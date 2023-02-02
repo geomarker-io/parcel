@@ -1,0 +1,110 @@
+#' 'expand' addresses containing abbreviations into all possible addresses
+#'
+#' The DeGAUSS [`postal`](https://degauss.org/postal/) container is used first
+#' to create clean addresses consisting of the parsed `house_number`, `road`,
+#' and first five digits of `postcode`. It is used again to expand these based on abbreviations.
+#' Because each input address will likely result in more than one expanded address,
+#' the newly added `expanded_addresses` column is a list-col.
+#'
+#' By default, each `expanded_address` is hashed using the 'spookyhash' algorithm. These
+#' combinations of hashes for all expanded address (i.e. "hashdress") can be used to
+#' link to other hashdress data resources (see `add_parcel_id()`)
+#'
+#' Each call to DeGAUSS is cached to disk (`data-raw` folder in working directory),
+#' making repetative function calls on the same data nearly instant.
+#' @param .x a tibble containing an `address` column
+#' @param hashdress logical; also compute hashdress?
+#' @param quiet logical; suppress intermediate DeGAUSS console output?
+#' @examples
+#' d <-
+#'   tibble::tibble(address = c(
+#'     "224 Woolper Ave Cincinnati OH 45220",
+#'     "222 East Central Parkway Cincinnati OH 45220",
+#'     "352 Helen St Cincinnati OH 45202",
+#'     "5377 Bahama Ter Apt 1 Cincinnati Ohio 45223",
+#'     "5377 Bahama Te Apt 1 Cincinnati Ohio 45223",
+#'     "1851 Campbell Dr Hamilton Ohio 45011",
+#'     "2 Maplewood Dr Ryland Heights, KY 41015"
+#'   ))
+#' address_expand(d)
+address_expand <- function(.x, hashdress = TRUE, quiet = TRUE) {
+
+  degauss_postal_version <- "0.1.4"
+
+  #' set cache for degauss_run
+  fc <- memoise::cache_filesystem(fs::path(fs::path_wd(), "degauss_cache"))
+  degauss_run <- memoise::memoise(dht::degauss_run, cache = fc, omit_args = "quiet")
+
+  d_in <- .x |>
+    dplyr::mutate(.id = dplyr::row_number()) |>
+    dplyr::select(.id, address) |>
+    dplyr::distinct()
+
+  message("parsing addresses...")
+  d_stub <-
+    d_in |>
+    degauss_run("postal", degauss_postal_version, quiet = quiet) |>
+    dplyr::select(-address) |>
+    dplyr::transmute(.id = .id, address = paste(parsed.house_number, parsed.road, parsed.postcode_five))
+
+  message("expanding addresses...")
+  d_expand <-
+    d_stub |>
+    degauss_run("postal", degauss_postal_version, "expand", quiet = quiet) |>
+    dplyr::select(.id, address_stub = address, expanded_addresses) |>
+    dplyr::group_by(.id, address_stub) |>
+    dplyr::summarize(expanded_addresses = list(expanded_addresses), .groups = "drop")
+
+  if (hashdress) {
+    d_expand <-
+      d_expand |>
+      dplyr::rowwise() |>
+      dplyr::mutate(hashdresses = list(purrr::map_chr(expanded_addresses,
+        digest::digest,
+        algo = "spookyhash"
+      ))) |>
+      dplyr::ungroup()
+  }
+
+  d_out <- dplyr::left_join(d_in, d_expand, by = ".id") |> dplyr::select(-.id)
+  d_out$hashdresses
+  return(d_out)
+}
+
+
+## library(data.table)
+
+## cagis_hashdress <- readRDS(fs::path("data", "cagis_hashdress.rds"))
+
+#' Add CAGIS Parcel ID
+#'
+#' This function relies on `dht::degauss_run()` and the postal DeGAUSS image
+#' to standardize input addresses and hash them to match with known addresses
+#' with parcel identifiers from the Hamilton County Auditor.
+#' @details  One address can be linked to more than one parcel (e.g.,
+#' "323 Fifth" on https://wedge3.hcauditor.org/search_results)
+#'
+#' @param .x tibble/data.frame with a column containing addresses, called "address"
+#' @param hashdresses an R object of parsed and hashed CAGIS addresses with corresponding
+#' parcel identifiers
+#' @param ... further arguments passed to `dht::degauss_run()` (e.g., `quiet = TRUE`)
+#' @return .x with additional parcel_id column; this could be a list-col if more than
+#' one parcel is matched to a given address
+#' @importFrom data.table data.table
+#' @examples
+#' cagis_hashdress <- readRDS(fs::path("data", "cagis_hashdress.rds"))
+#' d <- data.frame(address = c(
+#' "3937 Rose Hill Ave Cincinnati OH 45229",
+#' "424 Klotter Ave Cincinnati OH 45214",
+#' "3328 Bauerwoods Dr Cincinnati OH 45251"))
+#' add_parcel_id(d, quiet = TRUE)
+add_parcel_id <- function(.x, hashdresses = cagis_hashdress, ...) {
+  d <- address_expand(.x, hashdress = TRUE, ...)
+  d <- tibble::as_tibble(d)
+  # if data.table is not available, does this take much longer???
+  d$parcel <- purrr::map(d$hashdresses, ~ cagis_hashdress[., parcel_id])
+  d |>
+    dplyr::rowwise() |>
+    dplyr::mutate(parcel_id = list(unique(parcel))) |>
+    dplyr::select(-address_stub, -expanded_addresses, -hashdresses, -parcel)
+}
