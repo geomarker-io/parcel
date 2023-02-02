@@ -3,3 +3,12 @@
 #' A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data.
 #' @source Cincinnati Area Geographic Information System (CAGIS: https://cagismaps.hamilton-co.org/cagisportal/mapdata/download)
 "cagis_parcels"
+
+#' CAGIS hashdresses
+#'
+#' The parcel identifiers and a property address (consisting of
+#' property_addr_number, property_addr_street, property_addr_suffix)
+#' for each parcel are "hashdressed" by applying `address_expand()`
+#' This object is used to match parcel identifiers
+#' to hashdresses computed on other, real-world addresses
+"cagis_hashdresses"
