@@ -6,9 +6,9 @@
 #' Because each input address will likely result in more than one expanded address,
 #' the newly added `expanded_addresses` column is a list-col.
 #'
-#' By default, each `expanded_address` is hashed using the 'spookyhash' algorithm. These
-#' combinations of hashes for all expanded address (i.e. "hashdress") can be used to
-#' link to other hashdress data resources (see `add_parcel_id()`)
+#' By default, each `expanded_address` is hashed using the 'spookyhash' algorithm and also
+#' returned as a list col. These combinations of hashes for all expanded address
+#' (i.e. "hashdress") can be used to link to other hashdress data resources (see `add_parcel_id()`)
 #'
 #' Each call to DeGAUSS is cached to disk (`data-raw` folder in working directory),
 #' making repetative function calls on the same data nearly instant.
@@ -36,16 +36,19 @@ address_expand <- function(.x, hashdress = TRUE, quiet = TRUE) {
   degauss_run <- memoise::memoise(dht::degauss_run, cache = fc, omit_args = "quiet")
 
   d_in <- .x |>
-    dplyr::mutate(.id = dplyr::row_number()) |>
-    dplyr::select(.id, address) |>
-    dplyr::distinct()
+    dplyr::mutate(.id = dplyr::row_number())
 
   message("parsing addresses...")
   d_stub <-
     d_in |>
+    dplyr::select(.id, address) |>
+    dplyr::distinct() |>
     degauss_run("postal", degauss_postal_version, quiet = quiet) |>
     dplyr::select(-address) |>
-    dplyr::transmute(.id = .id, address = paste(parsed.house_number, parsed.road, parsed.postcode_five))
+    tidyr::unite(col = "address_stub",
+                 tidyselect::any_of(c("parsed.house_number", "parsed.road", "parsed.postcode_five")),
+                 sep = " ", na.rm = TRUE, remove = FALSE) |>
+    dplyr::select(.id, address = address_stub)
 
   message("expanding addresses...")
   d_expand <-
@@ -67,7 +70,6 @@ address_expand <- function(.x, hashdress = TRUE, quiet = TRUE) {
   }
 
   d_out <- dplyr::left_join(d_in, d_expand, by = ".id") |> dplyr::select(-.id)
-  d_out$hashdresses
   return(d_out)
 }
 

@@ -17,7 +17,9 @@ Imports:
     memoise,
     purrr,
     tibble,
-    data.table
+    data.table,
+    tidyr,
+    tidyselect
 Suggests: 
     testthat (>= 3.0.0)
 Remotes: 

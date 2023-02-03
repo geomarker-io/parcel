@@ -21,9 +21,9 @@ Because each input address will likely result in more than one expanded address,
 the newly added \code{expanded_addresses} column is a list-col.
 }
 \details{
-By default, each \code{expanded_address} is hashed using the 'spookyhash' algorithm. These
-combinations of hashes for all expanded address (i.e. "hashdress") can be used to
-link to other hashdress data resources (see \code{add_parcel_id()})
+By default, each \code{expanded_address} is hashed using the 'spookyhash' algorithm and also
+returned as a list col. These combinations of hashes for all expanded address
+(i.e. "hashdress") can be used to link to other hashdress data resources (see \code{add_parcel_id()})
 
 Each call to DeGAUSS is cached to disk (\code{data-raw} folder in working directory),
 making repetative function calls on the same data nearly instant.

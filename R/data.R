@@ -11,4 +11,4 @@
 #' for each parcel are "hashdressed" by applying `address_expand()`
 #' This object is used to match parcel identifiers
 #' to hashdresses computed on other, real-world addresses
-"cagis_hashdresses"
+## "cagis_hashdresses"
