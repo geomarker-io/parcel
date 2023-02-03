@@ -3,6 +3,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+> This package relies on system calls to [Docker](https://www.docker.com/), which must be installed and available.
+
 The goal of parcel is to provide tools for matching real-world addresses to reference sets of addresses. 
 
 Address matching is completed by calculating the "hashdress", in which an address is cleaned, parsed into components, combined into a "parsed_address", and 'expanded' into all possible addresses based on abbreviations. (See the [DeGAUSS](https://degauss.org) [postal](https://github.com/degauss-org/postal#geomarker-methods) container for details.) The cleaned, parsed, and expanded addresses are then each hashed to create a unique set of hashdress identifers for a specific address, termed "hashdresses":
@@ -12,8 +14,8 @@ graph LR
     subgraph clean/parse
     addr(address) --> paddr(parsed address)
     end	
-    subgraph expand    
-    paddr --> expanded_address_1 & expanded_address_2 & expanded_address_3        
+    subgraph expand
+    paddr --> expanded_address_1 & expanded_address_2 & expanded_address_3
     end	
     expanded_address_1 --> hashed_address_1	
     expanded_address_2 --> hashed_address_2	

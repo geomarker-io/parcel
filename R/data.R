@@ -10,5 +10,8 @@
 #' property_addr_number, property_addr_street, property_addr_suffix)
 #' for each parcel are "hashdressed" by applying `address_expand()`
 #' This object is used to match parcel identifiers
-#' to hashdresses computed on other, real-world addresses
-## "cagis_hashdresses"
+#' to hashdresses computed on other, real-world addresses. Note that
+#' the five digit ZIP code is not included in CAGIS data, and wasn't used to
+#' compute the hashdress.  These hashdresses are specific to Hamilton
+#' County, OH.
+"cagis_hashdresses"
