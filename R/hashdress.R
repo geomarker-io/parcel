@@ -1,20 +1,25 @@
-#' 'expand' addresses containing abbreviations into all possible addresses
+#' 'expand' and hash addresses
 #'
 #' The DeGAUSS [`postal`](https://degauss.org/postal/) container is used first
 #' to create clean addresses consisting of the parsed `house_number`, `road`,
 #' and first five digits of `postcode`. It is used again to expand these based on abbreviations.
 #' Because each input address will likely result in more than one expanded address,
 #' the newly added `expanded_addresses` column is a list-col.
-#'
-#' By default, each `expanded_address` is hashed using the 'spookyhash' algorithm and also
+#' Each `expanded_address` is hashed using the 'spookyhash' algorithm and also
 #' returned as a list col. These combinations of hashes for all expanded address
-#' (i.e. "hashdress") can be used to link to other hashdress data resources (see `add_parcel_id()`)
+#' (i.e. "hashdress") can be used to link to other addresses hashdressed
+#' using the same version of this package.
 #'
 #' Each call to DeGAUSS is cached to disk (`data-raw` folder in working directory),
 #' making repetative function calls on the same data nearly instant.
 #' @param .x a tibble containing an `address` column
-#' @param hashdress logical; also compute hashdress?
+#' @param address_stub_components a vector of character strings of parsed address
+#' components to use to construct the address stub used for expansion and hashing
 #' @param quiet logical; suppress intermediate DeGAUSS console output?
+#' @return `.x` with newly added columns
+#' - `address_stub` is the parsed and cleaned address used for expansion
+#' - `expanded_addresses` are the expanded addresses (a list-col)
+#' - `hashdresses` are the hashdresses for each of the expanded addresses
 #' @examples
 #' d <-
 #'   tibble::tibble(address = c(
@@ -26,9 +31,14 @@
 #'     "1851 Campbell Dr Hamilton Ohio 45011",
 #'     "2 Maplewood Dr Ryland Heights, KY 41015"
 #'   ))
-#' address_expand(d)
-address_expand <- function(.x, hashdress = TRUE, quiet = TRUE) {
-
+#' hashdress(d)
+hashdress <- function(.x,
+                      address_stub_components = c(
+                        "parsed.house_number",
+                        "parsed.road",
+                        "parsed.postcode_five"
+                      ),
+                      quiet = TRUE) {
   degauss_postal_version <- "0.1.4"
 
   #' set cache for degauss_run
@@ -45,9 +55,11 @@ address_expand <- function(.x, hashdress = TRUE, quiet = TRUE) {
     dplyr::distinct() |>
     degauss_run("postal", degauss_postal_version, quiet = quiet) |>
     dplyr::select(-address) |>
-    tidyr::unite(col = "address_stub",
-                 tidyselect::any_of(c("parsed.house_number", "parsed.road", "parsed.postcode_five")),
-                 sep = " ", na.rm = TRUE, remove = FALSE) |>
+    tidyr::unite(
+      col = "address_stub",
+      tidyselect::any_of(address_stub_components),
+      sep = " ", na.rm = TRUE, remove = FALSE
+    ) |>
     dplyr::select(.id, address = address_stub)
 
   message("expanding addresses...")
@@ -58,53 +70,48 @@ address_expand <- function(.x, hashdress = TRUE, quiet = TRUE) {
     dplyr::group_by(.id, address_stub) |>
     dplyr::summarize(expanded_addresses = list(expanded_addresses), .groups = "drop")
 
-  if (hashdress) {
-    d_expand <-
-      d_expand |>
-      dplyr::rowwise() |>
-      dplyr::mutate(hashdresses = list(purrr::map_chr(expanded_addresses,
+  d_expand <-
+    d_expand |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      hashdresses = list(purrr::map_chr(expanded_addresses,
         digest::digest,
         algo = "spookyhash"
-      ))) |>
-      dplyr::ungroup()
-  }
+      ))
+    ) |>
+    dplyr::ungroup()
 
   d_out <- dplyr::left_join(d_in, d_expand, by = ".id") |> dplyr::select(-.id)
   return(d_out)
 }
 
-
-## library(data.table)
-
-## cagis_hashdress <- readRDS(fs::path("data", "cagis_hashdress.rds"))
-
 #' Add CAGIS Parcel ID
 #'
-#' This function relies on `dht::degauss_run()` and the postal DeGAUSS image
-#' to standardize input addresses and hash them to match with known addresses
-#' with parcel identifiers from the Hamilton County Auditor.
+#' The hashdress() function is used to add a set of hashdresses for
+#' the parsed house_number and road from each input address in `.x$address`.
+#' The hashdresses are compared to the
+#' set of hashdresses in `cagis_hashdresses` for matches.
 #' @details  One address can be linked to more than one parcel (e.g.,
 #' "323 Fifth" on https://wedge3.hcauditor.org/search_results)
 #'
 #' @param .x tibble/data.frame with a column containing addresses, called "address"
-#' @param hashdresses an R object of parsed and hashed CAGIS addresses with corresponding
-#' parcel identifiers
-#' @param ... further arguments passed to `dht::degauss_run()` (e.g., `quiet = TRUE`)
-#' @return .x with additional parcel_id column; this could be a list-col if more than
-#' one parcel is matched to a given address
+#' @param quiet logical; suppress intermediate DeGAUSS console output?
+#' @return .x with additional parcel_id column; this will be a list-col because more than
+#' one parcel can be matched to a given address
 #' @importFrom data.table data.table
 #' @examples
-#' cagis_hashdress <- readRDS(fs::path("data", "cagis_hashdress.rds"))
 #' d <- data.frame(address = c(
-#' "3937 Rose Hill Ave Cincinnati OH 45229",
-#' "424 Klotter Ave Cincinnati OH 45214",
-#' "3328 Bauerwoods Dr Cincinnati OH 45251"))
+#'   "3937 Rose Hill Ave Cincinnati OH 45229",
+#'   "424 Klotter Ave Cincinnati OH 45214",
+#'   "3328 Bauerwoods Dr Cincinnati OH 45251"
+#' ))
 #' add_parcel_id(d, quiet = TRUE)
-add_parcel_id <- function(.x, hashdresses = cagis_hashdress, ...) {
-  d <- address_expand(.x, hashdress = TRUE, ...)
-  d <- tibble::as_tibble(d)
-  # if data.table is not available, does this take much longer???
-  d$parcel <- purrr::map(d$hashdresses, ~ cagis_hashdress[., parcel_id])
+add_parcel_id <- function(.x, quiet = TRUE) {
+  d <- hashdress(.x,
+                 address_stub_components = c("parsed.house_number", "parsed.road"),
+                 quiet = quiet)
+  #TODO  if data.table is not available, does this take much longer???
+  d$parcel <- purrr::map(d$hashdresses, ~ cagis_hashdresses[., parcel_id])
   d |>
     dplyr::rowwise() |>
     dplyr::mutate(parcel_id = list(unique(parcel))) |>

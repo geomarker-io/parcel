@@ -4,34 +4,32 @@
 \alias{add_parcel_id}
 \title{Add CAGIS Parcel ID}
 \usage{
-add_parcel_id(.x, hashdresses = cagis_hashdress, ...)
+add_parcel_id(.x, quiet = TRUE)
 }
 \arguments{
 \item{.x}{tibble/data.frame with a column containing addresses, called "address"}
 
-\item{hashdresses}{an R object of parsed and hashed CAGIS addresses with corresponding
-parcel identifiers}
-
-\item{...}{further arguments passed to \code{dht::degauss_run()} (e.g., \code{quiet = TRUE})}
+\item{quiet}{logical; suppress intermediate DeGAUSS console output?}
 }
 \value{
-.x with additional parcel_id column; this could be a list-col if more than
-one parcel is matched to a given address
+.x with additional parcel_id column; this will be a list-col because more than
+one parcel can be matched to a given address
 }
 \description{
-This function relies on \code{dht::degauss_run()} and the postal DeGAUSS image
-to standardize input addresses and hash them to match with known addresses
-with parcel identifiers from the Hamilton County Auditor.
+The hashdress() function is used to add a set of hashdresses for
+the parsed house_number and road from each input address in \code{.x$address}.
+The hashdresses are compared to the
+set of hashdresses in \code{cagis_hashdresses} for matches.
 }
 \details{
 One address can be linked to more than one parcel (e.g.,
 "323 Fifth" on https://wedge3.hcauditor.org/search_results)
 }
 \examples{
-cagis_hashdress <- readRDS(fs::path("data", "cagis_hashdress.rds"))
 d <- data.frame(address = c(
-"3937 Rose Hill Ave Cincinnati OH 45229",
-"424 Klotter Ave Cincinnati OH 45214",
-"3328 Bauerwoods Dr Cincinnati OH 45251"))
+  "3937 Rose Hill Ave Cincinnati OH 45229",
+  "424 Klotter Ave Cincinnati OH 45214",
+  "3328 Bauerwoods Dr Cincinnati OH 45251"
+))
 add_parcel_id(d, quiet = TRUE)
 }
