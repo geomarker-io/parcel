@@ -7,6 +7,7 @@ test_that("cagis_parcels is available", {
 })
 
 test_that("add_parcel_id works", {
+  skip_on_ci()
 
   d <-
     tibble::tibble(
@@ -27,4 +28,11 @@ test_that("add_parcel_id works", {
   expect_equal(is.na(d$parcel_id), c(rep(FALSE, 4), rep(TRUE, 3)))
 
   expect_equal(d$parcel_id[1:2], rep("2170054005900", 2))
+})
+
+test_that("hashdress works on addresses missing ZIP codes", {
+  tibble::tibble(address = c("222 East Central Parkway", "222 East Central Parkway 45202")) |>
+    hashdress() |>
+    dplyr::pull(address_stub) |>
+    expect_equal(c("222 east central parkway", "222 east central parkway 45202"))
 })

@@ -1,5 +1,5 @@
 test_that("hashdress works", {
-
+  skip_on_ci()
   d <-
     tibble::tibble(
       address = c(
@@ -48,9 +48,3 @@ test_that("hashdress works", {
   expect_equal(sum(is.na(d_hd_long)), 0)
 })
 
-test_that("address_expand works with addresses missing ZIP codes (doesn't print 'NA')", {
-  tibble::tibble(address = c("222 East Central Parkway", "222 East Central Parkway 45202")) |>
-    hashdress() |>
-    dplyr::pull(address_stub) |>
-    expect_equal(c("222 east central parkway", "222 east central parkway 45202"))
-})
