@@ -20,6 +20,7 @@
 #' - `address_stub` is the parsed and cleaned address used for expansion
 #' - `expanded_addresses` are the expanded addresses (a list-col)
 #' - `hashdresses` are the hashdresses for each of the expanded addresses
+#' @export
 #' @examples
 #' d <-
 #'   tibble::tibble(address = c(
@@ -41,7 +42,7 @@ hashdress <- function(.x,
                       quiet = TRUE) {
   degauss_postal_version <- "0.1.4"
 
-  #' set cache for degauss_run
+  # set cache for degauss_run
   fc <- memoise::cache_filesystem(fs::path(fs::path_wd(), "degauss_cache"))
   degauss_run <- memoise::memoise(dht::degauss_run, cache = fc, omit_args = "quiet")
 
@@ -92,13 +93,16 @@ hashdress <- function(.x,
 #' The hashdresses are compared to the
 #' set of hashdresses in `cagis_hashdresses` for matches.
 #' @details  One address can be linked to more than one parcel (e.g.,
-#' "323 Fifth" on https://wedge3.hcauditor.org/search_results)
-#'
+#' "323 Fifth" on https://wedge3.hcauditor.org/search_results). Note that
+#' this matches does not utilize the ZIP code, and instead assumes any input
+#' address in located in Hamilton County, OH. If addresses are not screened for
+#' ZIP codes (e.g., `cincy::zcta_tigris_2020`), then false positives are possible.
 #' @param .x tibble/data.frame with a column containing addresses, called "address"
 #' @param quiet logical; suppress intermediate DeGAUSS console output?
 #' @return .x with additional parcel_id column; this will be a list-col because more than
 #' one parcel can be matched to a given address
 #' @importFrom data.table data.table
+#' @export
 #' @examples
 #' d <- data.frame(address = c(
 #'   "3937 Rose Hill Ave Cincinnati OH 45229",
@@ -108,9 +112,9 @@ hashdress <- function(.x,
 #' add_parcel_id(d, quiet = TRUE)
 add_parcel_id <- function(.x, quiet = TRUE) {
   d <- hashdress(.x,
-                 address_stub_components = c("parsed.house_number", "parsed.road"),
-                 quiet = quiet)
-  #TODO  if data.table is not available, does this take much longer???
+    address_stub_components = c("parsed.house_number", "parsed.road"),
+    quiet = quiet
+  )
   d$parcel <- purrr::map(d$hashdresses, ~ cagis_hashdresses[., parcel_id])
   d |>
     dplyr::rowwise() |>

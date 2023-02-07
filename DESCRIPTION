@@ -16,12 +16,12 @@ Imports:
     fs,
     memoise,
     purrr,
-    tibble,
     data.table,
     tidyr,
     tidyselect
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble
 Remotes: 
     degauss-org/dht
 Config/testthat/edition: 3

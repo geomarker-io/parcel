@@ -31,20 +31,13 @@ graph LR
     end	
 ```
 
-This allows, for example, the "fuzzy" matching of addresses like
-
--  "352 Helen Street", "352 Helen St.", "352 helen st"
-- "5377 Bahama terrace 45223", "5377 Bahama ter", "537 Bahama Te"
-
-Address matching can be used, for example, to match addresses in collected data to a set of addresses with parcel identifiers obtained from a county auditor, or other open/commercial datasets describing the conditions specific to a parcel of land.
+This allows the matching of an address like "352 Helen Street" to "352 Helen St." or "352 helen st". This type of address matching can be used to match addresses in collected data to a set of addresses with parcel identifiers obtained from a county auditor, or other open/commercial datasets describing the conditions specific to a parcel of land.
 
 With this specific goal in mind, parcel includes:
 
-- tools for address cleaning, normalization, expansion, and hashing addresses (`address_expand()`)
-- functions for matching addresses to any reference address set (`address_match()`)
-- a reference address-parcel set of hashdresses for Hamilton County, OH (`cagis_hashdresses`)
-  - including parcel-specific county auditor tax data
-  - including functions to directly add parcel identifer based on addresses in Hamilton County, OH
+- **`hashdress()`**: a function to clean, normalize, expand, and hash addresses 
+- **`cagis_hashdresses`**: a reference address-parcel set of hashdresses for Hamilton County, OH (including parcel-specific county auditor tax data)
+- **`add_parcel_id()`**: a function to directly add parcel identifers to addresses in Hamilton County, OH based on the parsed street number and street name 
 
 ## Installation
 
@@ -58,6 +51,22 @@ renv::install("geomarker-io/parcel")
 
 ``` r
 library(parcel)
-## basic example code
+
+data.frame(address = c(
+  "3937 Rose Hill Ave Cincinnati OH 45229",
+  "424 Klotter Ave Cincinnati OH 45214",
+  "3328 Bauerwoods Dr Cincinnati OH 45251"
+)) |>
+  add_parcel_id() |>
+  tidyr::unnest(cols = c(parcel_id))
+
+#> parsing addresses...
+#> expanding addresses...
+#> # A tibble: 3 × 2
+#>   address                                parcel_id
+#>   <chr>                                  <chr>
+#> 1 3937 Rose Hill Ave Cincinnati OH 45229 1110003000600
+#> 2 424 Klotter Ave Cincinnati OH 45214    0960003015900
+#> 3 3328 Bauerwoods Dr Cincinnati OH 45251 5100093011200
 ```
 

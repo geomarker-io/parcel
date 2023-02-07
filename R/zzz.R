@@ -1,0 +1,6 @@
+utils::globalVariables(".id")
+utils::globalVariables("address")
+utils::globalVariables("address_stub")
+utils::globalVariables("expanded_addresses")
+utils::globalVariables("hashdresses")
+utils::globalVariables("parcel")
