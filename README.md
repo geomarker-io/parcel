@@ -1,6 +1,7 @@
 # parcel
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/geomarker-io/parcel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/parcel/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 > This package relies on system calls to [Docker](https://www.docker.com/), which must be installed and available.
