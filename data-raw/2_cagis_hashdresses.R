@@ -11,7 +11,7 @@ d_ham <-
                sep = " ", na.rm = TRUE, remove = FALSE) |>
   select(parcel_id, address)
 
-d_ham_expand <- address_expand(d_ham, hashdress = TRUE, quiet = FALSE)
+d_ham_expand <- hashdress(d_ham)
 
 cagis_hashdresses <-
   d_ham_expand |>
@@ -20,4 +20,4 @@ cagis_hashdresses <-
   summarize(hashdress = hashdresses, .groups = "drop") |>
   as.data.table(key = "hashdress")
 
-usethis::use_data(cagis_hashdresses, overwrite = TRUE)
+usethis::use_data(cagis_hashdresses, overwrite = TRUE, compress = "xz")

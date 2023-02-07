@@ -72,7 +72,7 @@ lu_keepers <-
 d <- d |>
   filter(land_use %in% lu_keepers) |>
   mutate(land_use = forcats::fct_recode(as.factor(land_use), !!!lu_keepers))
-nrow(d) # 286,236
+nrow(d) # 286,059
 
 # add lat/lon centroid coordinates
 coords <-
@@ -87,4 +87,4 @@ cagis_parcels <-
   st_drop_geometry(d) |>
   tibble::as_tibble()
 
-usethis::use_data(cagis_parcels, overwrite = TRUE)
+usethis::use_data(cagis_parcels, overwrite = TRUE, compress = "xz")

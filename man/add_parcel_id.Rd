@@ -23,7 +23,10 @@ set of hashdresses in \code{cagis_hashdresses} for matches.
 }
 \details{
 One address can be linked to more than one parcel (e.g.,
-"323 Fifth" on https://wedge3.hcauditor.org/search_results)
+"323 Fifth" on https://wedge3.hcauditor.org/search_results). Note that
+this matches does not utilize the ZIP code, and instead assumes any input
+address in located in Hamilton County, OH. If addresses are not screened for
+ZIP codes (e.g., \code{cincy::zcta_tigris_2020}), then false positives are possible.
 }
 \examples{
 d <- data.frame(address = c(

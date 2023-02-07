@@ -54,5 +54,4 @@ d <-
     "2 Maplewood Dr Ryland Heights, KY 41015"
   ))
 hashdress(d)
-set cache for degauss_run
 }
