@@ -37,8 +37,9 @@ This allows the matching of an address like "352 Helen Street" to "352 Helen St.
 With this specific goal in mind, parcel includes:
 
 - **`hashdress()`**: a function to clean, normalize, expand, and hash addresses 
-- **`cagis_hashdresses`**: a reference address-parcel set of hashdresses for Hamilton County, OH (including parcel-specific county auditor tax data)
+- **`cagis_hashdresses`**: a reference address-parcel set of hashdresses for Hamilton County, OH
 - **`add_parcel_id()`**: a function to directly add parcel identifers to addresses in Hamilton County, OH based on the parsed street number and street name 
+- **`cagis_parcels`**: parcel-specific county auditor tax data that can be linked using the parcel identifier
 
 ## Installation
 
@@ -63,11 +64,14 @@ data.frame(address = c(
 
 #> parsing addresses...
 #> expanding addresses...
-#> # A tibble: 3 × 2
-#>   address                                parcel_id
-#>   <chr>                                  <chr>
-#> 1 3937 Rose Hill Ave Cincinnati OH 45229 1110003000600
-#> 2 424 Klotter Ave Cincinnati OH 45214    0960003015900
-#> 3 3328 Bauerwoods Dr Cincinnati OH 45251 5100093011200
+#> # A tibble: 3 × 14
+#> address     parce…¹ prope…² prope…³ prope…⁴ marke…⁵ land_…⁶ acreage homes…⁷ RED_2…⁸ annua…⁹ unpai…˟ parce…˟ parce…˟
+#> <chr>       <chr>   <chr>   <chr>   <chr>     <dbl> <fct>     <dbl> <lgl>   <lgl>     <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 3937 Rose … 111000… 3937    ROSE H… AV       366930 single…   0.437 FALSE   TRUE      8772.       0   -84.5    39.2
+#> 2 424 Klotte… 096000… 424     KLOTTER AV        75000 reside…   0.103 FALSE   FALSE     1874.       0   -84.5    39.1
+#> 3 3328 Bauer… 510009… 3328    BAUERW… DR       189990 two fa…   0.467 FALSE   TRUE      5413.       0   -84.6    39.2
+#> # … with abbreviated variable names ¹​parcel_id, ²​property_addr_number, ³​property_addr_street, ⁴​property_addr_suffix,
+#> #   ⁵​market_total_value, ⁶​land_use, ⁷​homestead, ⁸​RED_25_FLAG, ⁹​annual_taxes, ˟​unpaid_taxes, ˟​parcel_centroid_lon,
+#> #   ˟​parcel_centroid_lat
 ```
 
