@@ -1,6 +1,6 @@
 #' CAGIS parcels
 #' 
-#' A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data.
+#' A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data. See `data-raw/tabular-data-resource.yaml` for detailed metadata.
 #' @source Cincinnati Area Geographic Information System (CAGIS: https://cagismaps.hamilton-co.org/cagisportal/mapdata/download)
 "cagis_parcels"
 
