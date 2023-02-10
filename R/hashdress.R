@@ -22,6 +22,7 @@
 #' - `hashdresses` are the hashdresses for each of the expanded addresses
 #' @export
 #' @examples
+#' \dontrun{
 #' d <-
 #'   tibble::tibble(address = c(
 #'     "224 Woolper Ave Cincinnati OH 45220",
@@ -33,6 +34,7 @@
 #'     "2 Maplewood Dr Ryland Heights, KY 41015"
 #'   ))
 #' hashdress(d)
+#' }
 hashdress <- function(.x,
                       address_stub_components = c(
                         "parsed.house_number",
@@ -104,12 +106,14 @@ hashdress <- function(.x,
 #' @importFrom data.table data.table
 #' @export
 #' @examples
+#' \dontrun{
 #' d <- data.frame(address = c(
 #'   "3937 Rose Hill Ave Cincinnati OH 45229",
 #'   "424 Klotter Ave Cincinnati OH 45214",
 #'   "3328 Bauerwoods Dr Cincinnati OH 45251"
 #' ))
 #' add_parcel_id(d, quiet = TRUE)
+#' }
 add_parcel_id <- function(.x, quiet = TRUE) {
   d <- hashdress(.x,
     address_stub_components = c("parsed.house_number", "parsed.road"),

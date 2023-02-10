@@ -43,6 +43,7 @@ Each call to DeGAUSS is cached to disk (\code{data-raw} folder in working direct
 making repetative function calls on the same data nearly instant.
 }
 \examples{
+\dontrun{
 d <-
   tibble::tibble(address = c(
     "224 Woolper Ave Cincinnati OH 45220",
@@ -54,4 +55,5 @@ d <-
     "2 Maplewood Dr Ryland Heights, KY 41015"
   ))
 hashdress(d)
+}
 }

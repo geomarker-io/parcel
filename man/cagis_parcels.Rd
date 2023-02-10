@@ -14,6 +14,6 @@ Cincinnati Area Geographic Information System (CAGIS: https://cagismaps.hamilton
 cagis_parcels
 }
 \description{
-A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data.
+A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data. See \code{data-raw/tabular-data-resource.yaml} for detailed metadata.
 }
 \keyword{datasets}

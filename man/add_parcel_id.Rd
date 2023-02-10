@@ -29,10 +29,12 @@ address in located in Hamilton County, OH. If addresses are not screened for
 ZIP codes (e.g., \code{cincy::zcta_tigris_2020}), then false positives are possible.
 }
 \examples{
+\dontrun{
 d <- data.frame(address = c(
   "3937 Rose Hill Ave Cincinnati OH 45229",
   "424 Klotter Ave Cincinnati OH 45214",
   "3328 Bauerwoods Dr Cincinnati OH 45251"
 ))
 add_parcel_id(d, quiet = TRUE)
+}
 }
