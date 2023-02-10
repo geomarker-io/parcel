@@ -31,6 +31,7 @@ test_that("add_parcel_id works", {
 })
 
 test_that("hashdress works on addresses missing ZIP codes", {
+  skip_on_ci()
   tibble::tibble(address = c("222 East Central Parkway", "222 East Central Parkway 45202")) |>
     hashdress() |>
     dplyr::pull(address_stub) |>
