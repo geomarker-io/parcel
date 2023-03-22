@@ -39,6 +39,9 @@ returned as a list col. These combinations of hashes for all expanded address
 using the same version of this package.
 }
 \details{
+Any input address for which at least one of the \code{address_stub_components} cannot be found
+will result in a missing \code{stub_address} and it will not be expanded nor hashed.
+
 Each call to DeGAUSS is cached to disk (\code{data-raw} folder in working directory),
 making repetative function calls on the same data nearly instant.
 }
