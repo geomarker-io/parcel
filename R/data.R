@@ -8,7 +8,7 @@
 #'
 #' The parcel identifiers and a property address (consisting of
 #' property_addr_number, property_addr_street, property_addr_suffix)
-#' for each parcel are "hashdressed" by applying `address_expand()`
+#' for each parcel are `hashdress()`ed using the parsed street number and street name.
 #' This object is used to match parcel identifiers
 #' to hashdresses computed on other, real-world addresses. Note that
 #' the five digit ZIP code is not included in CAGIS data, and wasn't used to

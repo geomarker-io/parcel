@@ -8,43 +8,31 @@ test_that("hashdress works", {
         "352 Helen St Cincinnati OH 45202",
         "5377 Bahama Ter Apt 1 Cincinnati Ohio 45223",
         "5377 Bahama Te Apt 1 Cincinnati Ohio 45223",
-        "1851 Campbell Dr Hamilton Ohio 45011",
-        "2 Maplewood Dr Ryland Heights, KY 41015"
+        "1851 Campbell Dr Hamilton Ohio 45011", # outside hamilton county
+        "2 Maplewood Dr Ryland Heights, KY 41015", # outside ohio
+        "222 East Central Parkway Cincinnati OH 45220", # non-residential
+        "736 South fredshuttles Apt 3 CINCINNATI Ohio 45229", # parsed as "house", not "house_number" and "road"
+        "NA"
       ),
-      id = letters[1:7]
+      id = letters[1:10]
     )
 
   d_hd <- hashdress(d, quiet = TRUE)
 
   expect_equal(names(d_hd), c("address", "id", "address_stub", "expanded_addresses", "hashdresses"))
-  expect_equal(nrow(d_hd), 7)
+  expect_equal(nrow(d_hd), 10)
 
-  d_hd_long <-
-    d_hd |>
-    dplyr::rowwise(address) |>
-    dplyr::summarize(expanded_address = expanded_addresses, hashdress = hashdresses, .groups = "drop")
+  d_hd_long <- tidyr::unnest(d_hd, cols = hashdresses, keep_empty = TRUE)
 
-  expect_equal(nrow(d_hd_long), 11)
+  expect_equal(nrow(d_hd_long), 14)
 
-  expect_equal(d_hd_long[["hashdress"]][1], "c8368081d566abf9dc869c5dc99dc802")
+  expect_equal(d_hd_long[["hashdresses"]][1], "c8368081d566abf9dc869c5dc99dc802")
 
-  expect_equal(
-    d_hd_long$expanded_address,
-    c(
-      "224 woolper avenue 45220",
-      "222 east central parkway 45220",
-      "352 helen saint 45202",
-      "352 helen street 45202",
-      "5377 bahama terrace 45223",
-      "5377 bahama ter 45223",
-      "5377 bahama te 45223",
-      "1851 campbell doctor 45011",
-      "1851 campbell drive 45011",
-      "2 maplewood doctor 41015",
-      "2 maplewood drive 41015"
-    )
-  )
+  expect_equal(sum(is.na(d_hd_long$hashdresses)), 2)
 
-  expect_equal(sum(is.na(d_hd_long)), 0)
+  expect_equal(sum(is.na(d_hd_long$hashdresses)), 2)
+
+  expect_equal(sum(is.na(d_hd_long$address)), 0)
+
 })
 

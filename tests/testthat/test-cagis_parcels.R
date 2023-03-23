@@ -18,22 +18,31 @@ test_that("add_parcel_id works", {
         "5377 Bahama Te Apt 1 Cincinnati Ohio 45223",
         "1851 Campbell Dr Hamilton Ohio 45011", # outside hamilton county
         "2 Maplewood Dr Ryland Heights, KY 41015", # outside ohio
-        "222 East Central Parkway Cincinnati OH 45220" # non-residential
+        "222 East Central Parkway Cincinnati OH 45220", # non-residential
+        "736 South fredshuttles Apt 3 CINCINNATI Ohio 45229", # parsed as "house", not "house_number" and "road"
+        "NA"
       ),
-      id = letters[1:7]
+      id = letters[1:9]
     ) |>
     add_parcel_id() |>
-    tidyr::unnest(cols = c(parcel_id))
+    tidyr::unnest(cols = c(parcel_id), keep_empty = TRUE)
 
-  expect_equal(is.na(d$parcel_id), c(rep(FALSE, 4), rep(TRUE, 3)))
+  expect_equal(is.na(d$parcel_id), c(rep(FALSE, 4), rep(TRUE, 5)))
+  expect_equal(is.na(d$address_stub), c(rep(FALSE, 7), rep(TRUE, 2)))
 
   expect_equal(d$parcel_id[1:2], rep("2170054005900", 2))
 })
 
-test_that("hashdress works on addresses missing ZIP codes", {
+test_that("hashdress returns missing on addresses missing one of the address_stub_components", {
   skip_on_ci()
+
   tibble::tibble(address = c("222 East Central Parkway", "222 East Central Parkway 45202")) |>
     hashdress() |>
     dplyr::pull(address_stub) |>
-    expect_equal(c("222 east central parkway", "222 east central parkway 45202"))
+    expect_equal(c(NA, "222 east central parkway 45202"))
+
+  tibble::tibble(address = c("222 East Central Parkway", "222 East Central Parkway 45202")) |>
+    hashdress(address_stub_components = c("parsed.house_number", "parsed.road")) |>
+    dplyr::pull(address_stub) |>
+    expect_equal(c("222 east central parkway", "222 east central parkway"))
 })

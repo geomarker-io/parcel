@@ -1,14 +1,17 @@
 #' 'expand' and hash addresses
 #'
 #' The DeGAUSS [`postal`](https://degauss.org/postal/) container is used first
-#' to create clean addresses consisting of the parsed `house_number`, `road`,
-#' and first five digits of `postcode`. It is used again to expand these based on abbreviations.
+#' to create clean addresses consisting of the parsed components specified in
+#' `address_stub_components`.It is used again to expand these based on abbreviations.
 #' Because each input address will likely result in more than one expanded address,
 #' the newly added `expanded_addresses` column is a list-col.
 #' Each `expanded_address` is hashed using the 'spookyhash' algorithm and also
 #' returned as a list col. These combinations of hashes for all expanded address
 #' (i.e. "hashdress") can be used to link to other addresses hashdressed
 #' using the same version of this package.
+#'
+#' Any input address for which at least one of the `address_stub_components` cannot be found
+#' will result in a missing `stub_address` and it will not be expanded nor hashed.
 #'
 #' Each call to DeGAUSS is cached to disk (`data-raw` folder in working directory),
 #' making repetative function calls on the same data nearly instant.
@@ -48,8 +51,7 @@ hashdress <- function(.x,
   fc <- memoise::cache_filesystem(fs::path(fs::path_wd(), "degauss_cache"))
   degauss_run <- memoise::memoise(dht::degauss_run, cache = fc, omit_args = "quiet")
 
-  d_in <- .x |>
-    dplyr::mutate(.id = dplyr::row_number())
+  d_in <- .x |> dplyr::mutate(.id = dplyr::row_number())
 
   message("parsing addresses...")
   d_stub <-
@@ -57,13 +59,15 @@ hashdress <- function(.x,
     dplyr::select(.id, address) |>
     dplyr::distinct() |>
     degauss_run("postal", degauss_postal_version, quiet = quiet) |>
-    dplyr::select(-address) |>
+    # if there are NA in any of the "address_stub_components", then don't create partial address_stub
+    dplyr::select(c(.id, tidyselect::any_of(address_stub_components))) |>
+    stats::na.omit() |>
     tidyr::unite(
       col = "address_stub",
       tidyselect::any_of(address_stub_components),
-      sep = " ", na.rm = TRUE, remove = FALSE
+      sep = " "
     ) |>
-    dplyr::select(.id, address = address_stub)
+    dplyr::rename(address = address_stub)
 
   message("expanding addresses...")
   d_expand <-
@@ -119,9 +123,11 @@ add_parcel_id <- function(.x, quiet = TRUE) {
     address_stub_components = c("parsed.house_number", "parsed.road"),
     quiet = quiet
   )
+
   d$parcel <- purrr::map(d$hashdresses, ~ cagis_hashdresses[., parcel_id])
+
   d |>
     dplyr::rowwise() |>
-    dplyr::mutate(parcel_id = list(unique(parcel))) |>
-    dplyr::select(-address_stub, -expanded_addresses, -hashdresses, -parcel)
+    dplyr::mutate(parcel_id = list(unique(as.character(parcel)))) |>
+    dplyr::select(-expanded_addresses, -hashdresses, -parcel)
 }
