@@ -28,6 +28,7 @@ test_that("add_parcel_id works", {
     tidyr::unnest(cols = c(parcel_id), keep_empty = TRUE)
 
   expect_equal(is.na(d$parcel_id), c(rep(FALSE, 4), rep(TRUE, 5)))
+  expect_equal(is.na(d$address_stub), c(rep(FALSE, 7), rep(TRUE, 2)))
 
   expect_equal(d$parcel_id[1:2], rep("2170054005900", 2))
 })

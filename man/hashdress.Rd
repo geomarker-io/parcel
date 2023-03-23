@@ -29,8 +29,8 @@ components to use to construct the address stub used for expansion and hashing}
 }
 \description{
 The DeGAUSS \href{https://degauss.org/postal/}{\code{postal}} container is used first
-to create clean addresses consisting of the parsed \code{house_number}, \code{road},
-and first five digits of \code{postcode}. It is used again to expand these based on abbreviations.
+to create clean addresses consisting of the parsed components specified in
+\code{address_stub_components}.It is used again to expand these based on abbreviations.
 Because each input address will likely result in more than one expanded address,
 the newly added \code{expanded_addresses} column is a list-col.
 Each \code{expanded_address} is hashed using the 'spookyhash' algorithm and also

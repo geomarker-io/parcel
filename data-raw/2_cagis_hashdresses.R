@@ -4,20 +4,25 @@ library(dplyr)
 
 d_ham <-
   cagis_parcels |>
-  select(parcel_id, starts_with("property_addr")) |>
+  select(parcel_id, tidyselect::any_of(c("property_addr_number", "property_addr_street", "property_addr_suffix"))) |>
   na.omit() |>
   tidyr::unite(col = "address",
                tidyselect::any_of(c("property_addr_number", "property_addr_street", "property_addr_suffix")),
                sep = " ", na.rm = TRUE, remove = FALSE) |>
   select(parcel_id, address)
 
-d_ham_expand <- hashdress(d_ham)
+d_ham_expand <- hashdress(d_ham, address_stub_components = c("parsed.house_number", "parsed.road"))
 
 cagis_hashdresses <-
   d_ham_expand |>
   rename(cagis_address = address) |>
-  rowwise(parcel_id, cagis_address) |>
-  summarize(hashdress = hashdresses, .groups = "drop") |>
+  select(-expanded_addresses) |>
+  tidyr::unnest(cols = hashdresses, keep_empty = TRUE) |>
+  rename(hashdress = hashdresses) |>
   as.data.table(key = "hashdress")
 
-usethis::use_data(cagis_hashdresses, overwrite = TRUE, compress = "xz")
+cagis_hashdresses <-
+  cagis_hashdresses |>
+  filter(!is.na(address_stub))
+
+usethis::use_data(cagis_hashdresses, overwrite = TRUE)

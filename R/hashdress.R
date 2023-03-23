@@ -1,8 +1,8 @@
 #' 'expand' and hash addresses
 #'
 #' The DeGAUSS [`postal`](https://degauss.org/postal/) container is used first
-#' to create clean addresses consisting of the parsed `house_number`, `road`,
-#' and first five digits of `postcode`. It is used again to expand these based on abbreviations.
+#' to create clean addresses consisting of the parsed components specified in
+#' `address_stub_components`.It is used again to expand these based on abbreviations.
 #' Because each input address will likely result in more than one expanded address,
 #' the newly added `expanded_addresses` column is a list-col.
 #' Each `expanded_address` is hashed using the 'spookyhash' algorithm and also
@@ -51,8 +51,7 @@ hashdress <- function(.x,
   fc <- memoise::cache_filesystem(fs::path(fs::path_wd(), "degauss_cache"))
   degauss_run <- memoise::memoise(dht::degauss_run, cache = fc, omit_args = "quiet")
 
-  d_in <- .x |>
-    dplyr::mutate(.id = dplyr::row_number())
+  d_in <- .x |> dplyr::mutate(.id = dplyr::row_number())
 
   message("parsing addresses...")
   d_stub <-

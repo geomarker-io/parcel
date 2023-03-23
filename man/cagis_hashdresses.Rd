@@ -5,7 +5,7 @@
 \alias{cagis_hashdresses}
 \title{CAGIS hashdresses}
 \format{
-An object of class \code{data.table} (inherits from \code{data.frame}) with 529165 rows and 3 columns.
+An object of class \code{data.table} (inherits from \code{data.frame}) with 528483 rows and 4 columns.
 }
 \usage{
 cagis_hashdresses
@@ -13,7 +13,7 @@ cagis_hashdresses
 \description{
 The parcel identifiers and a property address (consisting of
 property_addr_number, property_addr_street, property_addr_suffix)
-for each parcel are "hashdressed" by applying \code{address_expand()}
+for each parcel are \code{hashdress()}ed using the parsed street number and street name.
 This object is used to match parcel identifiers
 to hashdresses computed on other, real-world addresses. Note that
 the five digit ZIP code is not included in CAGIS data, and wasn't used to
