@@ -18,10 +18,11 @@ Imports:
     purrr,
     data.table,
     tidyr,
-    tidyselect
-Suggests: 
-    testthat (>= 3.0.0),
+    tidyselect,
+    reticulate,
     tibble
+Suggests: 
+    testthat (>= 3.0.0)
 Remotes: 
     degauss-org/dht
 Config/testthat/edition: 3

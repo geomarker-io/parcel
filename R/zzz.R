@@ -1,3 +1,9 @@
+usaddress <- NULL
+
+.onLoad <- function(libname, pkgname) {
+  usaddress <<- reticulate::import("usaddress", delay_load = TRUE)
+}
+
 utils::globalVariables(".id")
 utils::globalVariables("address")
 utils::globalVariables("address_stub")
