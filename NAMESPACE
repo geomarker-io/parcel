@@ -2,4 +2,5 @@
 
 export(add_parcel_id)
 export(hashdress)
+export(tag_address)
 importFrom(data.table,data.table)
