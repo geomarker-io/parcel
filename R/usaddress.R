@@ -3,8 +3,15 @@
 #' This function relies on usaddress package https://usaddress.readthedocs.io/en/latest/
 #' It can be installed to a python virtual environment specific to R with:
 #' `py_install("usaddress", pip = TRUE)`
-#' This function uses a custom tag mapping to categorize (and combine some) address
-#' components (see https://usaddress.readthedocs.io/en/latest/#details).
+#' This function uses a custom tag mapping to combine address components into the columns in the returned tibble
+#' (see https://usaddress.readthedocs.io/en/latest/#details for full definition of components):
+#'
+#' - `street_number`: `AddressNumber`, `AddressNumberPrefix`, `AddressNumberSuffix`
+#' - `street_name`: `StreetName`, `StreetNamePreDirectional`, `StreetNamePostDirectional`, `StreetNamePostModifier`, `StreetNamePostType`
+#' - `city`: `PlaceName`
+#' - `state`: `StateName`
+#' - `zip`: the **first five characters** of `ZipCode`
+#' 
 #' If an address is not classified as a `Street Address` (i.e. `Intersection`, `PO Box`, or `Ambiguous`),
 #' then the columns in the returned component tibble will all be NA
 #' @param address a character string that is a United States mailing address
@@ -59,7 +66,7 @@ tag_address <- function(address) {
       "street_name" = purrr::pluck(tags[[1]], "street_name"),
       "city" = purrr::pluck(tags[[1]], "city"),
       "state" = purrr::pluck(tags[[1]], "state"),
-      "zip_code" = purrr::pluck(tags[[1]], "zip_code")
+      "zip_code" = substr(purrr::pluck(tags[[1]], "zip_code"), 1, 5)
     )
   return(out)
 }
