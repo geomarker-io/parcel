@@ -73,16 +73,14 @@ hashdress <- function(.x) {
 #' ))
 #' add_parcel_id(d, quiet = TRUE)
 #' }
-add_parcel_id <- function(.x, quiet = TRUE) {
-  d <- hashdress(.x,
-    address_stub_components = c("parsed.house_number", "parsed.road"),
-    quiet = quiet
-  )
-
-  d$parcel <- purrr::map(d$hashdresses, ~ cagis_hashdresses[., parcel_id])
-
-  d |>
-    dplyr::rowwise() |>
-    dplyr::mutate(parcel_id = list(unique(as.character(parcel)))) |>
-    dplyr::select(-expanded_addresses, -hashdresses, -parcel)
-}
+## add_parcel_id <- function(.x, quiet = TRUE) {
+##   d <- hashdress(.x,
+##     address_stub_components = c("parsed.house_number", "parsed.road"),
+##     quiet = quiet
+##   )
+##   d$parcel <- purrr::map(d$hashdresses, ~ cagis_hashdresses[., parcel_id])
+##   d |>
+##     dplyr::rowwise() |>
+##     dplyr::mutate(parcel_id = list(unique(as.character(parcel)))) |>
+##     dplyr::select(-expanded_addresses, -hashdresses, -parcel)
+## }

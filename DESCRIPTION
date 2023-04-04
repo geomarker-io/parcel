@@ -16,9 +16,6 @@ Imports:
     fs,
     memoise,
     purrr,
-    data.table,
-    tidyr,
-    tidyselect,
     reticulate,
     tibble
 Suggests: 
