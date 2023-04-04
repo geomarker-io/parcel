@@ -1,8 +1,7 @@
 #' 'expand' and hash addresses
 #'
-#' The DeGAUSS [`postal`](https://degauss.org/postal/) container is used first
-#' to create clean addresses consisting of the parsed components specified in
-#' `address_stub_components`.It is used again to expand these based on abbreviations.
+#' The DeGAUSS [`postal`](https://degauss.org/postal/) container is used
+#' to expand addresses based on abbreviations.
 #' Because each input address will likely result in more than one expanded address,
 #' the newly added `expanded_addresses` column is a list-col.
 #' Each `expanded_address` is hashed using the 'spookyhash' algorithm and also

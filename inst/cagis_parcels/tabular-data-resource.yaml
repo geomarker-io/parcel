@@ -1,0 +1,92 @@
+profile: tabular-data-resource
+name: cagis_parcels
+path: cagis_parcels.csv
+version: 0.2.0
+title: CAGIS Parcels
+homepage: https://github.com/geomarker-io/hamilton_parcels
+description: 'A curated property-level data resource derived from the Hamilton County,
+  OH Auditor data distributed through CAGIS Open Data: https://cagismaps.hamilton-co.org/cagisportal/mapdata/download'
+schema:
+  fields:
+    parcel_id:
+      name: parcel_id
+      title: Parcel Identifier
+      description: uniquely identifies properties; the auditor Parcel Number
+      type: string
+    property_addr_number:
+      name: property_addr_number
+      title: Address Number
+      type: string
+    property_addr_street:
+      name: property_addr_street
+      title: Address Street
+      type: string
+    property_addr_suffix:
+      name: property_addr_suffix
+      title: Address Suffix
+      type: string
+    parcel_centroid_lat:
+      name: parcel_centroid_lat
+      title: Parcel Centroid Latitude
+      description: coordinates derived from centroid of parcel shape
+      type: number
+    parcel_centroid_lon:
+      name: parcel_centroid_lon
+      title: Parcel Centroid Longitude
+      description: coordinates derived from centroid of parcel shape
+      type: number
+    market_total_value:
+      name: market_total_value
+      title: Market Total Value
+      type: number
+    land_use:
+      name: land_use
+      type: string
+      constraints:
+        enum:
+        - apartment, 4-19 units
+        - apartment, 20-39 units
+        - apartment, 40+ units
+        - nursing home / private hospital
+        - independent living (seniors)
+        - mobile home / trailer park
+        - other commercial housing
+        - office / apartment over
+        - condominium office building
+        - residential vacant land
+        - resid unplat 10-19 acres
+        - resid unplat 20-29 acres
+        - resid unplat 30-39 acres
+        - single family dwelling
+        - single fam dw 0-9 acr
+        - two family dwelling
+        - three family dwelling
+        - condominium unit
+        - boataminium
+        - condo or pud garage
+        - landominium
+        - manufactured home
+        - lihtc res
+        - other residential structure
+        - metropolitan housing authority
+        - charities, hospitals, retir
+    acreage:
+      name: acreage
+      title: Acreage
+      type: number
+    homestead:
+      name: homestead
+      title: Homestead
+      type: boolean
+    RED_25_FLAG:
+      name: RED_25_FLAG
+      type: boolean
+    annual_taxes:
+      name: annual_taxes
+      title: Annual Taxes
+      type: number
+    unpaid_taxes:
+      name: unpaid_taxes
+      title: Unpaid Taxes
+      description: Calculated as `delinquent taxes` minus `delinquent taxes paid`
+      type: number
