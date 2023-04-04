@@ -1,4 +1,4 @@
 ^LICENSE\.md$
-^data-raw$
 ^degauss_cache$
 ^\.github$
+inst/HAM_MERGE_PARCELS.gdb
