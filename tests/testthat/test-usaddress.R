@@ -7,7 +7,6 @@ skip_if_no_usaddress <- function() {
 
 test_that("tag_address works", {
   skip_if_no_usaddress()
-
   tag_address("3333 Burnet Ave Cincinnati OH 45219") |>
     expect_identical(
       tibble::tibble(
