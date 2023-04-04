@@ -1,7 +1,7 @@
 library(dplyr)
 library(sf)
 library(CODECtools)
-# make sure {parcel} is loaded
+# make sure {parcel} is loaded to access read/write paths inside package during development
 
 parcel_gdb <- fs::path_package("parcel", "ham_merge_parcels.gdb")
 
@@ -130,7 +130,14 @@ d <- d |>
   mutate(land_use = forcats::fct_recode(as.factor(land_use), !!!lu_keepers))
 nrow(d) # 286,059
 
-## levels(d$land_use)
+d <- d |>
+  tidyr::unite(col = "parcel_address",
+               tidyselect::any_of(c("property_addr_number", "property_addr_street", "property_addr_suffix")),
+               sep = " ", na.rm = TRUE, remove = FALSE) |>
+  add_col_attrs(parcel_address,
+                title = "Parcel Address",
+                description = "derived by pasting Property Address Number, Street, and Suffix")
+
 d <-
   d |>
   add_type_attrs() |>

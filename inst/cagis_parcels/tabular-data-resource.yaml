@@ -17,6 +17,11 @@ schema:
       name: property_addr_number
       title: Address Number
       type: string
+    parcel_address:
+      name: parcel_address
+      title: Parcel Address
+      description: derived by pasting Property Address Number, Street, and Suffix
+      type: string
     property_addr_street:
       name: property_addr_street
       title: Address Street
