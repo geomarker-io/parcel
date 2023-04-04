@@ -16,8 +16,18 @@ a tibble with \code{street_number}, \code{street_name}, \code{city}, \code{state
 This function relies on usaddress package https://usaddress.readthedocs.io/en/latest/
 It can be installed to a python virtual environment specific to R with:
 \code{py_install("usaddress", pip = TRUE)}
-This function uses a custom tag mapping to categorize (and combine some) address
-components (see https://usaddress.readthedocs.io/en/latest/#details).
+This function uses a custom tag mapping to combine address components into the columns in the returned tibble
+(see https://usaddress.readthedocs.io/en/latest/#details for full definition of components):
+}
+\details{
+\itemize{
+\item \code{street_number}: \code{AddressNumber}, \code{AddressNumberPrefix}, \code{AddressNumberSuffix}
+\item \code{street_name}: \code{StreetName}, \code{StreetNamePreDirectional}, \code{StreetNamePostDirectional}, \code{StreetNamePostModifier}, \code{StreetNamePostType}
+\item \code{city}: \code{PlaceName}
+\item \code{state}: \code{StateName}
+\item \code{zip}: the \strong{first five characters} of \code{ZipCode}
+}
+
 If an address is not classified as a \verb{Street Address} (i.e. \code{Intersection}, \verb{PO Box}, or \code{Ambiguous}),
 then the columns in the returned component tibble will all be NA
 }

@@ -2,61 +2,18 @@
 % Please edit documentation in R/hashdress.R
 \name{hashdress}
 \alias{hashdress}
-\title{'expand' and hash addresses}
+\title{hash addresses}
 \usage{
-hashdress(
-  .x,
-  address_stub_components = c("parsed.house_number", "parsed.road",
-    "parsed.postcode_five"),
-  quiet = TRUE
-)
+hashdress(.x)
 }
 \arguments{
-\item{.x}{a tibble containing an \code{address} column}
-
-\item{address_stub_components}{a vector of character strings of parsed address
-components to use to construct the address stub used for expansion and hashing}
-
-\item{quiet}{logical; suppress intermediate DeGAUSS console output?}
+\item{.x}{a list of vectors of address character strings}
 }
 \value{
-\code{.x} with newly added columns
-\itemize{
-\item \code{address_stub} is the parsed and cleaned address used for expansion
-\item \code{expanded_addresses} are the expanded addresses (a list-col)
-\item \code{hashdresses} are the hashdresses for each of the expanded addresses
-}
+a list the same length as .x
 }
 \description{
-The DeGAUSS \href{https://degauss.org/postal/}{\code{postal}} container is used first
-to create clean addresses consisting of the parsed components specified in
-\code{address_stub_components}.It is used again to expand these based on abbreviations.
-Because each input address will likely result in more than one expanded address,
-the newly added \code{expanded_addresses} column is a list-col.
-Each \code{expanded_address} is hashed using the 'spookyhash' algorithm and also
-returned as a list col. These combinations of hashes for all expanded address
+These combinations of hashes for all expanded address
 (i.e. "hashdress") can be used to link to other addresses hashdressed
 using the same version of this package.
-}
-\details{
-Any input address for which at least one of the \code{address_stub_components} cannot be found
-will result in a missing \code{stub_address} and it will not be expanded nor hashed.
-
-Each call to DeGAUSS is cached to disk (\code{data-raw} folder in working directory),
-making repetative function calls on the same data nearly instant.
-}
-\examples{
-\dontrun{
-d <-
-  tibble::tibble(address = c(
-    "224 Woolper Ave Cincinnati OH 45220",
-    "222 East Central Parkway Cincinnati OH 45220",
-    "352 Helen St Cincinnati OH 45202",
-    "5377 Bahama Ter Apt 1 Cincinnati Ohio 45223",
-    "5377 Bahama Te Apt 1 Cincinnati Ohio 45223",
-    "1851 Campbell Dr Hamilton Ohio 45011",
-    "2 Maplewood Dr Ryland Heights, KY 41015"
-  ))
-hashdress(d)
-}
 }
