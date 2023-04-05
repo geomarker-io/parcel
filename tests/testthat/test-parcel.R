@@ -19,6 +19,20 @@ test_that("tag_address works", {
     )
 })
 
+test_that("tag_address returns empty data.frame if repeated label error happens", {
+  skip_if_no_usaddress()
+  tag_address(address = "3333 Burnet Ave 3333 Burnet Ave Cincinnati OH 45219") |>
+    expect_identical(
+      tibble::tibble(
+        street_number = NA,
+        street_name = NA,
+        city = NA,
+        state = NA,
+        zip_code = NA
+      )
+    )
+})
+
 test_that("create_address_stub works", {
   skip_if_no_usaddress()
   c(

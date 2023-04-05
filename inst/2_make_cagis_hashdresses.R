@@ -1,7 +1,7 @@
 library(data.table)
 library(dplyr)
 library(CODECtools)
-# make sure parcel is loaded
+# make sure {parcel} is loaded to access read/write paths inside package during development
 
 d_ham <-
   read_tdr_csv(fs::path_package("parcel", "cagis_parcels")) |>
