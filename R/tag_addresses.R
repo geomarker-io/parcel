@@ -66,7 +66,8 @@ tag_address <- function(address) {
       "street_name" = purrr::pluck(tags[[1]], "street_name"),
       "city" = purrr::pluck(tags[[1]], "city"),
       "state" = purrr::pluck(tags[[1]], "state"),
-      "zip_code" = substr(purrr::pluck(tags[[1]], "zip_code"), 1, 5)
+      "zip_code" = purrr::pluck(tags[[1]], "zip_code")
     )
+  if (any(nchar(out$zip_code) > 5)) out$zip_code <- substr(out$zip_code, 1, 5)
   return(out)
 }

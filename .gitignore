@@ -1,3 +1,4 @@
 /degauss_cache/
 /tests/testthat/degauss_cache/
 /inst/*.gdb
+/Hospital Admissions.csv
