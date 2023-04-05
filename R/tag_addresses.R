@@ -18,8 +18,20 @@
 #' @return a tibble with `street_number`, `street_name`, `city`, `state`, and `zip_code` columns
 #' @export
 tag_address <- function(address) {
+
+  out_template <-
+    tibble::tibble(
+      "street_number" = NA,
+      "street_name" = NA,
+      "city" = NA,
+      "state" = NA,
+      "zip_code" = NA
+    )
+
+  safe_tag <- purrr::possibly(usaddress$tag, otherwise = list(out_template, "repeated_label_error"))
+  
   tags <-
-    usaddress$tag(address,
+    safe_tag(address,
                   tag_mapping =
                     list(
                       "Recipient" = "name",
@@ -49,14 +61,6 @@ tag_address <- function(address) {
                       "StateName" = "state",
                       "ZipCode" = "zip_code"
                     ))
-  out_template <-
-      tibble::tibble(
-        "street_number" = NA,
-        "street_name" = NA,
-        "city" = NA,
-        "state" = NA,
-        "zip_code" = NA
-      )
   if (! tags[[2]] == "Street Address") {
     return(out_template)
   }
