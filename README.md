@@ -10,16 +10,16 @@ The goal of parcel is to provide tools for matching real-world addresses to refe
 
 With this specific goal in mind, parcel includes:
 
-- **`tag_address()`**: 
+- **`tag_address()`**: tag components from address character strings using the python `usaddress` library
 - **`create_address_stub()`**: create addresses based on street numbers and names for matching to CAGIS parcel data
 - **`expand_address()`**: to expand addresses based on abbreviations using the postal Docker container
 - **`hashdress()`**: hash expanded address lists created by `expand_address()`
-- **`cagis_hashdresses`**: a reference address-parcel set of hashdresses for Hamilton County, OH
 - **`add_parcel_id()`**: add CAGIS parcel ID using the hashdress method
+- **`csvlink.R`**: an example script for how match input addresses to CAGIS parcel identifiers using the python `csvdedupe` and `dedupe-variable-address`
 
-Address matching can be completed via two methods: hashdress and deduplication
+Address matching can be completed via two methods: hashdressing and deduplication
 
-## Hashdress
+## Hashdressing
 
 Address matching is completed by calculating the "hashdress", in which an address is cleaned, parsed into components, combined into a "parsed_address", and 'expanded' into all possible addresses based on abbreviations. (See the [DeGAUSS](https://degauss.org) [postal](https://github.com/degauss-org/postal#geomarker-methods) container for details.) The cleaned, parsed, and expanded addresses are then each hashed to create a unique set of hashdress identifers for a specific address, termed "hashdresses":
 
@@ -51,7 +51,18 @@ See an example script for this approach in the package (`fs::path_package("parce
 
 ## Installation
 
-> This package relies on system calls to [Docker](https://www.docker.com/), which must be installed and available.
+*Both* the hashdressing and the deduplication approach rely on the `usaddress` python module, which can be installed from inside R with: `py_install("usaddress", pip = TRUE)`
+
+*Only* the hashdressing approach relies on system calls to [Docker](https://www.docker.com/), which must be installed and available.
+
+*Only* the deduplication approach relies on the `csvdedupe` and `dedupe-variable-address` python libraries being installed:
+
+```r
+if (Sys.which("csvlink") == "") {
+  reticulate::py_install('csvdedupe', pip = TRUE)
+  reticulate::py_install('dedupe-variable-address')
+}
+```
 
 You can install the development version of parcel with:
 
