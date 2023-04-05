@@ -2,11 +2,24 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/geomarker-io/parcel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/parcel/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-> This package relies on system calls to [Docker](https://www.docker.com/), which must be installed and available.
 
-The goal of parcel is to provide tools for matching real-world addresses to reference sets of addresses. 
+The goal of parcel is to provide tools for matching real-world addresses to reference sets of addresses; e.g., "352 Helen Street", "352 Helen St." or "352 helen st". This package is motivated by the included example data resource of auditor parcel tax data from Hamilton County, Ohio.
+
+With this specific goal in mind, parcel includes:
+
+- **`tag_address()`**: 
+- **`create_address_stub()`**: create addresses based on street numbers and names for matching to CAGIS parcel data
+- **`expand_address()`**: to expand addresses based on abbreviations using the postal Docker container
+- **`hashdress()`**: hash expanded address lists created by `expand_address()`
+- **`cagis_hashdresses`**: a reference address-parcel set of hashdresses for Hamilton County, OH
+- **`add_parcel_id()`**: add CAGIS parcel ID using the hashdress method
+
+Address matching can be completed via two methods: hashdress and deduplication
+
+## Hashdress
 
 Address matching is completed by calculating the "hashdress", in which an address is cleaned, parsed into components, combined into a "parsed_address", and 'expanded' into all possible addresses based on abbreviations. (See the [DeGAUSS](https://degauss.org) [postal](https://github.com/degauss-org/postal#geomarker-methods) container for details.) The cleaned, parsed, and expanded addresses are then each hashed to create a unique set of hashdress identifers for a specific address, termed "hashdresses":
 
@@ -32,16 +45,13 @@ graph LR
     end	
 ```
 
-This allows the matching of an address like "352 Helen Street" to "352 Helen St." or "352 helen st". This type of address matching can be used to match addresses in collected data to a set of addresses with parcel identifiers obtained from a county auditor, or other open/commercial datasets describing the conditions specific to a parcel of land.
+## Deduplication
 
-With this specific goal in mind, parcel includes:
-
-- **`hashdress()`**: a function to clean, normalize, expand, and hash addresses 
-- **`cagis_hashdresses`**: a reference address-parcel set of hashdresses for Hamilton County, OH
-- **`add_parcel_id()`**: a function to directly add parcel identifers to addresses in Hamilton County, OH based on the parsed street number and street name 
-- **`cagis_parcels`**: parcel-specific county auditor tax data that can be linked using the parcel identifier
+See an example script for this approach in the package (`fs::path_package("parcel", "csvlink.R")`)
 
 ## Installation
+
+> This package relies on system calls to [Docker](https://www.docker.com/), which must be installed and available.
 
 You can install the development version of parcel with:
 
@@ -49,37 +59,20 @@ You can install the development version of parcel with:
 renv::install("geomarker-io/parcel")
 ```
 
-## Example
+## CAGIS Parcels Data Details
 
-``` r
-library(parcel)
+The CAGIS Parcels tabular data resource is created using the `1_make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`CODECtools`](https://geomarker.io/CODECtools)}:
 
-data.frame(address = c(
-  "3937 Rose Hill Ave Cincinnati OH 45229",
-  "424 Klotter Ave Cincinnati OH 45214",
-  "3328 Bauerwoods Dr Cincinnati OH 45251"
-)) |>
-  add_parcel_id() |>
-  tidyr::unnest(cols = c(parcel_id))
+```r
+CODECtools::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
 
-#> parsing addresses...
-#> expanding addresses...
-#> # A tibble: 3 × 14
-#> address     parce…¹ prope…² prope…³ prope…⁴ marke…⁵ land_…⁶ acreage homes…⁷ RED_2…⁸ annua…⁹ unpai…˟ parce…˟ parce…˟
-#> <chr>       <chr>   <chr>   <chr>   <chr>     <dbl> <fct>     <dbl> <lgl>   <lgl>     <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 3937 Rose … 111000… 3937    ROSE H… AV       366930 single…   0.437 FALSE   TRUE      8772.       0   -84.5    39.2
-#> 2 424 Klotte… 096000… 424     KLOTTER AV        75000 reside…   0.103 FALSE   FALSE     1874.       0   -84.5    39.1
-#> 3 3328 Bauer… 510009… 3328    BAUERW… DR       189990 two fa…   0.467 FALSE   TRUE      5413.       0   -84.6    39.2
-#> # … with abbreviated variable names ¹​parcel_id, ²​property_addr_number, ³​property_addr_street, ⁴​property_addr_suffix,
-#> #   ⁵​market_total_value, ⁶​land_use, ⁷​homestead, ⁸​RED_25_FLAG, ⁹​annual_taxes, ˟​unpaid_taxes, ˟​parcel_centroid_lon,
-#> #   ˟​parcel_centroid_lat
+# without CODECtools:
+# read.csv(fs::path_package("parcel", "cagis_parcels"))
 ```
 
-## Example CAGIS Parcels Data Details
+### Inclusion/Exclusion Criteria for Parcel Data
 
-#### Inclusion/Exclusion Criteria for Parcel Data
-
-Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number, or (3) were complete duplicates.
+Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) were complete duplicates.
 
 Parcels with the following land use categories are included in the data resource and others are excluded.  These were selected to reflect *residential* usages of parcels.
 
@@ -112,7 +105,7 @@ Parcels with the following land use categories are included in the data resource
 |resid unplat 30-39 acres        |      2|
 |single fam dw 0-9 acr           |      1|
 
-#### Estimating the number of households per parcel
+### Estimating the number of households per parcel
 
 We assume the following number of households per parcel.  (This is used in any calculation needs to be weighted by households instead of parcel; e.g. "What fraction of families live near roadway in Avondale?")
 
@@ -145,7 +138,7 @@ We assume the following number of households per parcel.  (This is used in any c
 |resid unplat 30-39 acres        |0|
 |residential vacant land         |0|
 
-#### Identifiers for Parcels and Properties
+### Identifiers for Parcels and Properties
 
 A `parcel_id` refers to the Hamilton County Auditor's "Parcel Number", which is referred to as the "Property Number" within the CAGIS Open Data and uniquely identifies properties. In rare cases, multple addresses can share the same parcel boundaries, but have unique `parcel_id`s and in these cases, their resulting centroid coordinates would also be identical.
 
