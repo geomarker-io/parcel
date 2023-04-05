@@ -1,7 +1,8 @@
-test_that("expand_address and hashdress works", {
+test_that("add_parcel_id works", {
   skip_on_ci()
-  expands <-
-    expand_addresses(c(
+
+  d <- tibble::tibble(
+    address =  c(
       "224 Woolper Ave Cincinnati OH 45220",
       "222 East Central Parkway Cincinnati OH 45220",
       "352 Helen St Cincinnati OH 45202",
@@ -9,10 +10,13 @@ test_that("expand_address and hashdress works", {
       "5377 Bahama Te Apt 1 Cincinnati Ohio 45223",
       "1851 Campbell Dr Hamilton Ohio 45011", # outside hamilton county
       "2 Maplewood Dr Ryland Heights, KY 41015", # outside ohio
-      "222 East Central Parkway Cincinnati OH 45220", # non-residential
-      "736 South fredshuttles Apt 3 CINCINNATI Ohio 45229", # parsed as "house", not "house_number" and "road"
-      "NA"
-    ))
+      "736 South fredshuttles Apt 3 CINCINNATI Ohio 45229" # parsed as "house", not "house_number" and "road"
+      ),
+    id = letters[1:8])
+
+  d |>
+    mutate(parcel_ids = add_parcel_id(address))
+
   expect_equal(length(expands), 10)
   expect_equal(sapply(expands, length), c(2, 2, 4, 1, 1, 2, 6, 2, 1, 1))
   expect_identical(is.na(expands[[10]]), TRUE)

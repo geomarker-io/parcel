@@ -2,31 +2,31 @@
 % Please edit documentation in R/hashdress.R
 \name{add_parcel_id}
 \alias{add_parcel_id}
-\title{Add CAGIS Parcel ID}
+\title{Add CAGIS Parcel ID using hashdress method}
 \usage{
 add_parcel_id(.x, quiet = TRUE)
 }
 \arguments{
-\item{.x}{tibble/data.frame with a column containing addresses, called "address"}
+\item{.x}{a vector of address character strings}
 
 \item{quiet}{logical; suppress intermediate DeGAUSS console output?}
 }
 \value{
-.x with additional parcel_id column; this will be a list-col because more than
-one parcel can be matched to a given address
+a list the same length as .x; each item will be a vector of \code{parcel_id}s
+because more than one parcel can be matched to a given address
 }
 \description{
-The hashdress() function is used to add a set of hashdresses for
-the parsed house_number and road from each input address in \code{.x$address}.
-The hashdresses are compared to the
-set of hashdresses in \code{cagis_hashdresses} for matches.
+A vector of address character strings are expanded and hashed
+into a set of hashdresses to match to an internal lookup
+table containing hashdresses for CAGIS Parcels.
 }
 \details{
+Addresses will be parsed and only the \code{street_number} and \code{street_name}
+\emph{from addresses with Hamilton County ZIP codes} are used to
+expand, hashdress, and match to a parcel identifier. Addresses not in Hamilton
+County will return a missing parcel identifier without an attempted match.
 One address can be linked to more than one parcel (e.g.,
-"323 Fifth" on https://wedge3.hcauditor.org/search_results). Note that
-this matches does not utilize the ZIP code, and instead assumes any input
-address in located in Hamilton County, OH. If addresses are not screened for
-ZIP codes (e.g., \code{cincy::zcta_tigris_2020}), then false positives are possible.
+"323 Fifth" on https://wedge3.hcauditor.org/search_results).
 }
 \examples{
 \dontrun{
