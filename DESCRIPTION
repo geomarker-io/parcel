@@ -10,7 +10,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.2
 Imports: 
-    cincy,
+    cincy (>= 1.0.0),
     data.table,
     dht (>= 1.2.3),
     digest,
@@ -24,8 +24,9 @@ Imports:
     tidyr
 Suggests: 
     testthat (>= 3.0.0)
-Remotes: 
-    degauss-org/dht
+Remotes:  
+    degauss-org/dht,
+    geomarker-io/cincy
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
