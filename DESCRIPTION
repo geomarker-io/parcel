@@ -19,7 +19,9 @@ Imports:
     memoise,
     purrr,
     reticulate,
-    tibble
+    stringr,
+    tibble,
+    tidyr
 Suggests: 
     testthat (>= 3.0.0)
 Remotes: 

@@ -4,12 +4,14 @@
 #' non-alphanumeric characters and excess whitespace) and then
 #' tagged into components. The `street_number` and `street_name`
 #' components are pasted together to create the address stub.
-#' If either the street_number or street_name are missing *or*
-#' the addresses does not have a parsed 5-digit ZIP code that is in
-#' Hamilton County, then the address_stub will be returned as missing.
+#' If either the street_number or street_name are missing
+#' then the address_stub will be returned as missing.
+#' If `filter_zip` is TRUE, then addresses without a parsed
+#' 5-digit ZIP code in Hamilton County will have a missing address stub.
 #' @param .x a vector of address character strings
+#' @param filter_zip force addresses with non-Hamilton ZIP codes to have a missing address_stub?
 #' @return a vector of cleaned address stubs (street_number + street_name)
-create_address_stub <- function(.x) {
+create_address_stub <- function(.x, filter_zip = TRUE) {
 
   clean_addresses <-
     .x |>
@@ -21,8 +23,7 @@ create_address_stub <- function(.x) {
 
   tagged_addresses <-
     purrr::map(clean_addresses, tag_address, .progress = "tagging addresses") |>
-    purrr::list_rbind() |>
-    dplyr::mutate(zip_code = substr(zip_code, 1, 5))
+    purrr::list_rbind()
 
   address_stubs <-
     tagged_addresses |>
@@ -30,7 +31,9 @@ create_address_stub <- function(.x) {
 
   address_stubs[is.na(address_stubs$street_number), "address_stub"] <- NA
   address_stubs[is.na(address_stubs$street_name), "address_stub"] <- NA
-  address_stubs[!address_stubs$zip_code %in% cincy::zcta_tigris_2020$zcta_2020, "address_stub"] <- NA
+  if (filter_zip) {
+    address_stubs[!address_stubs$zip_code %in% cincy::zcta_tigris_2020$zcta_2020, "address_stub"] <- NA
+  }
 
   return(address_stubs$address_stub)
 }
@@ -78,17 +81,9 @@ add_parcel_id <- function(.x, quiet = TRUE) {
 
   cagis_hashdresses <- readRDS(fs::path_package("parcel", "cagis_hashdresses.rds"))
 
-  purrr::map(.x, tag_address, .progress = "tagging addresses") |>
-    purrr::list_rbind() |>
-    mutate(zip_code = substr(zip_code, 1, 5)) |>
-    filter(zip_code %in% cincy::zcta_tigris_2020$zcta_2020)
   # create address stub; expand; hash
   # match to cagis_hashdresses
 
-  d <- hashdress(.x,
-    address_stub_components = c("parsed.house_number", "parsed.road"),
-    quiet = quiet
-  )
   d$parcel <- purrr::map(d$hashdresses, ~ cagis_hashdresses[., parcel_id])
   d |>
     dplyr::rowwise() |>
