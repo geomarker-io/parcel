@@ -11,12 +11,10 @@ if (Sys.which("csvlink") == "") {
 
 td <- tempdir()
 
-d_ref <-
-  CODECtools::read_tdr_csv(fs::path_package("parcel", "cagis_parcels")) |>
+CODECtools::read_tdr_csv(fs::path_package("parcel", "cagis_parcels")) |>
   select(parcel_id, parcel_address) |>
-  mutate(parcel_address_stub = create_address_stub(parcel_address, filter_zip = FALSE))
-  
-write_csv(d_ref, fs::path(td, "d_ref.csv"))
+  mutate(parcel_address_stub = create_address_stub(parcel_address, filter_zip = FALSE)) |>
+  write_csv(fs::path(td, "d_ref.csv"))
 
 d <-
   read_csv("Hospital Admissions.csv",
@@ -45,36 +43,27 @@ withr::with_dir(td, {
 })
 # recall_weight is how many times more we care about recall (i.e. sens) compared to precision (i.e., PPV)
 
-# TODO more than one match per address?
-# 400 Pike St Unit 514...
-
+# TODO fix the temporary choice to return the first match if more than one match is returned
 result <-
   readr::read_csv(fs::path(td, "inner.csv"), col_types = "c") |>
-  filter(!is.na(parcel_address_stub)) |>
-  select(parcel_id, patient_address_stub) |>
-  distinct()
+  select(patient_address_stub, parcel_id) |>
+  distinct() |>
+  group_by(patient_address_stub) |>
+  summarize(parcel_id = parcel_id[1], .groups = "drop")
 
-d_out <- left_join(d, result, by = c("PAT_ENC_CSN_ID", "patient_address_stub"))
-
-nrow(d_out) - nrow(d) # increased by this many rows (multiple address matches?)
+d_out <- left_join(d, result, by = c("patient_address_stub"))
 
 readr::write_csv(d_out, "riseup_parcel_matches.csv")
 
 message("matched among hamilton zipcode encounters:")
-out |>
+d_out |>
+  filter(!is.na(patient_address_stub)) |>
   group_by(!is.na(parcel_id)) |>
-  summarize(n =n()) |>
+  summarize(n = n()) |>
   mutate(`%` = scales::percent(n / sum(n)))
-
-# matching 65% of hamilton zipcode encounters
-
-d_out <- left_join(d, out, by = c("patient_address", "PAT_ENC_CSN_ID", "HOSP_ADMSN_TIME", "PAT_MRN_ID"))
 
 message("matched among all encounters:")
 d_out |>
   group_by(!is.na(parcel_id)) |>
-  summarize(n =n()) |>
+  summarize(n = n()) |>
   mutate(`%` = scales::percent(n / sum(n)))
-
-# matching 40% of all encounters
-
