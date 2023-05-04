@@ -11,7 +11,7 @@ if (Sys.which("csvlink") == "") {
 
 td <- tempdir()
 
-CODECtools::read_tdr_csv(fs::path_package("parcel", "cagis_parcels")) |>
+codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels")) |>
   select(parcel_id, parcel_address) |>
   mutate(parcel_address_stub = create_address_stub(parcel_address, filter_zip = FALSE)) |>
   write_csv(fs::path(td, "d_ref.csv"))

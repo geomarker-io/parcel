@@ -10,52 +10,19 @@ The goal of parcel is to provide tools for matching real-world addresses to refe
 
 With this specific goal in mind, parcel includes:
 
-- **`tag_address()`**: tag components from address character strings using the python `usaddress` library
-- **`create_address_stub()`**: create addresses based on street numbers and names for matching to CAGIS parcel data
-- **`expand_address()`**: to expand addresses based on abbreviations using the postal Docker container
-- **`hashdress()`**: hash expanded address lists created by `expand_address()`
-- **`add_parcel_id()`**: add CAGIS parcel ID using the hashdress method
-- **`csvlink.R`**: an example script for how match input addresses to CAGIS parcel identifiers using the python `csvdedupe` and `dedupe-variable-address`
-
-Address matching can be completed via two methods: hashdressing and deduplication
-
-## Hashdressing
-
-Address matching is completed by calculating the "hashdress", in which an address is cleaned, parsed into components, combined into a "parsed_address", and 'expanded' into all possible addresses based on abbreviations. (See the [DeGAUSS](https://degauss.org) [postal](https://github.com/degauss-org/postal#geomarker-methods) container for details.) The cleaned, parsed, and expanded addresses are then each hashed to create a unique set of hashdress identifers for a specific address, termed "hashdresses":
-
-```mermaid
-graph LR
-    subgraph clean/parse
-    addr(address) --> paddr(parsed address)
-    end	
-    subgraph expand
-    paddr --> expanded_address_1 & expanded_address_2 & expanded_address_3
-    end	
-    expanded_address_1 --> hashed_address_1	
-    expanded_address_2 --> hashed_address_2	
-    expanded_address_3 --> hashed_address_3	
-    subgraph hash
-    hashed_address_1
-    hashed_address_2
-    hashed_address_3
-    end	
-    hashed_address_1 & hashed_address_2 & hashed_address_3 --> hddr(hashdresses)
-    subgraph combine
-    hddr
-    end	
-```
-
-## Deduplication
-
-See an example script for this approach in the package (`fs::path_package("parcel", "csvlink.R")`)
+- **`tag_address()`**: a function to tag components in addresses using the python `usaddress` library
+- **`create_address_stub()`**: a function to create shortened addresses based on street numbers and names for matching to CAGIS parcel data
+- **`csvlink.R`**: an example script for how match input addresses to CAGIS parcel identifiers (`fs::path_package("parcel", "csvlink.R")`
 
 ## Installation
 
-*Both* the hashdressing and the deduplication approach rely on the `usaddress` python module, which can be installed from inside R with: `py_install("usaddress", pip = TRUE)`
+{parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, which can be installed from inside R with:
 
-*Only* the hashdressing approach relies on system calls to [Docker](https://www.docker.com/), which must be installed and available.
+```r
+py_install("usaddress", pip = TRUE)
+```
 
-*Only* the deduplication approach relies on the `csvdedupe` and `dedupe-variable-address` python libraries being installed:
+The deduplication-based matching approach requires the `csvdedupe` and `dedupe-variable-address` python modules, which can be installed from inside R with:
 
 ```r
 if (Sys.which("csvlink") == "") {
@@ -64,7 +31,7 @@ if (Sys.which("csvlink") == "") {
 }
 ```
 
-You can install the development version of parcel with:
+The development version of parcel can be installed with:
 
 ``` r
 renv::install("geomarker-io/parcel")
@@ -72,10 +39,10 @@ renv::install("geomarker-io/parcel")
 
 ## CAGIS Parcels Data Details
 
-The CAGIS Parcels tabular data resource is created using the `1_make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`CODECtools`](https://geomarker.io/CODECtools)}:
+The CAGIS Parcels tabular data resource is created using the `make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`CODECtools`](https://geomarker.io/CODECtools)}:
 
 ```r
-CODECtools::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
+codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
 
 # without CODECtools:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))

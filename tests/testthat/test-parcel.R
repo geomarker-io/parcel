@@ -54,31 +54,6 @@ test_that("create_address_stub works", {
 })
 
 
-test_that("expand_address and hashdress works", {
-  skip_on_ci()
-  expands <-
-    expand_addresses(c(
-      "224 Woolper Ave Cincinnati OH 45220",
-      "222 East Central Parkway Cincinnati OH 45220",
-      "352 Helen St Cincinnati OH 45202",
-      "5377 Bahama Ter Apt 1 Cincinnati Ohio 45223",
-      "5377 Bahama Te Apt 1 Cincinnati Ohio 45223",
-      "1851 Campbell Dr Hamilton Ohio 45011", # outside hamilton county
-      "2 Maplewood Dr Ryland Heights, KY 41015", # outside ohio
-      "222 East Central Parkway Cincinnati OH 45220", # non-residential
-      "736 South fredshuttles Apt 3 CINCINNATI Ohio 45229", # parsed as "house", not "house_number" and "road"
-      "NA"
-    ))
-  expect_equal(length(expands), 10)
-  expect_equal(sapply(expands, length), c(2, 2, 4, 1, 1, 2, 6, 2, 1, 1))
-  expect_identical(is.na(expands[[10]]), TRUE)
-  expect_identical(expands[[9]], "cincinnati ohio 45229")
-  expands_hd <- hashdress(expands)
-  expect_equal(length(expands_hd), 10)
-  expect_equal(sapply(expands_hd, length), c(2, 2, 4, 1, 1, 2, 6, 2, 1, 1))
-  expect_equal(expands_hd[[1]], c("51631215fa206a2d09c55d8feb505b85", "92c767e558294f4f9a8692c2f22d22d4"))
-})
-
 ## test_that("add_parcel_id works", {
 ##   skip_on_ci()
 
