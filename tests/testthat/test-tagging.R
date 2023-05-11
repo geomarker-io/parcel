@@ -5,8 +5,8 @@ skip_if_no_dedupe <- function() {
   }
 }
 
-cagis_parcel <-
-  codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels")) |>
-  dplyr::select(-property_addr_number, -property_addr_street, -property_addr_suffix)
+## cagis_parcel <-
+##   codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels")) |>
+##   dplyr::select(-property_addr_number, -property_addr_street, -property_addr_suffix)
 
-cagis_parcel$parcel_address_stub <- create_address_stub(cagis_parcel$parcel_address, filter_zip = FALSE)
+## cagis_parcel$parcel_address_stub <- create_address_stub(cagis_parcel$parcel_address, filter_zip = FALSE)

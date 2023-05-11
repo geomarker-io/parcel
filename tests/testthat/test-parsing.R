@@ -7,13 +7,23 @@ skip_if_no_usaddress <- function() {
 
 test_that("tag_address works", {
   skip_if_no_usaddress()
-  tag_address("3333 Burnet Ave Cincinnati OH 45219") |>
+  tag_address("3333 Burnet Ave Cincinnati OH 45219", clean = FALSE) |>
     expect_identical(
       tibble::tibble(
         street_number = "3333",
         street_name = "Burnet Ave",
         city = "Cincinnati",
         state = "OH",
+        zip_code = "45219"
+      )
+    )
+  tag_address("3333 Burnet Ave Cincinnati OH 45219") |>
+    expect_identical(
+      tibble::tibble(
+        street_number = "3333",
+        street_name = "burnet ave",
+        city = "cincinnati",
+        state = "oh",
         zip_code = "45219"
       )
     )
