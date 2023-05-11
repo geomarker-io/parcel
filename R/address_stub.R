@@ -1,4 +1,4 @@
-#' prepare addresses for matching to CAGIS Parcel data
+#' extract the street number and name (i.e., "address stub") from address text
 #'
 #' Input addresses are cleaned (convert to lowercase, remove
 #' non-alphanumeric characters and excess whitespace) and then
@@ -10,6 +10,7 @@
 #' 5-digit ZIP code in Hamilton County will have a missing address stub.
 #' @param .x a vector of address character strings
 #' @param filter_zip force addresses with non-Hamilton ZIP codes to have a missing address_stub?
+#' (i.e., `cincy::zcta_tigris_2020$zcta_2020`)
 #' @return a vector of cleaned address stubs (street_number + street_name)
 #' @export
 create_address_stub <- function(.x, filter_zip = TRUE) {
