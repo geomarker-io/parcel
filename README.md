@@ -19,16 +19,36 @@ With this specific goal in mind, parcel includes:
 {parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, which can be installed from inside R with:
 
 ```r
-py_install("usaddress", pip = TRUE)
+reticulate::py_install("usaddress", pip = TRUE)
 ```
 
-The deduplication-based matching approach requires the `csvdedupe` and `dedupe-variable-address` python modules, which can be installed from inside R with:
+<!-- The deduplication-based matching approach requires the `csvdedupe` and `dedupe-variable-address` python modules, which can be installed from inside R with: -->
+
+<!-- ```r -->
+<!-- if (Sys.which("csvlink") == "") { -->
+<!--   reticulate::py_install('csvdedupe', pip = TRUE) -->
+<!--   reticulate::py_install('dedupe-variable-address') -->
+<!-- } -->
+<!-- ``` -->
+
+
+`reticulate::py_install()` assumes a non-system version of Python is already installed.
+If not, it will ask you to install one via Miniconda. Don't do this; use virtualenv instead:
 
 ```r
-if (Sys.which("csvlink") == "") {
-  reticulate::py_install('csvdedupe', pip = TRUE)
-  reticulate::py_install('dedupe-variable-address')
-}
+library(reticulate)
+install_python("3.9.12")
+virtualenv_create("r-parcel", version = "3.9.12")
+use_virtualenv("r-parcel")
+py_install("usaddress", pip = TRUE)
+py_module_available("usaddress")
+```
+
+To help R find this virtualenv for every session, either `use_virtualenv("r-parcel")` should be run in every R session *or*, better yet, by setting the `RETICULATE_PYTHON` environment variable in a user- or project-specific `.Renviron` file. You can check on which python installation chosen to be used by reticulate and why by using:
+
+```r
+reticulate::py_config()
+reticulate::py_list_packages()
 ```
 
 The development version of parcel can be installed with:
