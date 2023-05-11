@@ -11,6 +11,7 @@
 #' @param .x a vector of address character strings
 #' @param filter_zip force addresses with non-Hamilton ZIP codes to have a missing address_stub?
 #' @return a vector of cleaned address stubs (street_number + street_name)
+#' @export
 create_address_stub <- function(.x, filter_zip = TRUE) {
 
   clean_addresses <-
