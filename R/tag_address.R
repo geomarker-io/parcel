@@ -1,8 +1,27 @@
-#' tag components of an address using the `usaddress` python library
+#' clean address text
+#' TODO add tests
 #' 
-#' This function relies on usaddress package https://usaddress.readthedocs.io/en/latest/
+## convert to lowercase, remove non-alphanumeric characters and excess whitespace
+#' @param .x a vector of address character strings
+#' @return a vector of cleaned addresses
+#' @export
+clean_address <- function(.x) {
+    .x |>
+    stringr::str_replace_all(stringr::fixed("\\"), "") |>
+    stringr::str_replace_all(stringr::fixed("\""), "") |>
+    stringr::str_replace_all("[^a-zA-Z0-9-]", " ") |>
+    stringr::str_squish() |>
+    tolower()
+  }
+
+
+#' tag components of an address
+#' 
+#' This function relies on `usaddress` python library https://usaddress.readthedocs.io/en/latest/
 #' It can be installed to a python virtual environment specific to R with:
-#' `py_install("usaddress", pip = TRUE)`
+#' `py_install("usaddress", pip = TRUE)` (See the README for more details on installing
+#' and managing non-system installations of python with {reticulate}.
+#' 
 #' This function uses a custom tag mapping to combine address components into the columns in the returned tibble
 #' (see https://usaddress.readthedocs.io/en/latest/#details for full definition of components):
 #'
@@ -13,11 +32,12 @@
 #' - `zip`: the **first five characters** of `ZipCode`
 #' 
 #' If an address is not classified as a `Street Address` (i.e. `Intersection`, `PO Box`, or `Ambiguous`),
-#' then the columns in the returned component tibble will all be NA
+#' then the columns in the returned component tibble will all be missing.
 #' @param address a character string that is a United States mailing address
+#' @param clean clean addresses with `clean_address()` prior to tagging?
 #' @return a tibble with `street_number`, `street_name`, `city`, `state`, and `zip_code` columns
 #' @export
-tag_address <- function(address) {
+tag_address <- function(address, clean = TRUE) {
 
   out_template <-
     tibble::tibble(
@@ -27,6 +47,8 @@ tag_address <- function(address) {
       "state" = NA,
       "zip_code" = NA
     )
+
+  if(clean) address <- clean_address(address)
 
   safe_tag <- purrr::possibly(usaddress$tag, otherwise = list(out_template, "repeated_label_error"))
   
