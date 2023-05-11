@@ -38,7 +38,6 @@ clean_address <- function(.x) {
 #' @return a tibble with `street_number`, `street_name`, `city`, `state`, and `zip_code` columns
 #' @export
 tag_address <- function(address, clean = TRUE) {
-
   out_template <-
     tibble::tibble(
       "street_number" = NA,
@@ -47,11 +46,8 @@ tag_address <- function(address, clean = TRUE) {
       "state" = NA,
       "zip_code" = NA
     )
-
   if(clean) address <- clean_address(address)
-
   safe_tag <- purrr::possibly(usaddress$tag, otherwise = list(out_template, "repeated_label_error"))
-  
   tags <-
     safe_tag(address,
                   tag_mapping =

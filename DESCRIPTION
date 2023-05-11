@@ -11,6 +11,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
     cincy (>= 1.0.0),
+    codec (>= 0.6.0),
     purrr,
     reticulate,
     stringr,
@@ -19,7 +20,8 @@ Imports:
 Suggests: 
     testthat (>= 3.0.0)
 Remotes: 
-    geomarker-io/cincy
+    geomarker-io/cincy,
+    geomarker-io/codec
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
