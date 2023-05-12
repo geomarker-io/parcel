@@ -13,5 +13,6 @@ clean_address(.x)
 a vector of cleaned addresses
 }
 \description{
-clean address text
+convert to lowercase, remove non-alphanumeric characters and excess whitespace
+(adapted from degauss-org/dht::clean_address)
 }
