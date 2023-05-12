@@ -22,16 +22,6 @@ With this specific goal in mind, parcel includes:
 reticulate::py_install("usaddress", pip = TRUE)
 ```
 
-<!-- The deduplication-based matching approach requires the `csvdedupe` and `dedupe-variable-address` python modules, which can be installed from inside R with: -->
-
-<!-- ```r -->
-<!-- if (Sys.which("csvlink") == "") { -->
-<!--   reticulate::py_install('csvdedupe', pip = TRUE) -->
-<!--   reticulate::py_install('dedupe-variable-address') -->
-<!-- } -->
-<!-- ``` -->
-
-
 `reticulate::py_install()` assumes a non-system version of Python is already installed.
 If not, it will ask you to install one via Miniconda. Don't do this; use virtualenv instead:
 
@@ -59,7 +49,7 @@ renv::install("geomarker-io/parcel")
 
 ## CAGIS Parcels Data Details
 
-The CAGIS Parcels tabular data resource is created using the `make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`CODECtools`](https://geomarker.io/CODECtools)}:
+The CAGIS Parcels tabular data resource is created using the `make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`codec`](https://geomarker.io/codec)}:
 
 ```r
 codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
@@ -74,7 +64,7 @@ Auditor parcel-level data were excluded if they (1) did not contain a parcel ide
 
 Parcels with the following land use categories are included in the data resource and others are excluded.  These were selected to reflect *residential* usages of parcels.
 
-|land_use                        |      n|
+|`land_use`                      |n parcels|
 |:-------------------------------|------:|
 |single family dwelling          | 212,059|
 |residential vacant land         |  24,585|
@@ -105,9 +95,9 @@ Parcels with the following land use categories are included in the data resource
 
 ### Estimating the number of households per parcel
 
-We assume the following number of households per parcel.  (This is used in any calculation needs to be weighted by households instead of parcel; e.g. "What fraction of families live near roadway in Avondale?")
+Certain calculations needs to be weighted by households instead of parcel; e.g. "What fraction of families live near roadway in Avondale?".  We assume the following as a conservative estimate of the number of households per parcel for each `land_use` code:
 
-|land_use                        |n_households|
+|`land_use`                        |n households|
 |:-------------------------------|------:|
 |single family dwelling          |1|
 |condominium unit                |1|
