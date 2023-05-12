@@ -13,7 +13,6 @@
 #' @return a vector of cleaned address stubs (street_number + street_name)
 #' @export
 create_address_stub <- function(.x, filter_zip = TRUE, ...) {
-
   tagged_addresses <-
     purrr::map(.x, tag_address, .progress = "tagging addresses", ...) |>
     purrr::list_rbind()

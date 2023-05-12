@@ -18,13 +18,16 @@ codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels")) |>
 
 d <-
   read_csv("Hospital Admissions.csv",
-           na = c("NA", "-", "NULL"),
-           col_types = cols_only(PAT_ENC_CSN_ID = col_character(),
-                                 PAT_ADDR_1 = col_character(),
-                                 PAT_ADDR_2 = col_character(),
-                                 PAT_CITY = col_character(),
-                                 PAT_STATE = col_character(),
-                                 PAT_ZIP = col_character())) |>
+    na = c("NA", "-", "NULL"),
+    col_types = cols_only(
+      PAT_ENC_CSN_ID = col_character(),
+      PAT_ADDR_1 = col_character(),
+      PAT_ADDR_2 = col_character(),
+      PAT_CITY = col_character(),
+      PAT_STATE = col_character(),
+      PAT_ZIP = col_character()
+    )
+  ) |>
   tidyr::unite(
     "patient_address",
     c(PAT_ADDR_1, PAT_ADDR_2, PAT_CITY, PAT_STATE, PAT_ZIP),
