@@ -1,7 +1,7 @@
 #' clean address text
-#' TODO add tests
 #' 
-## convert to lowercase, remove non-alphanumeric characters and excess whitespace
+#' convert to lowercase, remove non-alphanumeric characters and excess whitespace
+#' (adapted from degauss-org/dht::clean_address)
 #' @param .x a vector of address character strings
 #' @return a vector of cleaned addresses
 #' @export

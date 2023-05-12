@@ -2,24 +2,27 @@
 % Please edit documentation in R/tag_address.R
 \name{tag_address}
 \alias{tag_address}
-\title{tag components of an address using the \code{usaddress} python library}
+\title{tag components of an address}
 \usage{
-tag_address(address)
+tag_address(address, clean = TRUE)
 }
 \arguments{
 \item{address}{a character string that is a United States mailing address}
+
+\item{clean}{clean addresses with \code{clean_address()} prior to tagging?}
 }
 \value{
 a tibble with \code{street_number}, \code{street_name}, \code{city}, \code{state}, and \code{zip_code} columns
 }
 \description{
-This function relies on usaddress package https://usaddress.readthedocs.io/en/latest/
+This function relies on \code{usaddress} python library https://usaddress.readthedocs.io/en/latest/
 It can be installed to a python virtual environment specific to R with:
-\code{py_install("usaddress", pip = TRUE)}
-This function uses a custom tag mapping to combine address components into the columns in the returned tibble
-(see https://usaddress.readthedocs.io/en/latest/#details for full definition of components):
+\code{py_install("usaddress", pip = TRUE)} (See the README for more details on installing
+and managing non-system installations of python with {reticulate}.
 }
 \details{
+This function uses a custom tag mapping to combine address components into the columns in the returned tibble
+(see https://usaddress.readthedocs.io/en/latest/#details for full definition of components):
 \itemize{
 \item \code{street_number}: \code{AddressNumber}, \code{AddressNumberPrefix}, \code{AddressNumberSuffix}
 \item \code{street_name}: \code{StreetName}, \code{StreetNamePreDirectional}, \code{StreetNamePostDirectional}, \code{StreetNamePostModifier}, \code{StreetNamePostType}
@@ -29,5 +32,5 @@ This function uses a custom tag mapping to combine address components into the c
 }
 
 If an address is not classified as a \verb{Street Address} (i.e. \code{Intersection}, \verb{PO Box}, or \code{Ambiguous}),
-then the columns in the returned component tibble will all be NA
+then the columns in the returned component tibble will all be missing.
 }
