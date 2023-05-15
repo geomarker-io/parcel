@@ -24,8 +24,10 @@ create_address_stub <- function(.x, filter_zip = TRUE, ...) {
   address_stubs[is.na(address_stubs$street_number), "address_stub"] <- NA
   address_stubs[is.na(address_stubs$street_name), "address_stub"] <- NA
   if (filter_zip) {
+    if (! "zip_code" %in% names(address_stubs)) {
+      stop("there are no zip codes found, but zip code filtering was requested; try specifying filter_zip = FALSE", call. = FALSE)
+    }
     address_stubs[!address_stubs$zip_code %in% cincy::zcta_tigris_2020$zcta_2020, "address_stub"] <- NA
   }
-
   return(address_stubs$address_stub)
 }

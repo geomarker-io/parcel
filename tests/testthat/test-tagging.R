@@ -43,6 +43,20 @@ test_that("tag_address returns empty data.frame if repeated label error happens"
     )
 })
 
+test_that("create_address_stub works on addresses without zipcodes", {
+  skip_if_no_usaddress()
+  c("222 east central parkway", "352 Helen St", "224 Woolper Ave") |>
+    create_address_stub(filter_zip = FALSE) |>
+    expect_equal(c("222 east central parkway", "352 helen st", "224 woolper ave"))
+  })
+
+test_that("create_address_stub gives helpful error message on addresses without zipcodes and default setting of filter_zip=TRUE", {
+  skip_if_no_usaddress()
+  c("222 east central parkway", "352 Helen St", "224 Woolper Ave") |>
+    create_address_stub() |>
+    expect_error(regexp = "there are no zip codes found")
+  })
+
 test_that("create_address_stub works", {
   skip_if_no_usaddress()
   c(
