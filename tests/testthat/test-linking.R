@@ -1,4 +1,13 @@
+skip_if_no_dedupe <- function() {
+  have_dedupe <- reticulate::py_module_available("dedupe")
+  if (!have_dedupe) {
+    skip("dedupe python module not available for testing")
+  }
+}
+
+
 test_that("link_parcel works", {
+  skip_if_no_dedupe()
 
   my_addresses <- c(
     "224 Woolper Ave Cincinnati OH 45220",
@@ -8,7 +17,7 @@ test_that("link_parcel works", {
     "5377 Bahama Te Apt 1 Cincinnati Ohio 45223",
     "1851 Campbell Dr Hamilton Ohio 45011", # outside hamilton county
     "2 Maplewood Dr Ryland Heights, KY 41015", # outside ohio
-    "736 South fredshuttles Apt 3 CINCINNATI Ohio 45229" # parsed as "house", not "house_number" and "road"
+    "736 South fredshuttles Apt 3 CINCINNATI Ohio 45229"
   )
 
   my_addr_links <- link_parcel(my_addresses)
