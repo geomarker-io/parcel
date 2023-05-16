@@ -25,8 +25,10 @@ coords <-
 
 rd <-
   rd |>
-  mutate(parcel_centroid_lon = coords[, "X"],
-         parcel_centroid_lat = coords[, "Y"]) |>
+  mutate(
+    parcel_centroid_lon = coords[, "X"],
+    parcel_centroid_lat = coords[, "Y"]
+  ) |>
   st_drop_geometry(d) |>
   tibble::as_tibble()
 
@@ -50,12 +52,14 @@ d <-
   ) |>
   mutate(parcel_centroid_lat = rd$parcel_centroid_lat) |>
   add_col_attrs(parcel_centroid_lat,
-                title = "Parcel Centroid Latitude",
-                description = "coordinates derived from centroid of parcel shape") |>
+    title = "Parcel Centroid Latitude",
+    description = "coordinates derived from centroid of parcel shape"
+  ) |>
   mutate(parcel_centroid_lon = rd$parcel_centroid_lon) |>
   add_col_attrs(parcel_centroid_lon,
-                title = "Parcel Centroid Longitude",
-                description = "coordinates derived from centroid of parcel shape") |>
+    title = "Parcel Centroid Longitude",
+    description = "coordinates derived from centroid of parcel shape"
+  ) |>
   mutate(market_total_value = rd$MKT_TOTAL_VAL) |>
   add_col_attrs(market_total_value,
     title = "Market Total Value"
@@ -131,12 +135,15 @@ d <- d |>
 nrow(d) # 286,059
 
 d <- d |>
-  tidyr::unite(col = "parcel_address",
-               tidyselect::any_of(c("property_addr_number", "property_addr_street", "property_addr_suffix")),
-               sep = " ", na.rm = TRUE, remove = FALSE) |>
+  tidyr::unite(
+    col = "parcel_address",
+    tidyselect::any_of(c("property_addr_number", "property_addr_street", "property_addr_suffix")),
+    sep = " ", na.rm = TRUE, remove = FALSE
+  ) |>
   add_col_attrs(parcel_address,
-                title = "Parcel Address",
-                description = "derived by pasting Property Address Number, Street, and Suffix")
+    title = "Parcel Address",
+    description = "derived by pasting Property Address Number, Street, and Suffix"
+  )
 
 d <-
   d |>

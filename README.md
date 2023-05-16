@@ -10,25 +10,37 @@ The goal of parcel is to provide tools for matching real-world addresses to refe
 
 With this specific goal in mind, parcel includes:
 
-- **`tag_address()`**: a function to tag components in addresses using the python `usaddress` library
-- **`create_address_stub()`**: a function to create shortened addresses based on street numbers and names for matching to CAGIS parcel data
-- **`csvlink.R`**: an example script for how match input addresses to CAGIS parcel identifiers (`fs::path_package("parcel", "csvlink.R")`
+- functions for cleaning and tagging components of addresses: **`clean_address()`**, **`tag_address()`**, and **`create_address_stub()`**
+- the `cagis_parcels` CoDEC tabular-data-resource
+- functions for joining addresses to parcel identifiers based on an included model pretrained on electronic health record addresses in Hamilton County, OH: **`link_parcel()`**
 
 ## Installation
 
-{parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, which can be installed from inside R with:
+{parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, as well as the `dedupe` and `dedupe-variable-address` python modules for matching addresses, all of which can be installed from inside R with:
 
 ```r
-py_install("usaddress", pip = TRUE)
+reticulate::py_install("usaddress", pip = TRUE)
+reticulate::py_install("dedupe", pip = TRUE)
+reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
-The deduplication-based matching approach requires the `csvdedupe` and `dedupe-variable-address` python modules, which can be installed from inside R with:
+`reticulate::py_install()` assumes a non-system version of Python is already installed.
+If not, it will ask you to install one via Miniconda. Don't do this; use virtualenv instead:
 
 ```r
-if (Sys.which("csvlink") == "") {
-  reticulate::py_install('csvdedupe', pip = TRUE)
-  reticulate::py_install('dedupe-variable-address')
-}
+library(reticulate)
+install_python("3.9.12")
+virtualenv_create("r-parcel", version = "3.9.12")
+use_virtualenv("r-parcel")
+py_install("usaddress", pip = TRUE)
+py_module_available("usaddress")
+```
+
+To help R find this virtualenv for every session, either `use_virtualenv("r-parcel")` should be run in every R session *or*, better yet, by setting the `RETICULATE_PYTHON` environment variable in a user- or project-specific `.Renviron` file. You can check on which python installation chosen to be used by reticulate and why by using:
+
+```r
+reticulate::py_config()
+reticulate::py_list_packages()
 ```
 
 The development version of parcel can be installed with:
@@ -39,10 +51,10 @@ renv::install("geomarker-io/parcel")
 
 ## CAGIS Parcels Data Details
 
-The CAGIS Parcels tabular data resource is created using the `make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`CODECtools`](https://geomarker.io/CODECtools)}:
+The CAGIS Parcels tabular data resource is created using the `01_make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`codec`](https://geomarker.io/codec)}:
 
 ```r
-codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
+codec::codec_data("cagis_parcels")
 
 # without CODECtools:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
@@ -54,7 +66,7 @@ Auditor parcel-level data were excluded if they (1) did not contain a parcel ide
 
 Parcels with the following land use categories are included in the data resource and others are excluded.  These were selected to reflect *residential* usages of parcels.
 
-|land_use                        |      n|
+|`land_use`                      |n parcels|
 |:-------------------------------|------:|
 |single family dwelling          | 212,059|
 |residential vacant land         |  24,585|
@@ -85,9 +97,9 @@ Parcels with the following land use categories are included in the data resource
 
 ### Estimating the number of households per parcel
 
-We assume the following number of households per parcel.  (This is used in any calculation needs to be weighted by households instead of parcel; e.g. "What fraction of families live near roadway in Avondale?")
+Certain calculations needs to be weighted by households instead of parcel; e.g. "What fraction of families live near roadway in Avondale?".  We assume the following as a conservative estimate of the number of households per parcel for each `land_use` code:
 
-|land_use                        |n_households|
+|`land_use`                        |n households|
 |:-------------------------------|------:|
 |single family dwelling          |1|
 |condominium unit                |1|
