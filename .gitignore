@@ -3,3 +3,5 @@
 /inst/*.gdb
 /Hospital Admissions.csv
 /.Renviron
+/inst/training.json
+training.json
