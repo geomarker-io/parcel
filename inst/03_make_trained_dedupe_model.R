@@ -1,7 +1,6 @@
 # make sure {parcel} is loaded to access read/write paths inside package during development
 
 library(reticulate)
-py <- import_builtins()
 
 patient_address <-
   readr::read_csv("Hospital Admissions.csv",
@@ -38,7 +37,6 @@ data_in <-
 gaz <-
   dedupe$RecordLink(
     variable_definition = list(list(field = "address", type = "Address")),
-    num_cores = 1,
     in_memory = TRUE)
 
 gaz$prepare_training(data_1 = data_in,
@@ -60,13 +58,3 @@ with(py$open(settings_fl, "wb") %as% f, {
   gaz$write_settings(f)
 })
 
-##### how it would be called in a function to match new input addresses:
-with(py$open(fs::path(fs::path_package("parcel"), "learned_settings"), "rb") %as% f, {
-  gaz <<- dedupe$StaticRecordLink(f)
-})
-
-links <-
-  gaz$join(data_1 = data_in,
-           data_2 = readRDS(fs::path_package("parcel", "parcel_address_stubs.rds")),
-           threshold = 0.5,
-           constraint = "many-to-many")

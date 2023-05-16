@@ -2,17 +2,17 @@ usaddress <- NULL
 dedupe <- NULL
 
 .onLoad <- function(libname, pkgname) {
-  usaddress <<- reticulate::import("usaddress", delay_load = TRUE)
-  dedupe <<- reticulate::import("dedupe", delay_load = TRUE)
+  usaddress <<- reticulate::import("usaddress", delay_load = TRUE, convert = TRUE)
+  dedupe <<- reticulate::import("dedupe", delay_load = TRUE, convert = FALSE)
+  py <<- reticulate::import_builtins(convert = TRUE)
 }
 
-utils::globalVariables(".id")
 utils::globalVariables("address")
+utils::globalVariables("input_address")
 utils::globalVariables("address_stub")
-utils::globalVariables("expanded_addresses")
-utils::globalVariables("hashdresses")
 utils::globalVariables("parcel")
-utils::globalVariables("expansions")
 utils::globalVariables("zip_code")
 utils::globalVariables("street_number")
 utils::globalVariables("street_name")
+utils::globalVariables("gaz")
+utils::globalVariables("f")

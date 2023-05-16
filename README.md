@@ -12,7 +12,7 @@ With this specific goal in mind, parcel includes:
 
 - **`tag_address()`**: a function to tag components in addresses using the python `usaddress` library
 - **`create_address_stub()`**: a function to create shortened addresses based on street numbers and names for matching to CAGIS parcel data
-- **`csvlink.R`**: an example script for how match input addresses to CAGIS parcel identifiers (`fs::path_package("parcel", "csvlink.R")`
+- **`link_parcel()`**: a function that uses a dedupe model pre-trained on electronic health record addresses in Hamilton County, OH to match them to parcel identifiers
 
 ## Installation
 
