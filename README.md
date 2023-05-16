@@ -10,9 +10,9 @@ The goal of parcel is to provide tools for matching real-world addresses to refe
 
 With this specific goal in mind, parcel includes:
 
-- **`tag_address()`**: a function to tag components in addresses using the python `usaddress` library
-- **`create_address_stub()`**: a function to create shortened addresses based on street numbers and names for matching to CAGIS parcel data
-- **`link_parcel()`**: a function that uses a dedupe model pre-trained on electronic health record addresses in Hamilton County, OH to match them to parcel identifiers
+- functions for cleaning and tagging components of addresses: **`clean_address()`**, **`tag_address()`**, and **`create_address_stub()`**
+- the `cagis_parcels` CoDEC tabular-data-resource
+- functions for joining addresses to parcel identifiers based on an included model pretrained on electronic health record addresses in Hamilton County, OH: **`link_parcel()`**
 
 ## Installation
 
@@ -51,10 +51,10 @@ renv::install("geomarker-io/parcel")
 
 ## CAGIS Parcels Data Details
 
-The CAGIS Parcels tabular data resource is created using the `make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`codec`](https://geomarker.io/codec)}:
+The CAGIS Parcels tabular data resource is created using the `01_make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`codec`](https://geomarker.io/codec)}:
 
 ```r
-codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
+codec::codec_data("cagis_parcels")
 
 # without CODECtools:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
