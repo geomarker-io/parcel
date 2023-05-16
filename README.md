@@ -16,10 +16,12 @@ With this specific goal in mind, parcel includes:
 
 ## Installation
 
-{parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, which can be installed from inside R with:
+{parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, as well as the `dedupe` and `dedupe-variable-address` python modules for matching addresses, all of which can be installed from inside R with:
 
 ```r
 reticulate::py_install("usaddress", pip = TRUE)
+reticulate::py_install("dedupe", pip = TRUE)
+reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
 `reticulate::py_install()` assumes a non-system version of Python is already installed.

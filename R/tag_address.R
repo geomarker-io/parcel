@@ -49,36 +49,37 @@ tag_address <- function(address, clean = TRUE) {
   safe_tag <- purrr::possibly(usaddress$tag, otherwise = list(out_template, "repeated_label_error"))
   tags <-
     safe_tag(address,
-      tag_mapping =
-        list(
-          "Recipient" = "name",
-          "AddressNumber" = "street_number",
-          "AddressNumberPrefix" = "street_number",
-          "AddressNumberSuffix" = "street_number",
-          "StreetName" = "street_name",
-          "StreetNamePreDirectional" = "street_name",
-          "StreetNamePreModifier" = "street_name",
-          "StreetNamePreType" = "street_name",
-          "StreetNamePostDirectional" = "street_name",
-          "StreetNamePostModifier" = "street_name",
-          "StreetNamePostType" = "street_name",
-          "CornerOf" = "corner",
-          "IntersectionSeparator" = "corner",
-          "LandmarkName" = "place",
-          "USPSBoxGroupID" = "address1",
-          "USPSBoxGroupType" = "address1",
-          "USPSBoxID" = "address1",
-          "USPSBoxType" = "address1",
-          "BuildingName" = "place",
-          "OccupancyType" = "address2",
-          "OccupancyIdentifier" = "address2",
-          "SubaddressIdentifier" = "address2",
-          "SubaddressType" = "address2",
-          "PlaceName" = "city",
-          "StateName" = "state",
-          "ZipCode" = "zip_code"
-        )
-    )
+             tag_mapping =
+               list(
+                 "Recipient" = "name",
+                 "AddressNumber" = "street_number",
+                 "AddressNumberPrefix" = "street_number",
+                 "AddressNumberSuffix" = "street_number",
+                 "StreetName" = "street_name",
+                 "StreetNamePreDirectional" = "street_name",
+                 "StreetNamePreModifier" = "street_name",
+                 "StreetNamePreType" = "street_name",
+                 "StreetNamePostDirectional" = "street_name",
+                 "StreetNamePostModifier" = "street_name",
+                 "StreetNamePostType" = "street_name",
+                 "CornerOf" = "corner",
+                 "IntersectionSeparator" = "corner",
+                 "LandmarkName" = "place",
+                 "USPSBoxGroupID" = "address1",
+                 "USPSBoxGroupType" = "address1",
+                 "USPSBoxID" = "address1",
+                 "USPSBoxType" = "address1",
+                 "BuildingName" = "place",
+                 "OccupancyType" = "address2",
+                 "OccupancyIdentifier" = "address2",
+                 "SubaddressIdentifier" = "address2",
+                 "SubaddressType" = "address2",
+                 "PlaceName" = "city",
+                 "StateName" = "state",
+                 "ZipCode" = "zip_code"
+               )
+             )
+  # TODO: how to return if type returned is PO Box? or intersection?
   if (!tags[[2]] == "Street Address") {
     return(out_template)
   }
@@ -90,6 +91,8 @@ tag_address <- function(address, clean = TRUE) {
       "state" = purrr::pluck(tags[[1]], "state"),
       "zip_code" = purrr::pluck(tags[[1]], "zip_code")
     )
-  if (any(nchar(out$zip_code) > 5)) out$zip_code <- substr(out$zip_code, 1, 5)
+  suppressWarnings({
+    if (any(nchar(out$zip_code) > 5)) out$zip_code <- substr(out$zip_code, 1, 5)
+  })
   return(out)
 }

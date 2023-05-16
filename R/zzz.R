@@ -1,7 +1,9 @@
 usaddress <- NULL
+dedupe <- NULL
 
 .onLoad <- function(libname, pkgname) {
   usaddress <<- reticulate::import("usaddress", delay_load = TRUE)
+  dedupe <<- reticulate::import("dedupe", delay_load = TRUE)
 }
 
 utils::globalVariables(".id")
