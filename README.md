@@ -49,6 +49,26 @@ The development version of parcel can be installed with:
 renv::install("geomarker-io/parcel")
 ```
 
+## Example Usage
+
+Use `get_parcel_data()` to get the corresponding parcel data for a vector of addresses:
+
+```r
+get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
+                  "419 Elm St. Cincinnati OH 45238",
+                  "3544 Linwood Av Cincinnati OH 45226"))
+
+#> # A tibble: 4 × 16
+#>   input_address         parcel_id score property_addr_number parcel_address property_addr_street property_addr_suffix
+#>   <chr>                 <chr>     <dbl> <chr>                <chr>          <chr>                <chr>               
+#> 1 1069 Overlook Avenue… 1800A800… 0.923 1069                 1069 OVERLOOK… OVERLOOK             AV                  
+#> 2 419 Elm St. Cincinna… 54000410… 0.928 419                  419 ELM ST     ELM                  ST                  
+#> 3 419 Elm St. Cincinna… 54000410… 0.928 419                  419 ELM ST     ELM                  ST                  
+#> 4 3544 Linwood Av Cinc… 01900010… 0.928 3544                 3544 LINWOOD … LINWOOD              AV                  
+#> # ℹ 9 more variables: parcel_centroid_lat <dbl>, parcel_centroid_lon <dbl>, market_total_value <dbl>,
+#> #   land_use <fct>, acreage <dbl>, homestead <lgl>, RED_25_FLAG <lgl>, annual_taxes <dbl>, unpaid_taxes <dbl>
+```
+
 ## CAGIS Parcels Data Details
 
 The CAGIS Parcels tabular data resource is created using the `01_make_cagis_parcels.R` script and stored in the package.  It can be loaded using {[`codec`](https://geomarker.io/codec)}:

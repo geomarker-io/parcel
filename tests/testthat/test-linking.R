@@ -5,7 +5,6 @@ skip_if_no_dedupe <- function() {
   }
 }
 
-
 test_that("link_parcel works", {
   skip_if_no_dedupe()
 
@@ -27,3 +26,16 @@ test_that("link_parcel works", {
   expect_equal(my_addr_links$parcel_id,
                c("2170054005900", "2270001008600", "2270001008600"))
   })
+
+test_that("get_parcel_data works", {
+  skip_if_no_dedupe()
+  out <-
+    c("352 Helen St Cincinnati OH 45202",
+    "5377 Bahama Ter Cincinnati Ohio 45223",
+    "1851 Campbell Dr Hamilton Ohio 45011") |>
+    get_parcel_data()
+  expect_equal(nrow(out), 3)
+  expect_equal(as.vector(out$homestead), c(NA, FALSE, NA))
+  expect_equal(as.vector(out$parcel_id), c(NA, "2270001008600", NA))
+  })
+

@@ -54,3 +54,28 @@ link_parcel <- function(x) {
 
   return(out)
 }
+
+#' return parcel data for input addresses
+#'
+#' This helper function produces a tibble of parcel data for an input vector of addresses.
+#' 
+#' Note that one address can be linked to more than one parcel (e.g.,
+#' "323 Fifth" on https://wedge3.hcauditor.org/search_results). In this case,
+#' only the first match is returned to prevent unintentionally duplicating rows.
+#' For finer control of selecting matched parcels based on scores, use `link_parcel()`
+#' @param x a vector of address character strings
+#' @return a tibble with the `input_address`es defined in `x` in the first column,
+#' and columns corresponding to matched parcel characteristics
+#' @export
+get_parcel_data <- function(x) {
+
+  parcel_links <- link_parcel(x)
+
+  d_parcel <- 
+    fs::path_package("parcel", "cagis_parcels") |>
+    codec::read_tdr_csv()
+
+  tibble::tibble(input_address = x) |>
+    dplyr::left_join(parcel_links, by = dplyr::join_by(input_address)) |>
+    dplyr::left_join(d_parcel, by = dplyr::join_by(parcel_id), multiple = "first")
+  }
