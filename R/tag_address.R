@@ -79,7 +79,6 @@ tag_address <- function(address, clean = TRUE) {
                  "ZipCode" = "zip_code"
                )
              )
-  # TODO: how to return if type returned is PO Box? or intersection?
   if (!tags[[2]] == "Street Address") {
     return(out_template)
   }
