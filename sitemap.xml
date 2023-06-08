@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://geomarker.io/parcel/404.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/authors.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/index.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/reference/clean_address.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/reference/create_address_stub.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/reference/get_parcel_data.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/reference/link_parcel.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/reference/reexports.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/parcel/reference/tag_address.html</loc>
+  </url>
+</urlset>
