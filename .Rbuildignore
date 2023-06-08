@@ -3,3 +3,6 @@
 ^\.github$
 inst/HAM_MERGE_PARCELS.gdb
 Hospital Admissions.csv
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
