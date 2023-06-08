@@ -93,111 +93,257 @@
 </h2>
 <p>Use <code><a href="reference/get_parcel_data.html">get_parcel_data()</a></code> to get the corresponding parcel data for a vector of addresses:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/get_parcel_data.html">get_parcel_data</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1069 Overlook Avenue Cincinnati OH 45238"</span>,</span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://geomarker.io/parcel/">parcel</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/get_parcel_data.html">get_parcel_data</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1069 Overlook Avenue Cincinnati OH 45238"</span>,</span>
 <span>                  <span class="st">"419 Elm St. Cincinnati OH 45238"</span>,</span>
 <span>                  <span class="st">"3544 Linwood Av Cincinnati OH 45226"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 16</span></span>
-<span><span class="co">#&gt;   input_address         parcel_id score property_addr_number parcel_address property_addr_street property_addr_suffix</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                 &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;          &lt;chr&gt;                &lt;chr&gt;               </span></span>
-<span><span class="co">#&gt; 1 1069 Overlook Avenue… 1800A800… 0.923 1069                 1069 OVERLOOK… OVERLOOK             AV                  </span></span>
-<span><span class="co">#&gt; 2 419 Elm St. Cincinna… 54000410… 0.928 419                  419 ELM ST     ELM                  ST                  </span></span>
-<span><span class="co">#&gt; 3 419 Elm St. Cincinna… 54000410… 0.928 419                  419 ELM ST     ELM                  ST                  </span></span>
-<span><span class="co">#&gt; 4 3544 Linwood Av Cinc… 01900010… 0.928 3544                 3544 LINWOOD … LINWOOD              AV                  </span></span>
-<span><span class="co">#&gt; # ℹ 9 more variables: parcel_centroid_lat &lt;dbl&gt;, parcel_centroid_lon &lt;dbl&gt;, market_total_value &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   land_use &lt;fct&gt;, acreage &lt;dbl&gt;, homestead &lt;lgl&gt;, RED_25_FLAG &lt;lgl&gt;, annual_taxes &lt;dbl&gt;, unpaid_taxes &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt;   input_address              parcel_id score property_addr_number parcel_address</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                      &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt; 1 1069 Overlook Avenue Cinc… 1800A800… 0.923 1069                 1069 OVERLOOK…</span></span>
+<span><span class="co">#&gt; 2 419 Elm St. Cincinnati OH… 54000410… 0.928 419                  419 ELM ST    </span></span>
+<span><span class="co">#&gt; 3 419 Elm St. Cincinnati OH… 54000410… 0.928 419                  419 ELM ST    </span></span>
+<span><span class="co">#&gt; 4 3544 Linwood Av Cincinnat… 01900010… 0.928 3544                 3544 LINWOOD …</span></span>
+<span><span class="co">#&gt; # ℹ 11 more variables: property_addr_street &lt;chr&gt;, property_addr_suffix &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   parcel_centroid_lat &lt;dbl&gt;, parcel_centroid_lon &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   market_total_value &lt;dbl&gt;, land_use &lt;fct&gt;, acreage &lt;dbl&gt;, homestead &lt;lgl&gt;,</span></span>
+<span><span class="co">#&gt; #   RED_25_FLAG &lt;lgl&gt;, annual_taxes &lt;dbl&gt;, unpaid_taxes &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="cagis-parcels-data-details">CAGIS Parcels Data Details<a class="anchor" aria-label="anchor" href="#cagis-parcels-data-details"></a>
 </h2>
 <p>The CAGIS Parcels tabular data resource is created using the <code>01_make_cagis_parcels.R</code> script and stored in the package. It can be loaded using {<a href="https://geomarker.io/codec" class="external-link"><code>codec</code></a>}:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">codec</span><span class="fu">::</span><span class="fu"><a href="http://geomarker.io/codec/reference/codec_data.html" class="external-link">codec_data</a></span><span class="op">(</span><span class="st">"cagis_parcels"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">d_parcel</span> <span class="op">&lt;-</span> <span class="fu">codec</span><span class="fu">::</span><span class="fu"><a href="http://geomarker.io/codec/reference/read_tdr_csv.html" class="external-link">read_tdr_csv</a></span><span class="op">(</span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_package.html" class="external-link">path_package</a></span><span class="op">(</span><span class="st">"parcel"</span>, <span class="st">"cagis_parcels"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d_parcel</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 14</span></span>
+<span><span class="co">#&gt;   parcel_id     property_addr_number parcel_address       property_addr_street</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;                &lt;chr&gt;                &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt; 1 6210024007000 210                  210 CARRINGTON PL    CARRINGTON          </span></span>
+<span><span class="co">#&gt; 2 6210024009200 220                  220 CARRINGTON PL    CARRINGTON          </span></span>
+<span><span class="co">#&gt; 3 6210024007100 210                  210 CARRINGTON PL    CARRINGTON          </span></span>
+<span><span class="co">#&gt; 4 6210024008200 220                  220 CARRINGTON PL    CARRINGTON          </span></span>
+<span><span class="co">#&gt; 5 5000122021500 8053                 8053 WITTS MILL LN   WITTS MILL          </span></span>
+<span><span class="co">#&gt; 6 5000122020900 8120                 8120 WITTS MEADOW LN WITTS MEADOW        </span></span>
+<span><span class="co">#&gt; # ℹ 10 more variables: property_addr_suffix &lt;chr&gt;, parcel_centroid_lat &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   parcel_centroid_lon &lt;dbl&gt;, market_total_value &lt;dbl&gt;, land_use &lt;fct&gt;,</span></span>
+<span><span class="co">#&gt; #   acreage &lt;dbl&gt;, homestead &lt;lgl&gt;, RED_25_FLAG &lt;lgl&gt;, annual_taxes &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   unpaid_taxes &lt;dbl&gt;</span></span>
 <span></span>
 <span><span class="co"># without CODECtools:</span></span>
 <span><span class="co"># read.csv(fs::path_package("parcel", "cagis_parcels"))</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>knitr.kable.NA <span class="op">=</span> <span class="st">''</span><span class="op">)</span></span>
+<span><span class="fu">codec</span><span class="fu">::</span><span class="fu"><a href="http://geomarker.io/codec/reference/glimpse_schema.html" class="external-link">glimpse_schema</a></span><span class="op">(</span><span class="va">d_parcel</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="2%">
+<col width="3%">
+<col width="8%">
+<col width="1%">
+<col width="83%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">name</th>
+<th align="left">title</th>
+<th align="left">description</th>
+<th align="left">type</th>
+<th align="left">constraints</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">parcel_id</td>
+<td align="left">Parcel Identifier</td>
+<td align="left">uniquely identifies properties; the auditor Parcel Number</td>
+<td align="left">string</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">property_addr_number</td>
+<td align="left">Address Number</td>
+<td align="left"></td>
+<td align="left">string</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">parcel_address</td>
+<td align="left">Parcel Address</td>
+<td align="left">derived by pasting Property Address Number, Street, and Suffix</td>
+<td align="left">string</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">property_addr_street</td>
+<td align="left">Address Street</td>
+<td align="left"></td>
+<td align="left">string</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">property_addr_suffix</td>
+<td align="left">Address Suffix</td>
+<td align="left"></td>
+<td align="left">string</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">parcel_centroid_lat</td>
+<td align="left">Parcel Centroid Latitude</td>
+<td align="left">coordinates derived from centroid of parcel shape</td>
+<td align="left">number</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">parcel_centroid_lon</td>
+<td align="left">Parcel Centroid Longitude</td>
+<td align="left">coordinates derived from centroid of parcel shape</td>
+<td align="left">number</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">market_total_value</td>
+<td align="left">Market Total Value</td>
+<td align="left"></td>
+<td align="left">number</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">land_use</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">string</td>
+<td align="left">apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, nursing home / private hospital, independent living (seniors), mobile home / trailer park, other commercial housing, office / apartment over, condominium office building, residential vacant land, resid unplat 10-19 acres, resid unplat 20-29 acres, resid unplat 30-39 acres, single family dwelling, single fam dw 0-9 acr, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority, charities, hospitals, retir</td>
+</tr>
+<tr class="even">
+<td align="left">acreage</td>
+<td align="left">Acreage</td>
+<td align="left"></td>
+<td align="left">number</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">homestead</td>
+<td align="left">Homestead</td>
+<td align="left"></td>
+<td align="left">boolean</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">RED_25_FLAG</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">boolean</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">annual_taxes</td>
+<td align="left">Annual Taxes</td>
+<td align="left"></td>
+<td align="left">number</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">unpaid_taxes</td>
+<td align="left">Unpaid Taxes</td>
+<td align="left">Calculated as <code>delinquent taxes</code> minus <code>delinquent taxes paid</code>
+</td>
+<td align="left">number</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
 <div class="section level3">
 <h3 id="inclusionexclusion-criteria-for-parcel-data">Inclusion/Exclusion Criteria for Parcel Data<a class="anchor" aria-label="anchor" href="#inclusionexclusion-criteria-for-parcel-data"></a>
 </h3>
 <p>Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) were complete duplicates.</p>
 <p>Parcels with the following land use categories are included in the data resource and others are excluded. These were selected to reflect <em>residential</em> usages of parcels.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">d_parcel</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">land_use</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n_parcels <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_parcels</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
-<th align="left"><code>land_use</code></th>
-<th align="right">n parcels</th>
+<th align="left">land_use</th>
+<th align="right">n_parcels</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">single family dwelling</td>
-<td align="right">212,059</td>
+<td align="right">213044</td>
 </tr>
 <tr class="even">
 <td align="left">residential vacant land</td>
-<td align="right">24,585</td>
+<td align="right">24309</td>
 </tr>
 <tr class="odd">
 <td align="left">condominium unit</td>
-<td align="right">19,731</td>
+<td align="right">19794</td>
 </tr>
 <tr class="even">
 <td align="left">two family dwelling</td>
-<td align="right">11,502</td>
+<td align="right">11352</td>
 </tr>
 <tr class="odd">
 <td align="left">apartment, 4-19 units</td>
-<td align="right">5,664</td>
+<td align="right">5659</td>
 </tr>
 <tr class="even">
 <td align="left">landominium</td>
-<td align="right">3,028</td>
+<td align="right">3047</td>
 </tr>
 <tr class="odd">
 <td align="left">three family dwelling</td>
-<td align="right">1,889</td>
+<td align="right">1863</td>
 </tr>
 <tr class="even">
 <td align="left">charities, hospitals, retir</td>
-<td align="right">1,479</td>
+<td align="right">1430</td>
 </tr>
 <tr class="odd">
 <td align="left">condo or pud garage</td>
-<td align="right">985</td>
+<td align="right">1069</td>
 </tr>
 <tr class="even">
 <td align="left">condominium office building</td>
-<td align="right">905</td>
+<td align="right">944</td>
 </tr>
 <tr class="odd">
 <td align="left">other residential structure</td>
-<td align="right">885</td>
+<td align="right">875</td>
 </tr>
 <tr class="even">
 <td align="left">metropolitan housing authority</td>
-<td align="right">743</td>
+<td align="right">744</td>
 </tr>
 <tr class="odd">
 <td align="left">apartment, 40+ units</td>
-<td align="right">562</td>
+<td align="right">625</td>
 </tr>
 <tr class="even">
 <td align="left">apartment, 20-39 units</td>
-<td align="right">464</td>
-</tr>
-<tr class="odd">
-<td align="left">office / apartment over</td>
-<td align="right">193</td>
-</tr>
-<tr class="even">
-<td align="left">boataminium</td>
-<td align="right">141</td>
+<td align="right">457</td>
 </tr>
 <tr class="odd">
 <td align="left">manufactured home</td>
-<td align="right">110</td>
+<td align="right">204</td>
+</tr>
+<tr class="even">
+<td align="left">office / apartment over</td>
+<td align="right">188</td>
+</tr>
+<tr class="odd">
+<td align="left">boataminium</td>
+<td align="right">141</td>
 </tr>
 <tr class="even">
 <td align="left">other commercial housing</td>
-<td align="right">100</td>
+<td align="right">99</td>
 </tr>
 <tr class="odd">
 <td align="left">nursing home / private hospital</td>
@@ -205,11 +351,11 @@
 </tr>
 <tr class="even">
 <td align="left">mobile home / trailer park</td>
-<td align="right">38</td>
+<td align="right">40</td>
 </tr>
 <tr class="odd">
 <td align="left">independent living (seniors)</td>
-<td align="right">35</td>
+<td align="right">38</td>
 </tr>
 <tr class="even">
 <td align="left">lihtc res</td>
@@ -217,7 +363,7 @@
 </tr>
 <tr class="odd">
 <td align="left">resid unplat 10-19 acres</td>
-<td align="right">11</td>
+<td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">resid unplat 20-29 acres</td>
@@ -425,7 +571,6 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/geomarker-io/parcel/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/geomarker-io/parcel/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 </ul>
 </div>
 
