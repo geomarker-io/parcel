@@ -6,3 +6,5 @@ Hospital Admissions.csv
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^README\.Rmd$
+^README_cache$
