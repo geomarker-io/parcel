@@ -254,12 +254,36 @@
 </tr>
 </tbody>
 </table>
+<p>Some of the parcel characteristics do not make sense in certain contexts and should not be interpreted incorrectly; for example, the value of a parcel for a multi-family or multi-unit housing structure shouldn’t be compared to the value of a parcel for a single-family household for the purposes of assesing individual-level SES. Within the process of matching to a parcel, an individual address could be merged with differing types and resolutions of data:</p>
+<pre class="mermaid"><code>%%{init: { "fontFamily": "arial" } }%%
+
+flowchart LR
+classDef id fill:#acd68e,stroke:#000,stroke-width:1px;
+classDef input fill:#c490ae,stroke:#000,stroke-width:1px;
+classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px;
+classDef data fill:#67ccde,stroke:#000,stroke-width:1px;
+
+addr(address):::input ---&gt; hc("likely in \nHamilton County \n (by ZIP code)"):::data
+addr ---&gt; nhc("not in Hamilton  County"):::tool
+
+hc --&gt; inst([institutional parcel]):::id
+inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-&gt; sdoh("temporary housing,\n foster care"):::data
+
+hc --&gt; res([residential parcel]):::id
+
+res -. CCHMC \nlinkage -.-&gt; hhh("home's hospitalization history \n (i.e., pedigree)"):::data
+res -. CAGIS &amp; \nODC linkage -.-&gt; hce(housing code enforcement,\n public service calls, crime):::data
+
+res -- single family dwelling --&gt; vat("family-level SES measures \n (e.g., value, age, condition, tenure)"):::data
+res -- multi-family dwelling --&gt; lu("auditor land use type \n (e.g., two family dwelling, \n apartment with 20-39 units)"):::data
+
+hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 <div class="section level3">
 <h3 id="inclusionexclusion-criteria-for-parcel-data">Inclusion/Exclusion Criteria for Parcel Data<a class="anchor" aria-label="anchor" href="#inclusionexclusion-criteria-for-parcel-data"></a>
 </h3>
 <p>Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) were complete duplicates.</p>
 <p>Parcels with the following land use categories are included in the data resource and others are excluded. These were selected to reflect <em>residential</em> usages of parcels.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">d_parcel</span> <span class="op">|&gt;</span></span>
