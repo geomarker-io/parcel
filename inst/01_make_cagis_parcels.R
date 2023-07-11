@@ -1,8 +1,8 @@
 library(dplyr)
 library(sf)
 library(codec)
-# make sure {parcel} is loaded to access read/write paths inside package during development
 
+# make sure {parcel} is loaded using devtools::load_all() to access read/write paths inside package during development
 if (!fs::file_exists(fs::path_package("parcel", "ham_merge_parcels.gdb"))) {
   tmp <- tempfile(fileext = ".zip")
   download.file("https://www.cagis.org/Opendata/Auditor/HAM_MERGE_PARCELS.gdb.zip", tmp, timeout = 1000, method = "wget")
@@ -50,11 +50,14 @@ d <-
   add_col_attrs(property_addr_suffix,
     title = "Address Suffix"
   ) |>
-  mutate(property_addr_unit = rd$UNIT) |>
   mutate(condo_id = rd$CONDOMTCH) |>
   add_col_attrs(condo_id,
                 title = "Condo identifier",
                 description = "used to match two parcels to the same building of condos") |>
+  mutate(condo_unit = rd$UNIT) |>
+  add_col_attrs(condo_unit,
+                title = "Condo unit",
+                description = "specifies a specific unit within a building of condos") |>
   mutate(parcel_centroid_lat = rd$parcel_centroid_lat) |>
   add_col_attrs(parcel_centroid_lat,
     title = "Parcel Centroid Latitude",
