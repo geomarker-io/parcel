@@ -83,13 +83,11 @@ d <-
   mutate(homestead = rd$HMSD_FLAG == "Y") |>
   add_col_attrs(homestead,
     title = "Homestead"
-  ) |>
+    ) |>
   mutate(rental_registration = rd$RENT_REG_FLAG == "Y") |>
   add_col_attrs(rental_registration,
                 title = "Rental Registration") |>
-  mutate(RED_25_FLAG = rd$RED_25_FLAG == "Y") |>
-  mutate(EXLUCODE = as.factor(rd$EXLUCODE)) |>
-  mutate(BOR_FLAG = rd$BOR_FLAG == "Y")
+  mutate(RED_25_FLAG = rd$RED_25_FLAG == "Y")
 
 nrow(d) # n = 354,521
 # remove those without a parcel_id
