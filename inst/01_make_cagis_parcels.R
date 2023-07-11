@@ -69,12 +69,6 @@ d <-
   add_col_attrs(market_total_value,
     title = "Market Total Value"
   ) |>
-  mutate(sale_date = as.Date(rd$SALDAT)) |>
-  add_col_attrs(sale_date,
-                title = "Last sale date") |>
-  mutate(sale_amount = rd$SALAMT) |>
-  add_col_attrs(sale_amount,
-                title = "Last sale amount") |>
   mutate(land_use = rd$CLASS) |>
   add_col_attrs(land_use,
     title = "Auditor Land Use"
