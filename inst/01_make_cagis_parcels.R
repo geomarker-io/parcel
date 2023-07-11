@@ -80,11 +80,6 @@ d <-
   mutate(annual_taxes = rd$ANNUAL_TAXES) |>
   add_col_attrs(annual_taxes,
     title = "Annual Taxes"
-  ) |>
-  mutate(unpaid_taxes = rd$DELQ_TAXES - rd$DELQ_TAXES_PD) |>
-  add_col_attrs(unpaid_taxes,
-    title = "Unpaid Taxes",
-    description = "Calculated as `delinquent taxes` minus `delinquent taxes paid`"
   )
 
 nrow(d) # n = 354,521
