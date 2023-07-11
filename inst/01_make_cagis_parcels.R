@@ -1,15 +1,15 @@
 library(dplyr)
 library(sf)
-library(CODECtools)
+library(codec)
 # make sure {parcel} is loaded to access read/write paths inside package during development
 
-parcel_gdb <- fs::path_package("parcel", "ham_merge_parcels.gdb")
-
-if (!fs::file_exists(parcel_gdb)) {
+if (!fs::file_exists(fs::path_package("parcel", "ham_merge_parcels.gdb"))) {
   tmp <- tempfile(fileext = ".zip")
   download.file("https://www.cagis.org/Opendata/Auditor/HAM_MERGE_PARCELS.gdb.zip", tmp, timeout = 1000, method = "wget")
   unzip(tmp, exdir = fs::path_package("parcel"))
 }
+
+parcel_gdb <- fs::path_package("parcel", "ham_merge_parcels.gdb")
 
 ## st_layers(dsn = "data-raw/HAM_MERGE_PARCELS.gdb")
 rd <-
