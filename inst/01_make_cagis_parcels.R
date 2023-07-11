@@ -96,7 +96,6 @@ nrow(d) # n = 320,911
 # filter to residential land use codes
 lu_keepers <-
   c(
-    "residential vacant land" = "500",
     "single family dwelling" = "510",
     "two family dwelling" = "520",
     "three family dwelling" = "530",
