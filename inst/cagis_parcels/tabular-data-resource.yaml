@@ -1,7 +1,7 @@
 profile: tabular-data-resource
 name: cagis_parcels
 path: cagis_parcels.csv
-version: 0.2.0
+version: 0.5.0
 title: CAGIS Parcels
 homepage: https://github.com/geomarker-io/hamilton_parcels
 description: 'A curated property-level data resource derived from the Hamilton County,
@@ -13,14 +13,14 @@ schema:
       title: Parcel Identifier
       description: uniquely identifies properties; the auditor Parcel Number
       type: string
-    property_addr_number:
-      name: property_addr_number
-      title: Address Number
-      type: string
     parcel_address:
       name: parcel_address
       title: Parcel Address
       description: derived by pasting Property Address Number, Street, and Suffix
+      type: string
+    property_addr_number:
+      name: property_addr_number
+      title: Address Number
       type: string
     property_addr_street:
       name: property_addr_street
@@ -29,6 +29,14 @@ schema:
     property_addr_suffix:
       name: property_addr_suffix
       title: Address Suffix
+      type: string
+    property_addr_unit:
+      name: property_addr_unit
+      type: string
+    condo_id:
+      name: condo_id
+      title: Condo identifier
+      description: used to match two parcels to the same building of condos
       type: string
     parcel_centroid_lat:
       name: parcel_centroid_lat
@@ -44,6 +52,14 @@ schema:
       name: market_total_value
       title: Market Total Value
       type: number
+    sale_date:
+      name: sale_date
+      title: Last sale date
+      type: date
+    sale_amount:
+      name: sale_amount
+      title: Last sale amount
+      type: number
     land_use:
       name: land_use
       type: string
@@ -58,7 +74,6 @@ schema:
         - other commercial housing
         - office / apartment over
         - condominium office building
-        - residential vacant land
         - resid unplat 10-19 acres
         - resid unplat 20-29 acres
         - resid unplat 30-39 acres
@@ -83,15 +98,36 @@ schema:
       name: homestead
       title: Homestead
       type: boolean
+    rental_registration:
+      name: rental_registration
+      title: Rental Registration
+      type: boolean
     RED_25_FLAG:
       name: RED_25_FLAG
       type: boolean
-    annual_taxes:
-      name: annual_taxes
-      title: Annual Taxes
-      type: number
-    unpaid_taxes:
-      name: unpaid_taxes
-      title: Unpaid Taxes
-      description: Calculated as `delinquent taxes` minus `delinquent taxes paid`
-      type: number
+    EXLUCODE:
+      name: EXLUCODE
+      type: string
+      constraints:
+        enum:
+        - AG
+        - C
+        - CH
+        - ED
+        - HI
+        - IN
+        - LI
+        - MF
+        - MH
+        - MU
+        - NA
+        - O
+        - PR
+        - PS
+        - PU
+        - SF
+        - TF
+        - VA
+    BOR_FLAG:
+      name: BOR_FLAG
+      type: boolean

@@ -50,6 +50,11 @@ d <-
   add_col_attrs(property_addr_suffix,
     title = "Address Suffix"
   ) |>
+  mutate(property_addr_unit = rd$UNIT) |>
+  mutate(condo_id = rd$CONDOMTCH) |>
+  add_col_attrs(condo_id,
+                title = "Condo identifier",
+                description = "used to match two parcels to the same building of condos") |>
   mutate(parcel_centroid_lat = rd$parcel_centroid_lat) |>
   add_col_attrs(parcel_centroid_lat,
     title = "Parcel Centroid Latitude",
@@ -64,6 +69,12 @@ d <-
   add_col_attrs(market_total_value,
     title = "Market Total Value"
   ) |>
+  mutate(sale_date = as.Date(rd$SALDAT)) |>
+  add_col_attrs(sale_date,
+                title = "Last sale date") |>
+  mutate(sale_amount = rd$SALAMT) |>
+  add_col_attrs(sale_amount,
+                title = "Last sale amount") |>
   mutate(land_use = rd$CLASS) |>
   add_col_attrs(land_use,
     title = "Auditor Land Use"
@@ -76,11 +87,12 @@ d <-
   add_col_attrs(homestead,
     title = "Homestead"
   ) |>
+  mutate(rental_registration = rd$RENT_REG_FLAG == "Y") |>
+  add_col_attrs(rental_registration,
+                title = "Rental Registration") |>
   mutate(RED_25_FLAG = rd$RED_25_FLAG == "Y") |>
-  mutate(annual_taxes = rd$ANNUAL_TAXES) |>
-  add_col_attrs(annual_taxes,
-    title = "Annual Taxes"
-  )
+  mutate(EXLUCODE = as.factor(rd$EXLUCODE)) |>
+  mutate(BOR_FLAG = rd$BOR_FLAG == "Y")
 
 nrow(d) # n = 354,521
 # remove those without a parcel_id
@@ -126,7 +138,7 @@ lu_keepers <-
 d <- d |>
   filter(land_use %in% lu_keepers) |>
   mutate(land_use = forcats::fct_recode(as.factor(land_use), !!!lu_keepers))
-nrow(d) # 286,059
+nrow(d) # 261,750
 
 d <- d |>
   tidyr::unite(
