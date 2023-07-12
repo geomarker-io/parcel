@@ -1,15 +1,15 @@
 library(dplyr)
 library(sf)
-library(CODECtools)
-# make sure {parcel} is loaded to access read/write paths inside package during development
+library(codec)
 
-parcel_gdb <- fs::path_package("parcel", "ham_merge_parcels.gdb")
-
-if (!fs::file_exists(parcel_gdb)) {
+# make sure {parcel} is loaded using devtools::load_all() to access read/write paths inside package during development
+if (!fs::file_exists(fs::path_package("parcel", "ham_merge_parcels.gdb"))) {
   tmp <- tempfile(fileext = ".zip")
   download.file("https://www.cagis.org/Opendata/Auditor/HAM_MERGE_PARCELS.gdb.zip", tmp, timeout = 1000, method = "wget")
   unzip(tmp, exdir = fs::path_package("parcel"))
 }
+
+parcel_gdb <- fs::path_package("parcel", "ham_merge_parcels.gdb")
 
 ## st_layers(dsn = "data-raw/HAM_MERGE_PARCELS.gdb")
 rd <-
@@ -50,6 +50,14 @@ d <-
   add_col_attrs(property_addr_suffix,
     title = "Address Suffix"
   ) |>
+  mutate(condo_id = rd$CONDOMTCH) |>
+  add_col_attrs(condo_id,
+                title = "Condo identifier",
+                description = "used to match two parcels to the same building of condos") |>
+  mutate(condo_unit = rd$UNIT) |>
+  add_col_attrs(condo_unit,
+                title = "Condo unit",
+                description = "specifies a specific unit within a building of condos") |>
   mutate(parcel_centroid_lat = rd$parcel_centroid_lat) |>
   add_col_attrs(parcel_centroid_lat,
     title = "Parcel Centroid Latitude",
@@ -75,17 +83,11 @@ d <-
   mutate(homestead = rd$HMSD_FLAG == "Y") |>
   add_col_attrs(homestead,
     title = "Homestead"
-  ) |>
-  mutate(RED_25_FLAG = rd$RED_25_FLAG == "Y") |>
-  mutate(annual_taxes = rd$ANNUAL_TAXES) |>
-  add_col_attrs(annual_taxes,
-    title = "Annual Taxes"
-  ) |>
-  mutate(unpaid_taxes = rd$DELQ_TAXES - rd$DELQ_TAXES_PD) |>
-  add_col_attrs(unpaid_taxes,
-    title = "Unpaid Taxes",
-    description = "Calculated as `delinquent taxes` minus `delinquent taxes paid`"
-  )
+    ) |>
+  mutate(rental_registration = rd$RENT_REG_FLAG == "Y") |>
+  add_col_attrs(rental_registration,
+                title = "Rental Registration") |>
+  mutate(RED_25_FLAG = rd$RED_25_FLAG == "Y")
 
 nrow(d) # n = 354,521
 # remove those without a parcel_id
@@ -101,7 +103,6 @@ nrow(d) # n = 320,911
 # filter to residential land use codes
 lu_keepers <-
   c(
-    "residential vacant land" = "500",
     "single family dwelling" = "510",
     "two family dwelling" = "520",
     "three family dwelling" = "530",
@@ -132,7 +133,7 @@ lu_keepers <-
 d <- d |>
   filter(land_use %in% lu_keepers) |>
   mutate(land_use = forcats::fct_recode(as.factor(land_use), !!!lu_keepers))
-nrow(d) # 286,059
+nrow(d) # 261,750
 
 d <- d |>
   tidyr::unite(
