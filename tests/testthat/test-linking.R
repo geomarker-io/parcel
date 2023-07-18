@@ -40,12 +40,14 @@ test_that("get_parcel_data works", {
   })
 
 test_that("link_parcel threshold works", {
+  skip_if_no_dedupe()
   expect_equal(nrow(link_parcel("419 Elm St. Cincinnati OH 45238")), 2)
   expect_equal(nrow(link_parcel("419 Elm St. Cincinnati OH 45238", threshold = 0.2)), 4)
   expect_equal(nrow(link_parcel("419 Elm St. Cincinnati OH 45238", threshold = 0.8)), 1)
 })
 
 test_that("get_parcel_data only returns 1 row, possibly TIED_MATCH, per input address", {
+  skip_if_no_dedupe()
   c("5377 Bahama Ter Cincinnati Ohio 45223", "419 Elm St. Cincinnati OH 45238", "323 Fifth St W Cincinnati OH 45202") |>
     get_parcel_data() |>
     nrow() |>
