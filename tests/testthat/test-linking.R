@@ -44,3 +44,11 @@ test_that("link_parcel threshold works", {
   expect_equal(nrow(link_parcel("419 Elm St. Cincinnati OH 45238", threshold = 0.2)), 4)
   expect_equal(nrow(link_parcel("419 Elm St. Cincinnati OH 45238", threshold = 0.8)), 1)
 })
+
+test_that("get_parcel_data only returns 1 row, possibly TIED_MATCH, per input address", {
+  c("5377 Bahama Ter Cincinnati Ohio 45223", "419 Elm St. Cincinnati OH 45238", "323 Fifth St W Cincinnati OH 45202") |>
+    get_parcel_data() |>
+    nrow() |>
+    expect_equal(3)
+})
+
