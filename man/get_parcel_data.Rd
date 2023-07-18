@@ -15,10 +15,10 @@ and columns corresponding to matched parcel characteristics
 }
 \description{
 This helper function produces a tibble of parcel data for an input vector of addresses.
-}
-\details{
-Note that one address can be linked to more than one parcel (e.g.,
+The \code{link_parcel()} function returns all possible matches above the \code{threshold} for each
+input address and this function chooses the single best match based on the maximum score.
+Note that one address can be linked to more than one parcel with the same match score (e.g.,
 "323 Fifth" on https://wedge3.hcauditor.org/search_results). In this case,
-only the first match is returned to prevent unintentionally duplicating rows.
+a special identifier, \code{TIED_MATCHES} is returned instead of a missing \code{parcel_id}.
 For finer control of selecting matched parcels based on scores, use \code{link_parcel()}
 }

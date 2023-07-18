@@ -4,10 +4,12 @@
 \alias{link_parcel}
 \title{link addresses to CAGIS parcel identifiers}
 \usage{
-link_parcel(x)
+link_parcel(x, threshold = 0.5)
 }
 \arguments{
 \item{x}{a vector of address character strings}
+
+\item{threshold}{potential matches will only be returned if their \code{score} exceeds this value (from 0 to 1)}
 }
 \value{
 a tibble with a column of \emph{unique}, matched addresses input as \code{x} along
