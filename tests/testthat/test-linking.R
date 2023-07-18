@@ -39,3 +39,8 @@ test_that("get_parcel_data works", {
   expect_equal(as.vector(out$parcel_id), c(NA, "2270001008600", NA))
   })
 
+test_that("link_parcel threshold works", {
+  expect_equal(nrow(link_parcel("419 Elm St. Cincinnati OH 45238")), 2)
+  expect_equal(nrow(link_parcel("419 Elm St. Cincinnati OH 45238", threshold = 0.2)), 4)
+  expect_equal(nrow(link_parcel("419 Elm St. Cincinnati OH 45238", threshold = 0.8)), 1)
+})

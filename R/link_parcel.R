@@ -12,12 +12,13 @@ reticulate::`%as%`
 #' "323 Fifth" on https://wedge3.hcauditor.org/search_results). In this case,
 #' the input address will have multiple rows, one for each of the multiple matches.
 #' @param x a vector of address character strings
+#' @param threshold potential matches will only be returned if their `score` exceeds this value (from 0 to 1) 
 #' @return a tibble with a column of *unique*, matched addresses input as `x` along
 #' with columns for their `parcel_id`(s) and matching `score`(s) (use this as a lookup
 #' table for assigning parcel_id in other workflows, making decisions about what to do
 #' with multiple matches and matching thresholds, etc.)
 #' @export
-link_parcel <- function(x) {
+link_parcel <- function(x, threshold = 0.5) {
   with(py$open(fs::path(fs::path_package("parcel"), "learned_settings"), "rb") %as% f, {
     gaz <<- dedupe$StaticRecordLink(f)
   })
@@ -37,7 +38,7 @@ link_parcel <- function(x) {
   links <-
     gaz$join(data_1 = data_in,
              data_2 = readRDS(fs::path_package("parcel", "parcel_address_stubs.rds")),
-             threshold = 0.5,
+             threshold = threshold,
              constraint = "many-to-many")
 
   np <- reticulate::import("numpy", convert = FALSE)
