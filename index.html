@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">parcel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.2</span>
       </span>
     </div>
 
@@ -145,10 +145,10 @@
 <table class="table">
 <colgroup>
 <col width="3%">
-<col width="3%">
-<col width="8%">
+<col width="4%">
+<col width="10%">
 <col width="1%">
-<col width="82%">
+<col width="79%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">name</th>
@@ -233,7 +233,7 @@
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">string</td>
-<td align="left">apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, nursing home / private hospital, independent living (seniors), mobile home / trailer park, other commercial housing, office / apartment over, condominium office building, resid unplat 10-19 acres, resid unplat 20-29 acres, resid unplat 30-39 acres, single family dwelling, single fam dw 0-9 acr, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority, charities, hospitals, retir</td>
+<td align="left">apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, nursing home / private hospital, independent living (seniors), mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority, charities, hospitals, retir</td>
 </tr>
 <tr class="even">
 <td align="left">acreage</td>
@@ -292,7 +292,7 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 <div class="section level3">
 <h3 id="inclusionexclusion-criteria-for-parcel-data">Inclusion/Exclusion Criteria for Parcel Data<a class="anchor" aria-label="anchor" href="#inclusionexclusion-criteria-for-parcel-data"></a>
 </h3>
-<p>Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) were complete duplicates.</p>
+<p>Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) had a duplicated parcel identifier.</p>
 <p>Parcels with the following land use categories are included in the data resource and others are excluded. These were selected to reflect <em>residential</em> usages of parcels.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -314,7 +314,7 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 </tr>
 <tr class="even">
 <td align="left">condominium unit</td>
-<td align="right">19794</td>
+<td align="right">19754</td>
 </tr>
 <tr class="odd">
 <td align="left">two family dwelling</td>
@@ -338,75 +338,55 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 </tr>
 <tr class="even">
 <td align="left">condo or pud garage</td>
-<td align="right">1069</td>
+<td align="right">1063</td>
 </tr>
 <tr class="odd">
-<td align="left">condominium office building</td>
-<td align="right">944</td>
-</tr>
-<tr class="even">
 <td align="left">other residential structure</td>
 <td align="right">875</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">metropolitan housing authority</td>
 <td align="right">744</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">apartment, 40+ units</td>
 <td align="right">625</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">apartment, 20-39 units</td>
 <td align="right">457</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">manufactured home</td>
 <td align="right">204</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">office / apartment over</td>
 <td align="right">188</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">boataminium</td>
 <td align="right">141</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">other commercial housing</td>
 <td align="right">99</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">nursing home / private hospital</td>
 <td align="right">94</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">mobile home / trailer park</td>
 <td align="right">40</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">independent living (seniors)</td>
 <td align="right">38</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">lihtc res</td>
 <td align="right">25</td>
-</tr>
-<tr class="even">
-<td align="left">resid unplat 10-19 acres</td>
-<td align="right">10</td>
-</tr>
-<tr class="odd">
-<td align="left">resid unplat 20-29 acres</td>
-<td align="right">5</td>
-</tr>
-<tr class="even">
-<td align="left">resid unplat 30-39 acres</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">single fam dw 0-9 acr</td>
-<td align="right">1</td>
 </tr>
 </tbody>
 </table>
@@ -507,22 +487,6 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 </tr>
 <tr class="even">
 <td align="left">boataminium</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">resid unplat 10-19 acres</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">resid unplat 20-29 acres</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">resid unplat 30-39 acres</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">residential vacant land</td>
 <td align="right">0</td>
 </tr>
 </tbody>
