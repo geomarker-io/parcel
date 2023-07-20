@@ -1,7 +1,7 @@
 profile: tabular-data-resource
 name: cagis_parcels
 path: cagis_parcels.csv
-version: 0.6.0
+version: 0.6.2
 title: CAGIS Parcels
 homepage: https://github.com/geomarker-io/hamilton_parcels
 description: 'A curated property-level data resource derived from the Hamilton County,
@@ -67,12 +67,7 @@ schema:
         - mobile home / trailer park
         - other commercial housing
         - office / apartment over
-        - condominium office building
-        - resid unplat 10-19 acres
-        - resid unplat 20-29 acres
-        - resid unplat 30-39 acres
         - single family dwelling
-        - single fam dw 0-9 acr
         - two family dwelling
         - three family dwelling
         - condominium unit

@@ -32,6 +32,11 @@ rd <-
   st_drop_geometry(d) |>
   tibble::as_tibble()
 
+# remove duplicated entries for a parcel id
+nrow(rd) #354521
+rd <- distinct(rd, AUDPTYID, .keep_all = TRUE)
+nrow(rd) #352529
+
 d <-
   tibble::tibble(parcel_id = rd$AUDPTYID) |>
   add_col_attrs(parcel_id,
@@ -89,16 +94,10 @@ d <-
                 title = "Rental Registration") |>
   mutate(RED_25_FLAG = rd$RED_25_FLAG == "Y")
 
-nrow(d) # n = 354,521
 # remove those without a parcel_id
 d <- filter(d, !is.na(parcel_id))
-nrow(d) # 352,812
 # remove missing property address number or street
 d <- filter(d, (!is.na(property_addr_number)) & (!is.na(property_addr_street)))
-nrow(d) # 321,113
-# filter out rows of duplicated data
-d <- filter(d, !duplicated(d))
-nrow(d) # n = 320,911
 
 # filter to residential land use codes
 lu_keepers <-
@@ -115,15 +114,10 @@ lu_keepers <-
     "mobile home / trailer park" = "415",
     "other commercial housing" = "419",
     "office / apartment over" = "431",
-    "resid unplat 10-19 acres" = "502",
-    "resid unplat 20-29 acres" = "503",
-    "resid unplat 30-39 acres" = "504",
-    "single fam dw 0-9 acr" = "511",
     "boataminium" = "551",
     "landominium" = "555",
     "manufactured home" = "560",
     "metropolitan housing authority" = "645",
-    "condominium office building" = "450",
     "lihtc res" = "569",
     "other residential structure" = "599",
     "condo or pud garage" = "552",
@@ -133,7 +127,6 @@ lu_keepers <-
 d <- d |>
   filter(land_use %in% lu_keepers) |>
   mutate(land_use = forcats::fct_recode(as.factor(land_use), !!!lu_keepers))
-nrow(d) # 261,750
 
 d <- d |>
   tidyr::unite(

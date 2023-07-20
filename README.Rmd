@@ -129,7 +129,7 @@ hc --> npm(not matched \nto a parcel):::tool
 
 ### Inclusion/Exclusion Criteria for Parcel Data
 
-Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) were complete duplicates.
+Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) had a duplicated parcel identifier.
 
 Parcels with the following land use categories are included in the data resource and others are excluded.  These were selected to reflect *residential* usages of parcels.
 
@@ -171,10 +171,6 @@ Certain calculations needs to be weighted by households instead of parcel; e.g. 
 |condominium office building     |0|
 |other residential structure     |0|
 |boataminium                     |0|
-|resid unplat 10-19 acres        |0|
-|resid unplat 20-29 acres        |0|
-|resid unplat 30-39 acres        |0|
-|residential vacant land         |0|
 
 ### Identifiers for Parcels and Properties
 
