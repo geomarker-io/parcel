@@ -4,7 +4,7 @@
 \alias{link_parcel}
 \title{link addresses to CAGIS parcel identifiers}
 \usage{
-link_parcel(x, threshold = 0.5)
+link_parcel(x, threshold = 0.2)
 }
 \arguments{
 \item{x}{a vector of address character strings}

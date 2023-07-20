@@ -18,7 +18,7 @@ reticulate::`%as%`
 #' table for assigning parcel_id in other workflows, making decisions about what to do
 #' with multiple matches and matching thresholds, etc.)
 #' @export
-link_parcel <- function(x, threshold = 0.5) {
+link_parcel <- function(x, threshold = 0.2) {
   with(py$open(fs::path(fs::path_package("parcel"), "learned_settings"), "rb") %as% f, {
     gaz <<- dedupe$StaticRecordLink(f)
   })
