@@ -64,10 +64,11 @@ link_parcel <- function(x, threshold = 0.2) {
 #' Note that one address can be linked to more than one parcel with the same match score (e.g.,
 #' "323 Fifth" on https://wedge3.hcauditor.org/search_results). In this case,
 #' a special identifier, `TIED_MATCHES` is returned instead of a missing `parcel_id`.
+#' The `hamilton_online_parcels` tabular data resource is also linked based on `parcel_id`.
 #' For finer control of selecting matched parcels based on scores, use `link_parcel()`
 #' @param x a vector of address character strings
 #' @return a tibble with the `input_address`es defined in `x` in the first column,
-#' and columns corresponding to matched parcel characteristics
+#' and columns corresponding to matched parcel characteristics from CAGIS and Auditor Online Summary website
 #' @export
 get_parcel_data <- function(x) {
 
@@ -96,4 +97,6 @@ get_parcel_data <- function(x) {
   tibble::tibble(input_address = x) |>
     dplyr::left_join(parcel_matches, by = dplyr::join_by(input_address)) |>
     dplyr::left_join(d_parcel, by = dplyr::join_by(parcel_id), relationship = "many-to-one")
+
+  # TODO also load and merge in hamilton_online_parcels
   }

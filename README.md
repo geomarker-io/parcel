@@ -11,7 +11,7 @@
 The goal of parcel is to provide tools for matching real-world addresses
 to reference sets of addresses; e.g., “352 Helen Street”, “352 Helen
 St.” or “352 helen st”. This package is motivated by the included
-example data resource of auditor parcel tax data from Hamilton County,
+example data resources of auditor parcel tax data from Hamilton County,
 Ohio.
 
 With this specific goal in mind, parcel includes:
@@ -19,10 +19,17 @@ With this specific goal in mind, parcel includes:
 - functions for cleaning and tagging components of addresses:
   **`clean_address()`**, **`tag_address()`**, and
   **`create_address_stub()`**
-- the `cagis_parcels` CoDEC tabular-data-resource
+- the `cagis_parcels` tabular-data-resource, which contains parcel
+  identifiers, parcel addresses, and parcel characteristics downloaded
+  from the [Cincinnati Area Geographic Information System
+  (CAGIS)](https://cagismaps.hamilton-co.org/cagisportal/mapdata/download)
+- the `hamilton_online_parcels` tabular-data-resource, which contains
+  parcel characteristics scraped from [Hamilton County Auditor
+  Online](https://wedge1.hcauditor.org/)
 - functions for joining addresses to parcel identifiers based on an
   included model pretrained on electronic health record addresses in
   Hamilton County, OH: **`link_parcel()`**
+- fs::path_package(“parcel”, “cagis_parcels”) \|\> codec::read_tdr_csv()
 
 ## Installation
 
