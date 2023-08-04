@@ -37,9 +37,43 @@ reticulate::py_install("dedupe", pip = TRUE)
 reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
+The development version of parcel can be installed with:
+
+``` r
+renv::install("geomarker-io/parcel")
+```
+
+## Example Usage
+
+Use `get_parcel_data()` to get the corresponding parcel data for a
+vector of addresses:
+
+``` r
+library(parcel)
+get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
+                  "419 Elm St. Cincinnati OH 45238",
+                  "3544 Linwood Av Cincinnati OH 45226"))
+#> # A tibble: 3 × 17
+#>   input_address              parcel_id score parcel_address property_addr_number
+#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
+#> 1 1069 Overlook Avenue Cinc… 1800A800… 0.845 1069 OVERLOOK… 1069                
+#> 2 419 Elm St. Cincinnati OH… 54000410… 0.864 419 ELM ST     419                 
+#> 3 3544 Linwood Av Cincinnat… 01900010… 0.864 3544 LINWOOD … 3544                
+#> # ℹ 12 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
+#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
+#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
+#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
+#> #   RED_25_FLAG <lgl>
+```
+
+### Python, `miniconda`, and `virtualenv`
+
 `reticulate::py_install()` assumes a non-system version of Python is
-already installed. If not, it will ask you to install one via Miniconda.
-Don’t do this; use virtualenv instead:
+already installed and will offer to install Miniconda and create an
+environment specifically for R and the reticulate package.
+
+As an alternative to miniconda, it is possible to create a virtualenv
+using reticulate:
 
 ``` r
 library(reticulate)
@@ -59,35 +93,6 @@ python installation chosen to be used by reticulate and why by using:
 ``` r
 reticulate::py_config()
 reticulate::py_list_packages()
-```
-
-The development version of parcel can be installed with:
-
-``` r
-renv::install("geomarker-io/parcel")
-```
-
-## Example Usage
-
-Use `get_parcel_data()` to get the corresponding parcel data for a
-vector of addresses:
-
-``` r
-library(parcel)
-get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
-                  "419 Elm St. Cincinnati OH 45238",
-                  "3544 Linwood Av Cincinnati OH 45226"))
-#> # A tibble: 4 × 16
-#>   input_address              parcel_id score property_addr_number parcel_address
-#>   <chr>                      <chr>     <dbl> <chr>                <chr>         
-#> 1 1069 Overlook Avenue Cinc… 1800A800… 0.923 1069                 1069 OVERLOOK…
-#> 2 419 Elm St. Cincinnati OH… 54000410… 0.928 419                  419 ELM ST    
-#> 3 419 Elm St. Cincinnati OH… 54000410… 0.928 419                  419 ELM ST    
-#> 4 3544 Linwood Av Cincinnat… 01900010… 0.928 3544                 3544 LINWOOD …
-#> # ℹ 11 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
-#> #   parcel_centroid_lat <dbl>, parcel_centroid_lon <dbl>,
-#> #   market_total_value <dbl>, land_use <fct>, acreage <dbl>, homestead <lgl>,
-#> #   RED_25_FLAG <lgl>, annual_taxes <dbl>, unpaid_taxes <dbl>
 ```
 
 ## CAGIS Parcels Data Details

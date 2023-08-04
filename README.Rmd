@@ -39,26 +39,6 @@ reticulate::py_install("dedupe", pip = TRUE)
 reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
-`reticulate::py_install()` assumes a non-system version of Python is already installed.
-If not, it will ask you to install one via Miniconda. Don't do this; use virtualenv instead:
-
-```{r}
-#| eval: false
-library(reticulate)
-install_python("3.9.12")
-virtualenv_create("r-parcel", version = "3.9.12")
-use_virtualenv("r-parcel")
-py_install("usaddress", pip = TRUE)
-py_module_available("usaddress")
-```
-
-To help R find this virtualenv for every session, either `use_virtualenv("r-parcel")` should be run in every R session *or*, better yet, by setting the `RETICULATE_PYTHON` environment variable in a user- or project-specific `.Renviron` file. You can check on which python installation chosen to be used by reticulate and why by using:
-
-```{r}
-#| eval: false
-reticulate::py_config()
-reticulate::py_list_packages()
-```
 
 The development version of parcel can be installed with:
 
@@ -77,6 +57,30 @@ library(parcel)
 get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
                   "419 Elm St. Cincinnati OH 45238",
                   "3544 Linwood Av Cincinnati OH 45226"))
+```
+
+### Python, `miniconda`, and `virtualenv`
+
+`reticulate::py_install()` assumes a non-system version of Python is already installed and will offer to install Miniconda and create an environment specifically for R and the reticulate package.
+
+As an alternative to miniconda, it is possible to create a virtualenv using reticulate:
+
+```{r}
+#| eval: false
+library(reticulate)
+install_python("3.9.12")
+virtualenv_create("r-parcel", version = "3.9.12")
+use_virtualenv("r-parcel")
+py_install("usaddress", pip = TRUE)
+py_module_available("usaddress")
+```
+
+To help R find this virtualenv for every session, either `use_virtualenv("r-parcel")` should be run in every R session *or*, better yet, by setting the `RETICULATE_PYTHON` environment variable in a user- or project-specific `.Renviron` file. You can check on which python installation chosen to be used by reticulate and why by using:
+
+```{r}
+#| eval: false
+reticulate::py_config()
+reticulate::py_list_packages()
 ```
 
 ## CAGIS Parcels Data Details
