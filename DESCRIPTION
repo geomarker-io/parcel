@@ -21,7 +21,12 @@ Imports:
     tibble,
     tidyr
 Suggests: 
-    testthat (>= 3.0.0)
+    glue,
+    mappp,
+    readr,
+    rvest,
+    testthat (>= 3.0.0),
+    xml2
 Remotes: 
     geomarker-io/cincy,
     geomarker-io/codec

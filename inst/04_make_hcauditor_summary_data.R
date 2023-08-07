@@ -1,4 +1,6 @@
 library(dplyr, warn.conflicts = FALSE)
+library(codec)
+# make sure {parcel} is loaded using devtools::load_all() to access read/write paths inside package during development
 
 d <-
   fs::path_package("parcel", "cagis_parcels") |>
@@ -22,18 +24,18 @@ scrape_hamilton_parcel <- function(parcel_id){
 }
 
 d$auditor_online <-
-  mappp::mappp(d$parcel_id, scrape_hamilton_parcel, parallel = TRUE, cache = TRUE, cache_name = "auditor_online_cache")
+  mappp::mappp(d$parcel_id, scrape_hamilton_parcel, parallel = FALSE, cache = TRUE, cache_name = "auditor_online_cache")
 
-# TODO stop early with ~ 30k results and work on data cleaning
-
-d |>
-mutate(year_built = purrr::map_int(auditor_online, "Year Built")) |>
-  add_col_attrs(year_built, title = "Year Built") |>
-  mutate(total_rooms = purrr::map_dbl(auditor_online, "Total Rooms")) |>
-  add_col_attrs(total_rooms, title = "Total Rooms") |>
-
-d <-
+d_out <-
   d |>
+  select(parcel_id, auditor_online) |>
+  mutate(year_built = as.integer(purrr::map_chr(auditor_online, "Year Built"))) |>
+  mutate(n_total_rooms = as.integer(purrr::map_chr(auditor_online, "Total Rooms"))) |>
+  mutate(n_bedrooms = as.integer(purrr::map_chr(auditor_online, "# Bedrooms"))) |>
+  mutate(n_full_bathrooms = as.integer(purrr::map_chr(auditor_online, "# Full Bathrooms"))) |>
+  mutate(n_half_bathrooms = as.integer(purrr::map_chr(auditor_online, "# Half Bathrooms"))) |>
+  mutate(market_total_value = readr::parse_number(purrr::map_chr(auditor_online, "Market Total Value"))) |>
+  select(-auditor_online) |>
   add_type_attrs() |>
   add_attrs(
     name = "hamilton_online_parcels",
@@ -43,4 +45,4 @@ d <-
     description = "A curated property-level data resource derived from scraping the Hamilton County, OH Auditor Online: https://wedge1.hcauditor.org/. Data was scraped for only residential parcels in CAGIS Parcels; see homepage for details."
   )
 
-write_tdr_csv(d, dir = fs::path_package("parcel"))
+write_tdr_csv(d_out, dir = fs::path_package("parcel"))
