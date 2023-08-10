@@ -1,0 +1,36 @@
+profile: tabular-data-resource
+name: hamilton_online_parcels
+path: hamilton_online_parcels.csv
+version: 0.7.2
+title: Hamilton Online Parcels
+homepage: https://github.com/geomarker-io/parcel
+description: 'A curated property-level data resource derived from scraping the Hamilton
+  County, OH Auditor Online: https://wedge1.hcauditor.org/. Data was scraped for only
+  residential parcels in CAGIS Parcels; see homepage for details.'
+schema:
+  fields:
+    parcel_id:
+      name: parcel_id
+      title: Parcel Identifier
+      description: uniquely identifies properties; the auditor Parcel Number
+      type: string
+    year_built:
+      name: year_built
+      type: integer
+    n_total_rooms:
+      name: n_total_rooms
+      type: integer
+    n_bedrooms:
+      name: n_bedrooms
+      type: integer
+    n_full_bathrooms:
+      name: n_full_bathrooms
+      type: integer
+    n_half_bathrooms:
+      name: n_half_bathrooms
+      type: integer
+    online_market_total_value:
+      name: online_market_total_value
+      description: May differ from the market_total_value from CAGIS auditor online
+        data. This value is scraped from the auditor's website.
+      type: number

@@ -3,6 +3,8 @@
 ^\.github$
 inst/HAM_MERGE_PARCELS.gdb
 Hospital Admissions.csv
+^auditor_online_scrape_.*\\.rds$
+auditor_online_cache.zip
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
