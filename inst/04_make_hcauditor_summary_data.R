@@ -39,7 +39,9 @@ d_out <-
   mutate(n_bedrooms = as.integer(purrr::map_chr(auditor_online, "# Bedrooms"))) |>
   mutate(n_full_bathrooms = as.integer(purrr::map_chr(auditor_online, "# Full Bathrooms"))) |>
   mutate(n_half_bathrooms = as.integer(purrr::map_chr(auditor_online, "# Half Bathrooms"))) |>
-  mutate(market_total_value = readr::parse_number(purrr::map_chr(auditor_online, "Market Total Value"))) |>
+  mutate(online_market_total_value = readr::parse_number(purrr::map_chr(auditor_online, "Market Total Value"))) |>
+  add_col_attrs(online_market_total_value,
+               description = "May differ from the market_total_value from CAGIS auditor online data. This value is scraped from the auditor's website.") |>
   select(-auditor_online) |>
   add_type_attrs() |>
   add_attrs(

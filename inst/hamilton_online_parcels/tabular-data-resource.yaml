@@ -29,6 +29,8 @@ schema:
     n_half_bathrooms:
       name: n_half_bathrooms
       type: integer
-    market_total_value:
-      name: market_total_value
+    online_market_total_value:
+      name: online_market_total_value
+      description: May differ from the market_total_value from CAGIS auditor online
+        data. This value is scraped from the auditor's website.
       type: number
