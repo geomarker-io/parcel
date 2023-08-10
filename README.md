@@ -29,7 +29,6 @@ With this specific goal in mind, parcel includes:
 - functions for joining addresses to parcel identifiers based on an
   included model pretrained on electronic health record addresses in
   Hamilton County, OH: **`link_parcel()`**
-- fs::path_package(“parcel”, “cagis_parcels”) \|\> codec::read_tdr_csv()
 
 ## Installation
 
@@ -47,7 +46,7 @@ reticulate::py_install("dedupe-variable-address", pip = TRUE)
 The development version of parcel can be installed with:
 
 ``` r
-renv::install("geomarker-io/parcel")
+pak::pak("geomarker-io/parcel")
 ```
 
 ## Example Usage
@@ -60,17 +59,19 @@ library(parcel)
 get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
                   "419 Elm St. Cincinnati OH 45238",
                   "3544 Linwood Av Cincinnati OH 45226"))
-#> # A tibble: 3 × 17
+#> # A tibble: 3 × 23
 #>   input_address              parcel_id score parcel_address property_addr_number
 #>   <chr>                      <chr>     <dbl> <chr>          <chr>               
 #> 1 1069 Overlook Avenue Cinc… 1800A800… 0.845 1069 OVERLOOK… 1069                
 #> 2 419 Elm St. Cincinnati OH… 54000410… 0.864 419 ELM ST     419                 
 #> 3 3544 Linwood Av Cincinnat… 01900010… 0.864 3544 LINWOOD … 3544                
-#> # ℹ 12 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
+#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
 #> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
 #> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
 #> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
-#> #   RED_25_FLAG <lgl>
+#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
+#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
+#> #   online_market_total_value <dbl>
 ```
 
 ### Python, `miniconda`, and `virtualenv`
@@ -141,7 +142,7 @@ codec::glimpse_attr(d_parcel) |>
 | profile     | tabular-data-resource                                                                                                                                                                          |
 | name        | cagis_parcels                                                                                                                                                                                  |
 | path        | cagis_parcels.csv                                                                                                                                                                              |
-| version     | 0.6.2                                                                                                                                                                                          |
+| version     | 0.7.2                                                                                                                                                                                          |
 | title       | CAGIS Parcels                                                                                                                                                                                  |
 | homepage    | <https://github.com/geomarker-io/hamilton_parcels>                                                                                                                                             |
 | description | A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data: <https://cagismaps.hamilton-co.org/cagisportal/mapdata/download> |

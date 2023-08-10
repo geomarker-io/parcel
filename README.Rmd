@@ -28,9 +28,6 @@ With this specific goal in mind, parcel includes:
 - the `cagis_parcels` tabular-data-resource, which contains parcel identifiers, parcel addresses, and parcel characteristics downloaded from the [Cincinnati Area Geographic Information System (CAGIS)](https://cagismaps.hamilton-co.org/cagisportal/mapdata/download) 
 - the `hamilton_online_parcels` tabular-data-resource, which contains parcel characteristics scraped from [Hamilton County Auditor Online](https://wedge1.hcauditor.org/)
 - functions for joining addresses to parcel identifiers based on an included model pretrained on electronic health record addresses in Hamilton County, OH: **`link_parcel()`**
-- 
-    fs::path_package("parcel", "cagis_parcels") |>
-    codec::read_tdr_csv()
 
 ## Installation
 
@@ -48,7 +45,7 @@ The development version of parcel can be installed with:
 
 ```{r}
 #| eval: false
-renv::install("geomarker-io/parcel")
+pak::pak("geomarker-io/parcel")
 ```
 
 ## Example Usage
@@ -56,7 +53,6 @@ renv::install("geomarker-io/parcel")
 Use `get_parcel_data()` to get the corresponding parcel data for a vector of addresses:
 
 ```{r}
-#| cache: true
 library(parcel)
 get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
                   "419 Elm St. Cincinnati OH 45238",
