@@ -23,8 +23,12 @@ scrape_hamilton_parcel <- function(parcel_id){
            haul[seq(from = 1, to = length(haul), by = 2)])
 }
 
-d$auditor_online <-
-  mappp::mappp(d$parcel_id, scrape_hamilton_parcel, parallel = FALSE, cache = TRUE, cache_name = "auditor_online_cache")
+d$auditor_online <- readRDS("./auditor_online_scrape_2023-08-10.rds")
+# to run the very long process of scraping without using a prestored result, run:
+## d$auditor_online <-
+##   mappp::mappp(d$parcel_id, scrape_hamilton_parcel, parallel = FALSE, cache = TRUE, cache_name = "auditor_online_cache")
+## save dated copy of parcel scrape
+## saveRDS(d$auditor_parcel, "./auditor_online_scrape_2023-08-10.rds")
 
 d_out <-
   d |>
