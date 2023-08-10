@@ -1,7 +1,7 @@
 profile: tabular-data-resource
 name: cagis_parcels
 path: cagis_parcels.csv
-version: 0.6.2
+version: 0.7.2
 title: CAGIS Parcels
 homepage: https://github.com/geomarker-io/hamilton_parcels
 description: 'A curated property-level data resource derived from the Hamilton County,
