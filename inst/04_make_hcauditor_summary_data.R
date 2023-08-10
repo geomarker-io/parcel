@@ -1,5 +1,6 @@
 library(dplyr, warn.conflicts = FALSE)
 library(codec)
+Sys.unsetenv("RETICULATE_PYTHON") # where????????
 # make sure {parcel} is loaded using devtools::load_all() to access read/write paths inside package during development
 
 d <-
