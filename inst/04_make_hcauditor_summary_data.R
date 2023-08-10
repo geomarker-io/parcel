@@ -47,7 +47,7 @@ d_out <-
     name = "hamilton_online_parcels",
     version = paste0(packageVersion("parcel")),
     title = "Hamilton Online Parcels",
-    homepage = "https://github.com/geomarker-io/hamilton_parcels",
+    homepage = "https://github.com/geomarker-io/parcel",
     description = "A curated property-level data resource derived from scraping the Hamilton County, OH Auditor Online: https://wedge1.hcauditor.org/. Data was scraped for only residential parcels in CAGIS Parcels; see homepage for details."
   )
 
