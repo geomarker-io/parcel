@@ -35,6 +35,9 @@ test_that("get_parcel_data works", {
   expect_equal(nrow(out), 3)
   expect_equal(as.vector(out$homestead), c(NA, FALSE, NA))
   expect_equal(as.vector(out$parcel_id), c(NA, "2270001008600", NA))
+  expect_equal(as.vector(out$year_built), c(NA, 1968, NA))
+  expect_equal(as.vector(out$n_total_rooms), c(NA, 8, NA))
+  expect_equal(as.vector(out$online_market_total_value), c(NA, 164610, NA))
   })
 
 test_that("get_parcel_data only returns 1 row, possibly TIED_MATCH, per input address", {
