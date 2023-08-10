@@ -104,9 +104,9 @@ reticulate::py_list_packages()
 
 ## CAGIS Parcels Data Details
 
-The CAGIS Parcels tabular data resource is created using the
-`01_make_cagis_parcels.R` script and stored in the package. It can be
-loaded using {[`codec`](https://geomarker.io/codec)}:
+The `cagis_parcels` tabular data resource (TDR) is created using the R
+scripts in `/inst` and stored within the package. It can be loaded using
+{[`codec`](https://geomarker.io/codec)}:
 
 ``` r
 d_parcel <- codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
@@ -129,6 +129,22 @@ head(d_parcel)
 # without CODECtools:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
 ```
+
+``` r
+options(knitr.kable.NA = '')
+codec::glimpse_attr(d_parcel) |>
+  knitr::kable()
+```
+
+| name        | value                                                                                                                                                                                          |
+|:------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| profile     | tabular-data-resource                                                                                                                                                                          |
+| name        | cagis_parcels                                                                                                                                                                                  |
+| path        | cagis_parcels.csv                                                                                                                                                                              |
+| version     | 0.6.2                                                                                                                                                                                          |
+| title       | CAGIS Parcels                                                                                                                                                                                  |
+| homepage    | <https://github.com/geomarker-io/hamilton_parcels>                                                                                                                                             |
+| description | A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data: <https://cagismaps.hamilton-co.org/cagisportal/mapdata/download> |
 
 ``` r
 options(knitr.kable.NA = '')
@@ -187,6 +203,75 @@ res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family 
 
 hc --> npm(not matched \nto a parcel):::tool
 ```
+
+### Hamilton County Auditor Online
+
+The `hamilton_online_parcels` TDR is created by linking a saved scraping
+of the [auditor’s website](https://wedge1.hcauditor.org/) to the parcel
+identifiers in the `cagis_parcels` TDR.
+
+Similarly, the `hamilton_online_parcel` TDR is created using the R
+scripts in `/inst` and stored within the package. It can be loaded using
+{[`codec`](https://geomarker.io/codec)}:
+
+``` r
+d_online <- codec::read_tdr_csv(fs::path_package("parcel", "hamilton_online_parcels"))
+
+head(d_online)
+#> # A tibble: 6 × 7
+#>   parcel_id     year_built n_total_rooms n_bedrooms n_full_bathrooms
+#>   <chr>              <int>         <int>      <int>            <int>
+#> 1 6210024007000       1961             8          3                2
+#> 2 6210024009200       1960             7          3                3
+#> 3 6210024007100       1960             7          3                2
+#> 4 6210024008200       1960             7          3                2
+#> 5 5000122021500       1955             6          2                1
+#> 6 5000122020900       1955             6          3                2
+#> # ℹ 2 more variables: n_half_bathrooms <int>, online_market_total_value <dbl>
+
+# without CODECtools:
+# read.csv(fs::path_package("parcel", "hamilton_online_parcels"))
+```
+
+``` r
+options(knitr.kable.NA = '')
+codec::glimpse_attr(d_online) |>
+  knitr::kable()
+```
+
+| name        | value                                                                                                                                                                                                                           |
+|:------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| profile     | tabular-data-resource                                                                                                                                                                                                           |
+| name        | hamilton_online_parcels                                                                                                                                                                                                         |
+| path        | hamilton_online_parcels.csv                                                                                                                                                                                                     |
+| version     | 0.7.2                                                                                                                                                                                                                           |
+| title       | Hamilton Online Parcels                                                                                                                                                                                                         |
+| homepage    | <https://github.com/geomarker-io/parcel>                                                                                                                                                                                        |
+| description | A curated property-level data resource derived from scraping the Hamilton County, OH Auditor Online: <https://wedge1.hcauditor.org/>. Data was scraped for only residential parcels in CAGIS Parcels; see homepage for details. |
+
+``` r
+options(knitr.kable.NA = '')
+codec::glimpse_schema(d_parcel) |>
+  knitr::kable()
+```
+
+| name                 | title                     | description                                                    | type    | constraints                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|:---------------------|:--------------------------|:---------------------------------------------------------------|:--------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| parcel_id            | Parcel Identifier         | uniquely identifies properties; the auditor Parcel Number      | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| parcel_address       | Parcel Address            | derived by pasting Property Address Number, Street, and Suffix | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| property_addr_number | Address Number            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| property_addr_street | Address Street            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| property_addr_suffix | Address Suffix            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| condo_id             | Condo identifier          | used to match two parcels to the same building of condos       | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| condo_unit           | Condo unit                | specifies a specific unit within a building of condos          | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| parcel_centroid_lat  | Parcel Centroid Latitude  | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| parcel_centroid_lon  | Parcel Centroid Longitude | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| market_total_value   | Market Total Value        |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| land_use             |                           |                                                                | string  | apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, nursing home / private hospital, independent living (seniors), mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority, charities, hospitals, retir |
+| acreage              | Acreage                   |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| homestead            | Homestead                 |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| rental_registration  | Rental Registration       |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| RED_25_FLAG          |                           |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 ### Inclusion/Exclusion Criteria for Parcel Data
 
