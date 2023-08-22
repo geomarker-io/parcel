@@ -10,3 +10,5 @@ auditor_online_cache.zip
 ^pkgdown$
 ^README\.Rmd$
 ^README_cache$
+^.*\.Rproj$
+^\.Rproj\.user$
