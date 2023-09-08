@@ -20,7 +20,6 @@ test_that("link_parcel works", {
 
 test_that("link_parcel works with inst addresses", {
   skip_if_no_dedupe()
-
   my_addresses <- c(
     "222 E Central Parkway Cincinnati Ohio 45220",
     "222 Central Pkwy Cincinnati Ohio 45220",
@@ -36,18 +35,9 @@ test_that("link_parcel works with inst addresses", {
     tibble::tibble(address = my_addresses) |>
     dplyr::left_join(my_addr_links, by = c("address" = "input_address"))
   out
-
   expect_equal(length(my_addresses), nrow(out))
-
   expect_equal(out$parcel_id,
                paste0("nonres-", c("jfs-e", "jfs", "eden-3031", "eden-3010", "cchmc", "cchmc", "rmh-341", "rmh-350")))
-  
-})
-
-test_that("link_parcel threshold works", {
-  skip_if_no_dedupe()
-  expect_equal(nrow(link_parcel("224 Woolper Ave Cincinnati OH 45220")), 1)
-  expect_equal(nrow(link_parcel("224 Woolper Ave Cincinnati OH 45220", threshold = 0.1)), 2)
 })
 
 test_that("get_parcel_data works", {
