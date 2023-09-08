@@ -40,7 +40,6 @@ reticulate::py_install("dedupe", pip = TRUE)
 reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
-
 The development version of parcel can be installed with:
 
 ```{r}
@@ -59,7 +58,17 @@ get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
                   "3544 Linwood Av Cincinnati OH 45226"))
 ```
 
-### Python, `miniconda`, and `virtualenv`
+Known non-residential addresses will be matched and returned with a special parcel identifer denoting that the matched parcel is non-residential; e.g., Cincinnati Children's Hospital Medical Center, Jobs and Family Services, Ronald McDonald House):
+
+```{r}
+c("222 E Central Parkway Cincinnati Ohio 45220",
+  "3333 Burnet Ave Cincinnati Ohio 45219",
+  "3333 Burnet Avenue Cincinnati Ohio 45219",
+  "350 Erkenbrecher Ave Cincinnati Ohio 45219") |>
+  get_parcel_data()
+```
+
+## Python, `miniconda`, and `virtualenv`
 
 `reticulate::py_install()` assumes a non-system version of Python is already installed and will offer to install Miniconda and create an environment specifically for R and the reticulate package.
 
@@ -227,3 +236,9 @@ Because "second line" address components (e.g., "Unit 2B") are not captured, a s
 |14500010319 |             255000|condominium unit            |
 |14500010322 |             388230|condominium unit            |
 |14500010318 |             239500|condominium unit            |
+
+In this case, a special parcel identifier `TIED_MATCH` is returned to denote that the address matched more than one parcel:
+
+```{r}
+get_parcel_data("323 Fifth St W Cincinnati OH 45202")
+```

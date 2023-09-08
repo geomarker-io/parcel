@@ -74,7 +74,34 @@ get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
 #> #   online_market_total_value <dbl>
 ```
 
-### Python, `miniconda`, and `virtualenv`
+Known non-residential addresses will be matched and returned with a
+special parcel identifer denoting that the matched parcel is
+non-residential; e.g., Cincinnati Children’s Hospital Medical Center,
+Jobs and Family Services, Ronald McDonald House):
+
+``` r
+c("222 E Central Parkway Cincinnati Ohio 45220",
+  "3333 Burnet Ave Cincinnati Ohio 45219",
+  "3333 Burnet Avenue Cincinnati Ohio 45219",
+  "350 Erkenbrecher Ave Cincinnati Ohio 45219") |>
+  get_parcel_data()
+#> # A tibble: 4 × 23
+#>   input_address              parcel_id score parcel_address property_addr_number
+#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
+#> 1 222 E Central Parkway Cin… nonres-j… 0.733 <NA>           <NA>                
+#> 2 3333 Burnet Ave Cincinnat… nonres-c… 0.711 <NA>           <NA>                
+#> 3 3333 Burnet Avenue Cincin… nonres-c… 0.698 <NA>           <NA>                
+#> 4 350 Erkenbrecher Ave Cinc… nonres-r… 0.733 <NA>           <NA>                
+#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
+#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
+#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
+#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
+#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
+#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
+#> #   online_market_total_value <dbl>
+```
+
+## Python, `miniconda`, and `virtualenv`
 
 `reticulate::py_install()` assumes a non-system version of Python is
 already installed and will offer to install Miniconda and create an
@@ -369,3 +396,21 @@ values and land uses:
 | 14500010319 |             255000 | condominium unit            |
 | 14500010322 |             388230 | condominium unit            |
 | 14500010318 |             239500 | condominium unit            |
+
+In this case, a special parcel identifier `TIED_MATCH` is returned to
+denote that the address matched more than one parcel:
+
+``` r
+get_parcel_data("323 Fifth St W Cincinnati OH 45202")
+#> # A tibble: 1 × 23
+#>   input_address              parcel_id score parcel_address property_addr_number
+#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
+#> 1 323 Fifth St W Cincinnati… TIED_MAT… 0.733 <NA>           <NA>                
+#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
+#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
+#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
+#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
+#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
+#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
+#> #   online_market_total_value <dbl>
+```
