@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">parcel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.2</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@
 <span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/py_install.html" class="external-link">py_install</a></span><span class="op">(</span><span class="st">"dedupe-variable-address"</span>, pip <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The development version of parcel can be installed with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"geomarker-io/parcel"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"geomarker-io/parcel"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-usage">Example Usage<a class="anchor" aria-label="anchor" href="#example-usage"></a>
@@ -96,9 +96,9 @@
 <span><span class="co">#&gt; # A tibble: 3 × 23</span></span>
 <span><span class="co">#&gt;   input_address              parcel_id score parcel_address property_addr_number</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                      &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;               </span></span>
-<span><span class="co">#&gt; 1 1069 Overlook Avenue Cinc… 1800A800… 0.845 1069 OVERLOOK… 1069                </span></span>
-<span><span class="co">#&gt; 2 419 Elm St. Cincinnati OH… 54000410… 0.864 419 ELM ST     419                 </span></span>
-<span><span class="co">#&gt; 3 3544 Linwood Av Cincinnat… 01900010… 0.864 3544 LINWOOD … 3544                </span></span>
+<span><span class="co">#&gt; 1 1069 Overlook Avenue Cinc… 1800A800… 0.717 1069 OVERLOOK… 1069                </span></span>
+<span><span class="co">#&gt; 2 419 Elm St. Cincinnati OH… 54000410… 0.733 419 ELM ST     419                 </span></span>
+<span><span class="co">#&gt; 3 3544 Linwood Av Cincinnat… 01900010… 0.733 3544 LINWOOD … 3544                </span></span>
 <span><span class="co">#&gt; # ℹ 18 more variables: property_addr_street &lt;chr&gt;, property_addr_suffix &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   condo_id &lt;chr&gt;, condo_unit &lt;chr&gt;, parcel_centroid_lat &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   parcel_centroid_lon &lt;dbl&gt;, market_total_value &lt;dbl&gt;, land_use &lt;fct&gt;,</span></span>
@@ -106,10 +106,11 @@
 <span><span class="co">#&gt; #   RED_25_FLAG &lt;lgl&gt;, year_built &lt;int&gt;, n_total_rooms &lt;int&gt;, n_bedrooms &lt;int&gt;,</span></span>
 <span><span class="co">#&gt; #   n_full_bathrooms &lt;int&gt;, n_half_bathrooms &lt;int&gt;,</span></span>
 <span><span class="co">#&gt; #   online_market_total_value &lt;dbl&gt;</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="python-miniconda-and-virtualenv">Python, <code>miniconda</code>, and <code>virtualenv</code>
+</div>
+<div class="section level2">
+<h2 id="python-miniconda-and-virtualenv">Python, <code>miniconda</code>, and <code>virtualenv</code>
 <a class="anchor" aria-label="anchor" href="#python-miniconda-and-virtualenv"></a>
-</h3>
+</h2>
 <p><code><a href="https://rstudio.github.io/reticulate/reference/py_install.html" class="external-link">reticulate::py_install()</a></code> assumes a non-system version of Python is already installed and will offer to install Miniconda and create an environment specifically for R and the reticulate package.</p>
 <p>As an alternative to miniconda, it is possible to create a virtualenv using reticulate:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -124,9 +125,8 @@
 <code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/py_config.html" class="external-link">py_config</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/py_list_packages.html" class="external-link">py_list_packages</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-</div>
 <div class="section level2">
-<h2 id="cagis-parcels-data-details">CAGIS Parcels Data Details<a class="anchor" aria-label="anchor" href="#cagis-parcels-data-details"></a>
+<h2 id="cagis-parcels-data">CAGIS Parcels Data<a class="anchor" aria-label="anchor" href="#cagis-parcels-data"></a>
 </h2>
 <p>The <code>cagis_parcels</code> tabular data resource (TDR) is created using the R scripts in <code>/inst</code> and stored within the package. It can be loaded using {<a href="https://geomarker.io/codec" class="external-link"><code>codec</code></a>}:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -147,7 +147,7 @@
 <span><span class="co">#&gt; #   market_total_value &lt;dbl&gt;, land_use &lt;fct&gt;, acreage &lt;dbl&gt;, homestead &lt;lgl&gt;,</span></span>
 <span><span class="co">#&gt; #   rental_registration &lt;lgl&gt;, RED_25_FLAG &lt;lgl&gt;</span></span>
 <span></span>
-<span><span class="co"># without CODECtools:</span></span>
+<span><span class="co"># without codec:</span></span>
 <span><span class="co"># read.csv(fs::path_package("parcel", "cagis_parcels"))</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>knitr.kable.NA <span class="op">=</span> <span class="st">''</span><span class="op">)</span></span>
@@ -177,7 +177,7 @@
 </tr>
 <tr class="even">
 <td align="left">version</td>
-<td align="left">0.7.2</td>
+<td align="left">0.8.2</td>
 </tr>
 <tr class="odd">
 <td align="left">title</td>
@@ -200,11 +200,11 @@
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="3%">
 <col width="4%">
-<col width="10%">
+<col width="5%">
+<col width="12%">
 <col width="1%">
-<col width="79%">
+<col width="75%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">name</th>
@@ -289,7 +289,7 @@
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">string</td>
-<td align="left">apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, nursing home / private hospital, independent living (seniors), mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority, charities, hospitals, retir</td>
+<td align="left">apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority</td>
 </tr>
 <tr class="even">
 <td align="left">acreage</td>
@@ -325,29 +325,29 @@
 <pre class="mermaid"><code>%%{init: { "fontFamily": "arial" } }%%
 
 flowchart LR
-classDef id fill:#acd68e,stroke:#000,stroke-width:1px;
-classDef input fill:#c490ae,stroke:#000,stroke-width:1px;
-classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px;
-classDef data fill:#67ccde,stroke:#000,stroke-width:1px;
+classDef id fill:#fff,stroke:#000,stroke-width:1px;
+classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px,stroke-dasharray: 5 2;
+classDef data fill:#fff,stroke:#000,stroke-width:1px;
 
-addr(address):::input ---&gt; hc("likely in \nHamilton County \n (by ZIP code)"):::data
+addr(hospitalization):::id ---&gt; hc("likely in \nHamilton County \n (by ZIP code)"):::data
 addr ---&gt; nhc("not in Hamilton  County"):::tool
 
-hc --&gt; inst([institutional parcel]):::id
-inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-&gt; sdoh("temporary housing,\n foster care"):::data
+hc --&gt; inst[institutional parcel]:::id
+inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-&gt; sdoh("temporary housing,\n foster care,\n low income housing tax credit"):::data
 
-hc --&gt; res([residential parcel]):::id
+hc --&gt; res(residential parcel):::id
 
-res -. CCHMC \nlinkage -.-&gt; hhh("home's hospitalization history \n (i.e., pedigree)"):::data
-res -. CAGIS &amp; \nODC linkage -.-&gt; hce(housing code enforcement,\n public service calls, crime):::data
+res -- CCHMC \nlinkage --&gt; hhh("home's hospitalization history \n (i.e., pedigree)"):::data
+res -- CAGIS &amp; \nODC linkage --&gt; hce(housing code enforcement,\n public service calls, crime):::data
 
 res -- single family dwelling --&gt; vat("family-level SES measures \n (e.g., value, age, condition, tenure)"):::data
 res -- multi-family dwelling --&gt; lu("auditor land use type \n (e.g., two family dwelling, \n apartment with 20-39 units)"):::data
 
 hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
-<div class="section level3">
-<h3 id="hamilton-county-auditor-online">Hamilton County Auditor Online<a class="anchor" aria-label="anchor" href="#hamilton-county-auditor-online"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="hamilton-county-auditor-online-data">Hamilton County Auditor Online Data<a class="anchor" aria-label="anchor" href="#hamilton-county-auditor-online-data"></a>
+</h2>
 <p>The <code>hamilton_online_parcels</code> TDR is created by linking a saved scraping of the <a href="https://wedge1.hcauditor.org/" class="external-link">auditor’s website</a> to the parcel identifiers in the <code>cagis_parcels</code> TDR.</p>
 <p>Similarly, the <code>hamilton_online_parcel</code> TDR is created using the R scripts in <code>/inst</code> and stored within the package. It can be loaded using {<a href="https://geomarker.io/codec" class="external-link"><code>codec</code></a>}:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -365,7 +365,7 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 <span><span class="co">#&gt; 6 5000122020900       1955             6          3                2</span></span>
 <span><span class="co">#&gt; # ℹ 2 more variables: n_half_bathrooms &lt;int&gt;, online_market_total_value &lt;dbl&gt;</span></span>
 <span></span>
-<span><span class="co"># without CODECtools:</span></span>
+<span><span class="co"># without codec:</span></span>
 <span><span class="co"># read.csv(fs::path_package("parcel", "hamilton_online_parcels"))</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>knitr.kable.NA <span class="op">=</span> <span class="st">''</span><span class="op">)</span></span>
@@ -395,7 +395,7 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 </tr>
 <tr class="even">
 <td align="left">version</td>
-<td align="left">0.7.2</td>
+<td align="left">0.8.2</td>
 </tr>
 <tr class="odd">
 <td align="left">title</td>
@@ -417,11 +417,11 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="3%">
 <col width="4%">
-<col width="10%">
+<col width="5%">
+<col width="12%">
 <col width="1%">
-<col width="79%">
+<col width="75%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">name</th>
@@ -506,7 +506,7 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">string</td>
-<td align="left">apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, nursing home / private hospital, independent living (seniors), mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority, charities, hospitals, retir</td>
+<td align="left">apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority</td>
 </tr>
 <tr class="even">
 <td align="left">acreage</td>
@@ -539,9 +539,9 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 </tbody>
 </table>
 </div>
-<div class="section level3">
-<h3 id="inclusionexclusion-criteria-for-parcel-data">Inclusion/Exclusion Criteria for Parcel Data<a class="anchor" aria-label="anchor" href="#inclusionexclusion-criteria-for-parcel-data"></a>
-</h3>
+<div class="section level2">
+<h2 id="inclusionexclusion-criteria-for-parcel-data">Inclusion/Exclusion Criteria for Parcel Data<a class="anchor" aria-label="anchor" href="#inclusionexclusion-criteria-for-parcel-data"></a>
+</h2>
 <p>Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) had a duplicated parcel identifier.</p>
 <p>Parcels with the following land use categories are included in the data resource and others are excluded. These were selected to reflect <em>residential</em> usages of parcels.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -583,67 +583,80 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 <td align="right">1863</td>
 </tr>
 <tr class="odd">
-<td align="left">charities, hospitals, retir</td>
-<td align="right">1430</td>
-</tr>
-<tr class="even">
 <td align="left">condo or pud garage</td>
 <td align="right">1063</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">other residential structure</td>
 <td align="right">875</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">metropolitan housing authority</td>
 <td align="right">744</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">apartment, 40+ units</td>
 <td align="right">625</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">apartment, 20-39 units</td>
 <td align="right">457</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">manufactured home</td>
 <td align="right">204</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">office / apartment over</td>
 <td align="right">188</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">boataminium</td>
 <td align="right">141</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">other commercial housing</td>
 <td align="right">99</td>
-</tr>
-<tr class="odd">
-<td align="left">nursing home / private hospital</td>
-<td align="right">94</td>
 </tr>
 <tr class="even">
 <td align="left">mobile home / trailer park</td>
 <td align="right">40</td>
 </tr>
 <tr class="odd">
-<td align="left">independent living (seniors)</td>
-<td align="right">38</td>
-</tr>
-<tr class="even">
 <td align="left">lihtc res</td>
 <td align="right">25</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section level3">
-<h3 id="estimating-the-number-of-households-per-parcel">Estimating the number of households per parcel<a class="anchor" aria-label="anchor" href="#estimating-the-number-of-households-per-parcel"></a>
-</h3>
+<div class="section level2">
+<h2 id="non-residential-parcels">Non-Residential Parcels<a class="anchor" aria-label="anchor" href="#non-residential-parcels"></a>
+</h2>
+<p>Known non-residential addresses will be matched and returned with a special parcel identifer denoting that the matched parcel is non-residential; e.g., Cincinnati Children’s Hospital Medical Center, Jobs and Family Services, Ronald McDonald House):</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"222 E Central Parkway Cincinnati Ohio 45220"</span>,</span>
+<span>  <span class="st">"3333 Burnet Ave Cincinnati Ohio 45219"</span>,</span>
+<span>  <span class="st">"3333 Burnet Avenue Cincinnati Ohio 45219"</span>,</span>
+<span>  <span class="st">"350 Erkenbrecher Ave Cincinnati Ohio 45219"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/get_parcel_data.html">get_parcel_data</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 23</span></span>
+<span><span class="co">#&gt;   input_address              parcel_id score parcel_address property_addr_number</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                      &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt; 1 222 E Central Parkway Cin… nonres-j… 0.620 &lt;NA&gt;           &lt;NA&gt;                </span></span>
+<span><span class="co">#&gt; 2 3333 Burnet Ave Cincinnat… nonres-c… 0.733 &lt;NA&gt;           &lt;NA&gt;                </span></span>
+<span><span class="co">#&gt; 3 3333 Burnet Avenue Cincin… nonres-c… 0.720 &lt;NA&gt;           &lt;NA&gt;                </span></span>
+<span><span class="co">#&gt; 4 350 Erkenbrecher Ave Cinc… nonres-r… 0.733 &lt;NA&gt;           &lt;NA&gt;                </span></span>
+<span><span class="co">#&gt; # ℹ 18 more variables: property_addr_street &lt;chr&gt;, property_addr_suffix &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   condo_id &lt;chr&gt;, condo_unit &lt;chr&gt;, parcel_centroid_lat &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   parcel_centroid_lon &lt;dbl&gt;, market_total_value &lt;dbl&gt;, land_use &lt;fct&gt;,</span></span>
+<span><span class="co">#&gt; #   acreage &lt;dbl&gt;, homestead &lt;lgl&gt;, rental_registration &lt;lgl&gt;,</span></span>
+<span><span class="co">#&gt; #   RED_25_FLAG &lt;lgl&gt;, year_built &lt;int&gt;, n_total_rooms &lt;int&gt;, n_bedrooms &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   n_full_bathrooms &lt;int&gt;, n_half_bathrooms &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   online_market_total_value &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="estimating-the-number-of-households-per-parcel">Estimating the number of households per parcel<a class="anchor" aria-label="anchor" href="#estimating-the-number-of-households-per-parcel"></a>
+</h2>
 <p>Certain calculations needs to be weighted by households instead of parcel; e.g. “What fraction of families live near roadway in Avondale?”. We assume the following as a conservative estimate of the number of households per parcel for each <code>land_use</code> code:</p>
 <table class="table">
 <thead><tr class="header">
@@ -742,9 +755,9 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 </tbody>
 </table>
 </div>
-<div class="section level3">
-<h3 id="identifiers-for-parcels-and-properties">Identifiers for Parcels and Properties<a class="anchor" aria-label="anchor" href="#identifiers-for-parcels-and-properties"></a>
-</h3>
+<div class="section level2">
+<h2 id="identifiers-for-parcels-and-properties">Identifiers for Parcels and Properties<a class="anchor" aria-label="anchor" href="#identifiers-for-parcels-and-properties"></a>
+</h2>
 <p>A <code>parcel_id</code> refers to the Hamilton County Auditor’s “Parcel Number”, which is referred to as the “Property Number” within the CAGIS Open Data and uniquely identifies properties. In rare cases, multple addresses can share the same parcel boundaries, but have unique <code>parcel_id</code>s and in these cases, their resulting centroid coordinates would also be identical.</p>
 <p>Because “second line” address components (e.g., “Unit 2B”) are not captured, a single address can refer to multiple parcels in the case of condos or otherwise shared building ownership. For example, the address “323 Fifth St” has six distinct <code>parcel_id</code>s, each with different home values and land uses:</p>
 <table class="table">
@@ -786,7 +799,20 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 </tr>
 </tbody>
 </table>
-</div>
+<p>In this case, a special parcel identifier <code>TIED_MATCH</code> is returned to denote that the address matched more than one parcel:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/get_parcel_data.html">get_parcel_data</a></span><span class="op">(</span><span class="st">"323 Fifth St W Cincinnati OH 45202"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 23</span></span>
+<span><span class="co">#&gt;   input_address              parcel_id score parcel_address property_addr_number</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                      &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt; 1 323 Fifth St W Cincinnati… TIED_MAT… 0.733 &lt;NA&gt;           &lt;NA&gt;                </span></span>
+<span><span class="co">#&gt; # ℹ 18 more variables: property_addr_street &lt;chr&gt;, property_addr_suffix &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   condo_id &lt;chr&gt;, condo_unit &lt;chr&gt;, parcel_centroid_lat &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   parcel_centroid_lon &lt;dbl&gt;, market_total_value &lt;dbl&gt;, land_use &lt;fct&gt;,</span></span>
+<span><span class="co">#&gt; #   acreage &lt;dbl&gt;, homestead &lt;lgl&gt;, rental_registration &lt;lgl&gt;,</span></span>
+<span><span class="co">#&gt; #   RED_25_FLAG &lt;lgl&gt;, year_built &lt;int&gt;, n_total_rooms &lt;int&gt;, n_bedrooms &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   n_full_bathrooms &lt;int&gt;, n_half_bathrooms &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   online_market_total_value &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 </div>
   </div>
