@@ -92,7 +92,7 @@ d_parcel <- codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
 
 head(d_parcel)
 
-# without CODECtools:
+# without codec:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
 ```
 
@@ -149,7 +149,7 @@ d_online <- codec::read_tdr_csv(fs::path_package("parcel", "hamilton_online_parc
 
 head(d_online)
 
-# without CODECtools:
+# without codec:
 # read.csv(fs::path_package("parcel", "hamilton_online_parcels"))
 ```
 
