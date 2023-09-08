@@ -20,12 +20,14 @@ test_that("link_parcel works", {
 
 test_that("link_parcel works with inst addresses", {
   skip_if_no_dedupe()
+
   my_addresses <- c(
-    "222 E Central Parkway Cincinnati Ohio 45220",
     "222 Central Pkwy Cincinnati Ohio 45220",
-    "3333 Burnet Ave Cincinnati Ohio 45219",
-    "3031 Eden Ave Cincinnati Ohio 45219",
+    "222 E Central Parkway Cincinnati Ohio 45220",
     "3010 Eden Ave Cincinnati Ohio 45219",
+    "3031 Eden Ave Cincinnati Ohio 45219",
+    "3333 Burnet Ave Cincinnati Ohio 45219",
+    "3333 Burnet Avenue Cincinnati Ohio 45219",
     "341 Erkenbrecher Ave Cincinnati Ohio 45219",
     "350 Erkenbrecher Ave Cincinnati Ohio 45219"
   )
