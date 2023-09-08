@@ -74,33 +74,6 @@ get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
 #> #   online_market_total_value <dbl>
 ```
 
-Known non-residential addresses will be matched and returned with a
-special parcel identifer denoting that the matched parcel is
-non-residential; e.g., Cincinnati Children’s Hospital Medical Center,
-Jobs and Family Services, Ronald McDonald House):
-
-``` r
-c("222 E Central Parkway Cincinnati Ohio 45220",
-  "3333 Burnet Ave Cincinnati Ohio 45219",
-  "3333 Burnet Avenue Cincinnati Ohio 45219",
-  "350 Erkenbrecher Ave Cincinnati Ohio 45219") |>
-  get_parcel_data()
-#> # A tibble: 4 × 23
-#>   input_address              parcel_id score parcel_address property_addr_number
-#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
-#> 1 222 E Central Parkway Cin… nonres-j… 0.733 <NA>           <NA>                
-#> 2 3333 Burnet Ave Cincinnat… nonres-c… 0.711 <NA>           <NA>                
-#> 3 3333 Burnet Avenue Cincin… nonres-c… 0.698 <NA>           <NA>                
-#> 4 350 Erkenbrecher Ave Cinc… nonres-r… 0.733 <NA>           <NA>                
-#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
-#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
-#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
-#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
-#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
-#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
-#> #   online_market_total_value <dbl>
-```
-
 ## Python, `miniconda`, and `virtualenv`
 
 `reticulate::py_install()` assumes a non-system version of Python is
@@ -130,7 +103,7 @@ reticulate::py_config()
 reticulate::py_list_packages()
 ```
 
-## CAGIS Parcels Data Details
+## CAGIS Parcels Data
 
 The `cagis_parcels` tabular data resource (TDR) is created using the R
 scripts in `/inst` and stored within the package. It can be loaded using
@@ -232,7 +205,7 @@ res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family 
 hc --> npm(not matched \nto a parcel):::tool
 ```
 
-### Hamilton County Auditor Online
+## Hamilton County Auditor Online Data
 
 The `hamilton_online_parcels` TDR is created by linking a saved scraping
 of the [auditor’s website](https://wedge1.hcauditor.org/) to the parcel
@@ -301,7 +274,7 @@ codec::glimpse_schema(d_parcel) |>
 | rental_registration  | Rental Registration       |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
 | RED_25_FLAG          |                           |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
 
-### Inclusion/Exclusion Criteria for Parcel Data
+## Inclusion/Exclusion Criteria for Parcel Data
 
 Auditor parcel-level data were excluded if they (1) did not contain a
 parcel identifier, (2) did not contain a property address number/name,
@@ -341,7 +314,36 @@ d_parcel |>
 | mobile home / trailer park     |        40 |
 | lihtc res                      |        25 |
 
-### Estimating the number of households per parcel
+## Non-Residential Parcels
+
+Known non-residential addresses will be matched and returned with a
+special parcel identifer denoting that the matched parcel is
+non-residential; e.g., Cincinnati Children’s Hospital Medical Center,
+Jobs and Family Services, Ronald McDonald House):
+
+``` r
+c("222 E Central Parkway Cincinnati Ohio 45220",
+  "3333 Burnet Ave Cincinnati Ohio 45219",
+  "3333 Burnet Avenue Cincinnati Ohio 45219",
+  "350 Erkenbrecher Ave Cincinnati Ohio 45219") |>
+  get_parcel_data()
+#> # A tibble: 4 × 23
+#>   input_address              parcel_id score parcel_address property_addr_number
+#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
+#> 1 222 E Central Parkway Cin… nonres-j… 0.733 <NA>           <NA>                
+#> 2 3333 Burnet Ave Cincinnat… nonres-c… 0.711 <NA>           <NA>                
+#> 3 3333 Burnet Avenue Cincin… nonres-c… 0.698 <NA>           <NA>                
+#> 4 350 Erkenbrecher Ave Cinc… nonres-r… 0.733 <NA>           <NA>                
+#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
+#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
+#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
+#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
+#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
+#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
+#> #   online_market_total_value <dbl>
+```
+
+## Estimating the number of households per parcel
 
 Certain calculations needs to be weighted by households instead of
 parcel; e.g. “What fraction of families live near roadway in Avondale?”.
@@ -373,7 +375,7 @@ households per parcel for each `land_use` code:
 | other residential structure     |            0 |
 | boataminium                     |            0 |
 
-### Identifiers for Parcels and Properties
+## Identifiers for Parcels and Properties
 
 A `parcel_id` refers to the Hamilton County Auditor’s “Parcel Number”,
 which is referred to as the “Property Number” within the CAGIS Open Data
