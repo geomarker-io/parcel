@@ -44,7 +44,7 @@ link_parcel <- function(x, threshold = 0.2) {
       address = inst_addr$address_stub[.])) |>
     rlang::set_names(inst_addr$parcel_id)
 
-  data_ref <- append(data_ref, inst_addr)
+  data_ref <- c(data_ref, inst_addr)
 
   links <-
     gaz$join(data_1 = data_in,
@@ -59,9 +59,11 @@ link_parcel <- function(x, threshold = 0.2) {
     reticulate::py_to_r() |>
     as.vector()
 
+  length(links)
+
   out <-
-    tibble::tibble(input_address = pairs[seq_along(pairs) %% 2 > 0],
-                   parcel_id = pairs[seq_along(pairs) %% 2 == 0],
+    tibble::tibble(input_address = pairs[c(1:length(links))],
+                   parcel_id = pairs[-c(1:length(links))],
                    score = as.numeric(reticulate::py_to_r(alinks[["score"]])))
 
   return(out)
