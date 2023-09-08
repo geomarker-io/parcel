@@ -1,7 +1,7 @@
 profile: tabular-data-resource
 name: cagis_parcels
 path: cagis_parcels.csv
-version: 0.7.2
+version: 0.8.2
 title: CAGIS Parcels
 homepage: https://github.com/geomarker-io/hamilton_parcels
 description: 'A curated property-level data resource derived from the Hamilton County,
@@ -62,8 +62,6 @@ schema:
         - apartment, 4-19 units
         - apartment, 20-39 units
         - apartment, 40+ units
-        - nursing home / private hospital
-        - independent living (seniors)
         - mobile home / trailer park
         - other commercial housing
         - office / apartment over
@@ -78,7 +76,6 @@ schema:
         - lihtc res
         - other residential structure
         - metropolitan housing authority
-        - charities, hospitals, retir
     acreage:
       name: acreage
       title: Acreage
