@@ -20,7 +20,6 @@ test_that("link_parcel works", {
 
 test_that("link_parcel works with inst addresses", {
   skip_if_no_dedupe()
-
   my_addresses <- c(
     "222 Central Pkwy Cincinnati Ohio 45220",
     "222 E Central Parkway Cincinnati Ohio 45220",
@@ -33,9 +32,14 @@ test_that("link_parcel works with inst addresses", {
   )
   my_addr_links <- link_parcel(my_addresses, threshold = 0.2)
 
+  out <-
+    tibble::tibble(address = my_addresses) |>
+    dplyr::left_join(my_addr_links, by = c("address" = "input_address"))
+
+
+  
   expect_equal(length(my_addresses), nrow(my_addr_links) + 1)
   # TODO finish testing; should we remove burnet ave from parcel dataset?
-
 })
 
 test_that("link_parcel threshold works", {
