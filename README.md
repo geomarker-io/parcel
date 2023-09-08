@@ -183,21 +183,20 @@ differing types and resolutions of data:
 %%{init: { "fontFamily": "arial" } }%%
 
 flowchart LR
-classDef id fill:#acd68e,stroke:#000,stroke-width:1px;
-classDef input fill:#c490ae,stroke:#000,stroke-width:1px;
-classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px;
-classDef data fill:#67ccde,stroke:#000,stroke-width:1px;
+classDef id fill:#fff,stroke:#000,stroke-width:1px;
+classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px,stroke-dasharray: 5 2;
+classDef data fill:#fff,stroke:#000,stroke-width:1px;
 
-addr(address):::input ---> hc("likely in \nHamilton County \n (by ZIP code)"):::data
+addr(hospitalization):::id ---> hc("likely in \nHamilton County \n (by ZIP code)"):::data
 addr ---> nhc("not in Hamilton  County"):::tool
 
-hc --> inst([institutional parcel]):::id
-inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-> sdoh("temporary housing,\n foster care"):::data
+hc --> inst[institutional parcel]:::id
+inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-> sdoh("temporary housing,\n foster care,\n low income housing tax credit"):::data
 
-hc --> res([residential parcel]):::id
+hc --> res(residential parcel):::id
 
-res -. CCHMC \nlinkage -.-> hhh("home's hospitalization history \n (i.e., pedigree)"):::data
-res -. CAGIS & \nODC linkage -.-> hce(housing code enforcement,\n public service calls, crime):::data
+res -- CCHMC \nlinkage --> hhh("home's hospitalization history \n (i.e., pedigree)"):::data
+res -- CAGIS & \nODC linkage --> hce(housing code enforcement,\n public service calls, crime):::data
 
 res -- single family dwelling --> vat("family-level SES measures \n (e.g., value, age, condition, tenure)"):::data
 res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family dwelling, \n apartment with 20-39 units)"):::data
@@ -330,9 +329,9 @@ c("222 E Central Parkway Cincinnati Ohio 45220",
 #> # A tibble: 4 × 23
 #>   input_address              parcel_id score parcel_address property_addr_number
 #>   <chr>                      <chr>     <dbl> <chr>          <chr>               
-#> 1 222 E Central Parkway Cin… nonres-j… 0.733 <NA>           <NA>                
-#> 2 3333 Burnet Ave Cincinnat… nonres-c… 0.711 <NA>           <NA>                
-#> 3 3333 Burnet Avenue Cincin… nonres-c… 0.698 <NA>           <NA>                
+#> 1 222 E Central Parkway Cin… nonres-j… 0.620 <NA>           <NA>                
+#> 2 3333 Burnet Ave Cincinnat… nonres-c… 0.733 <NA>           <NA>                
+#> 3 3333 Burnet Avenue Cincin… nonres-c… 0.720 <NA>           <NA>                
 #> 4 350 Erkenbrecher Ave Cinc… nonres-r… 0.733 <NA>           <NA>                
 #> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
 #> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
