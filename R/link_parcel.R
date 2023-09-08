@@ -35,9 +35,20 @@ link_parcel <- function(x, threshold = 0.2) {
       address = input_data_for_link$input_address_stub[.])) |>
     rlang::set_names(input_data_for_link$input_address)
 
+  data_ref <- readRDS(fs::path_package("parcel", "parcel_address_stubs.rds"))
+
+  inst_addr <- readr::read_csv(fs::path_package("parcel", "known_nonresidential_stubs.csv"), col_types = "cc")
+
+  inst_addr <-
+    purrr::map(1:nrow(inst_addr), \(.) list(
+      address = inst_addr$address_stub[.])) |>
+    rlang::set_names(inst_addr$parcel_id)
+
+  data_ref <- append(data_ref, inst_addr)
+
   links <-
     gaz$join(data_1 = data_in,
-             data_2 = readRDS(fs::path_package("parcel", "parcel_address_stubs.rds")),
+             data_2 = data_ref,
              threshold = threshold,
              constraint = "many-to-many")
 

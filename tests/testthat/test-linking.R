@@ -9,7 +9,6 @@ test_that("link_parcel works", {
   skip_if_no_dedupe()
   my_addresses <- c(
     "224 Woolper Ave Cincinnati OH 45220",
-    "222 East Central Parkway Cincinnati OH 45220",
     "5377 Bahama Ter Apt 1 Cincinnati Ohio 45223",
     "5377 Bahama Te Apt 1 Cincinnati Ohio 45223"
   )
@@ -17,7 +16,18 @@ test_that("link_parcel works", {
   expect_equal(nrow(my_addr_links), 3)
   expect_equal(my_addr_links$parcel_id,
                c("2170054005900", "2270001008600", "2270001008600"))
-  })
+})
+
+test_that("link_parcel works with inst addresses", {
+  skip_if_no_dedupe()
+  my_addresses <- c(
+    "222 E Central Parkway Cincinnati Ohio 45220",
+    "222 Central Pkwy Cincinnati Ohio 45220"
+  )
+  my_addr_links <- link_parcel(my_addresses, threshold = 0.2)
+  expect_equal(length(my_addresses), nrow(my_addr_links))
+
+})
 
 test_that("link_parcel threshold works", {
   skip_if_no_dedupe()
