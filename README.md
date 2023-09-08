@@ -62,9 +62,9 @@ get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
 #> # A tibble: 3 × 23
 #>   input_address              parcel_id score parcel_address property_addr_number
 #>   <chr>                      <chr>     <dbl> <chr>          <chr>               
-#> 1 1069 Overlook Avenue Cinc… 1800A800… 0.845 1069 OVERLOOK… 1069                
-#> 2 419 Elm St. Cincinnati OH… 54000410… 0.864 419 ELM ST     419                 
-#> 3 3544 Linwood Av Cincinnat… 01900010… 0.864 3544 LINWOOD … 3544                
+#> 1 1069 Overlook Avenue Cinc… 1800A800… 0.717 1069 OVERLOOK… 1069                
+#> 2 419 Elm St. Cincinnati OH… 54000410… 0.733 419 ELM ST     419                 
+#> 3 3544 Linwood Av Cincinnat… 01900010… 0.733 3544 LINWOOD … 3544                
 #> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
 #> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
 #> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
@@ -74,7 +74,7 @@ get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
 #> #   online_market_total_value <dbl>
 ```
 
-### Python, `miniconda`, and `virtualenv`
+## Python, `miniconda`, and `virtualenv`
 
 `reticulate::py_install()` assumes a non-system version of Python is
 already installed and will offer to install Miniconda and create an
@@ -103,7 +103,7 @@ reticulate::py_config()
 reticulate::py_list_packages()
 ```
 
-## CAGIS Parcels Data Details
+## CAGIS Parcels Data
 
 The `cagis_parcels` tabular data resource (TDR) is created using the R
 scripts in `/inst` and stored within the package. It can be loaded using
@@ -127,7 +127,7 @@ head(d_parcel)
 #> #   market_total_value <dbl>, land_use <fct>, acreage <dbl>, homestead <lgl>,
 #> #   rental_registration <lgl>, RED_25_FLAG <lgl>
 
-# without CODECtools:
+# without codec:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
 ```
 
@@ -142,7 +142,7 @@ codec::glimpse_attr(d_parcel) |>
 | profile     | tabular-data-resource                                                                                                                                                                          |
 | name        | cagis_parcels                                                                                                                                                                                  |
 | path        | cagis_parcels.csv                                                                                                                                                                              |
-| version     | 0.7.2                                                                                                                                                                                          |
+| version     | 0.8.2                                                                                                                                                                                          |
 | title       | CAGIS Parcels                                                                                                                                                                                  |
 | homepage    | <https://github.com/geomarker-io/hamilton_parcels>                                                                                                                                             |
 | description | A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data: <https://cagismaps.hamilton-co.org/cagisportal/mapdata/download> |
@@ -153,23 +153,23 @@ codec::glimpse_schema(d_parcel) |>
   knitr::kable()
 ```
 
-| name                 | title                     | description                                                    | type    | constraints                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-|:---------------------|:--------------------------|:---------------------------------------------------------------|:--------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| parcel_id            | Parcel Identifier         | uniquely identifies properties; the auditor Parcel Number      | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| parcel_address       | Parcel Address            | derived by pasting Property Address Number, Street, and Suffix | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| property_addr_number | Address Number            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| property_addr_street | Address Street            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| property_addr_suffix | Address Suffix            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| condo_id             | Condo identifier          | used to match two parcels to the same building of condos       | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| condo_unit           | Condo unit                | specifies a specific unit within a building of condos          | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| parcel_centroid_lat  | Parcel Centroid Latitude  | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| parcel_centroid_lon  | Parcel Centroid Longitude | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| market_total_value   | Market Total Value        |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| land_use             |                           |                                                                | string  | apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, nursing home / private hospital, independent living (seniors), mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority, charities, hospitals, retir |
-| acreage              | Acreage                   |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| homestead            | Homestead                 |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| rental_registration  | Rental Registration       |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| RED_25_FLAG          |                           |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| name                 | title                     | description                                                    | type    | constraints                                                                                                                                                                                                                                                                                                                                                                        |
+|:---------------------|:--------------------------|:---------------------------------------------------------------|:--------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| parcel_id            | Parcel Identifier         | uniquely identifies properties; the auditor Parcel Number      | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| parcel_address       | Parcel Address            | derived by pasting Property Address Number, Street, and Suffix | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| property_addr_number | Address Number            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| property_addr_street | Address Street            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| property_addr_suffix | Address Suffix            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| condo_id             | Condo identifier          | used to match two parcels to the same building of condos       | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| condo_unit           | Condo unit                | specifies a specific unit within a building of condos          | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| parcel_centroid_lat  | Parcel Centroid Latitude  | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| parcel_centroid_lon  | Parcel Centroid Longitude | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| market_total_value   | Market Total Value        |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| land_use             |                           |                                                                | string  | apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority |
+| acreage              | Acreage                   |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| homestead            | Homestead                 |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
+| rental_registration  | Rental Registration       |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
+| RED_25_FLAG          |                           |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
 
 Some of the parcel characteristics do not make sense in certain contexts
 and should not be interpreted incorrectly; for example, the value of a
@@ -183,21 +183,20 @@ differing types and resolutions of data:
 %%{init: { "fontFamily": "arial" } }%%
 
 flowchart LR
-classDef id fill:#acd68e,stroke:#000,stroke-width:1px;
-classDef input fill:#c490ae,stroke:#000,stroke-width:1px;
-classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px;
-classDef data fill:#67ccde,stroke:#000,stroke-width:1px;
+classDef id fill:#fff,stroke:#000,stroke-width:1px;
+classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px,stroke-dasharray: 5 2;
+classDef data fill:#fff,stroke:#000,stroke-width:1px;
 
-addr(address):::input ---> hc("likely in \nHamilton County \n (by ZIP code)"):::data
+addr(hospitalization):::id ---> hc("likely in \nHamilton County \n (by ZIP code)"):::data
 addr ---> nhc("not in Hamilton  County"):::tool
 
-hc --> inst([institutional parcel]):::id
-inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-> sdoh("temporary housing,\n foster care"):::data
+hc --> inst[institutional parcel]:::id
+inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-> sdoh("temporary housing,\n foster care,\n low income housing tax credit"):::data
 
-hc --> res([residential parcel]):::id
+hc --> res(residential parcel):::id
 
-res -. CCHMC \nlinkage -.-> hhh("home's hospitalization history \n (i.e., pedigree)"):::data
-res -. CAGIS & \nODC linkage -.-> hce(housing code enforcement,\n public service calls, crime):::data
+res -- CCHMC \nlinkage --> hhh("home's hospitalization history \n (i.e., pedigree)"):::data
+res -- CAGIS & \nODC linkage --> hce(housing code enforcement,\n public service calls, crime):::data
 
 res -- single family dwelling --> vat("family-level SES measures \n (e.g., value, age, condition, tenure)"):::data
 res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family dwelling, \n apartment with 20-39 units)"):::data
@@ -205,7 +204,7 @@ res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family 
 hc --> npm(not matched \nto a parcel):::tool
 ```
 
-### Hamilton County Auditor Online
+## Hamilton County Auditor Online Data
 
 The `hamilton_online_parcels` TDR is created by linking a saved scraping
 of the [auditor’s website](https://wedge1.hcauditor.org/) to the parcel
@@ -230,7 +229,7 @@ head(d_online)
 #> 6 5000122020900       1955             6          3                2
 #> # ℹ 2 more variables: n_half_bathrooms <int>, online_market_total_value <dbl>
 
-# without CODECtools:
+# without codec:
 # read.csv(fs::path_package("parcel", "hamilton_online_parcels"))
 ```
 
@@ -245,7 +244,7 @@ codec::glimpse_attr(d_online) |>
 | profile     | tabular-data-resource                                                                                                                                                                                                           |
 | name        | hamilton_online_parcels                                                                                                                                                                                                         |
 | path        | hamilton_online_parcels.csv                                                                                                                                                                                                     |
-| version     | 0.7.2                                                                                                                                                                                                                           |
+| version     | 0.8.2                                                                                                                                                                                                                           |
 | title       | Hamilton Online Parcels                                                                                                                                                                                                         |
 | homepage    | <https://github.com/geomarker-io/parcel>                                                                                                                                                                                        |
 | description | A curated property-level data resource derived from scraping the Hamilton County, OH Auditor Online: <https://wedge1.hcauditor.org/>. Data was scraped for only residential parcels in CAGIS Parcels; see homepage for details. |
@@ -256,25 +255,25 @@ codec::glimpse_schema(d_parcel) |>
   knitr::kable()
 ```
 
-| name                 | title                     | description                                                    | type    | constraints                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-|:---------------------|:--------------------------|:---------------------------------------------------------------|:--------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| parcel_id            | Parcel Identifier         | uniquely identifies properties; the auditor Parcel Number      | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| parcel_address       | Parcel Address            | derived by pasting Property Address Number, Street, and Suffix | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| property_addr_number | Address Number            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| property_addr_street | Address Street            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| property_addr_suffix | Address Suffix            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| condo_id             | Condo identifier          | used to match two parcels to the same building of condos       | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| condo_unit           | Condo unit                | specifies a specific unit within a building of condos          | string  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| parcel_centroid_lat  | Parcel Centroid Latitude  | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| parcel_centroid_lon  | Parcel Centroid Longitude | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| market_total_value   | Market Total Value        |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| land_use             |                           |                                                                | string  | apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, nursing home / private hospital, independent living (seniors), mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority, charities, hospitals, retir |
-| acreage              | Acreage                   |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| homestead            | Homestead                 |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| rental_registration  | Rental Registration       |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| RED_25_FLAG          |                           |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| name                 | title                     | description                                                    | type    | constraints                                                                                                                                                                                                                                                                                                                                                                        |
+|:---------------------|:--------------------------|:---------------------------------------------------------------|:--------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| parcel_id            | Parcel Identifier         | uniquely identifies properties; the auditor Parcel Number      | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| parcel_address       | Parcel Address            | derived by pasting Property Address Number, Street, and Suffix | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| property_addr_number | Address Number            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| property_addr_street | Address Street            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| property_addr_suffix | Address Suffix            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| condo_id             | Condo identifier          | used to match two parcels to the same building of condos       | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| condo_unit           | Condo unit                | specifies a specific unit within a building of condos          | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| parcel_centroid_lat  | Parcel Centroid Latitude  | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| parcel_centroid_lon  | Parcel Centroid Longitude | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| market_total_value   | Market Total Value        |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| land_use             |                           |                                                                | string  | apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority |
+| acreage              | Acreage                   |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
+| homestead            | Homestead                 |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
+| rental_registration  | Rental Registration       |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
+| RED_25_FLAG          |                           |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
 
-### Inclusion/Exclusion Criteria for Parcel Data
+## Inclusion/Exclusion Criteria for Parcel Data
 
 Auditor parcel-level data were excluded if they (1) did not contain a
 parcel identifier, (2) did not contain a property address number/name,
@@ -294,30 +293,56 @@ d_parcel |>
   knitr::kable()
 ```
 
-| land_use                        | n_parcels |
-|:--------------------------------|----------:|
-| single family dwelling          |    213044 |
-| condominium unit                |     19754 |
-| two family dwelling             |     11352 |
-| apartment, 4-19 units           |      5659 |
-| landominium                     |      3047 |
-| three family dwelling           |      1863 |
-| charities, hospitals, retir     |      1430 |
-| condo or pud garage             |      1063 |
-| other residential structure     |       875 |
-| metropolitan housing authority  |       744 |
-| apartment, 40+ units            |       625 |
-| apartment, 20-39 units          |       457 |
-| manufactured home               |       204 |
-| office / apartment over         |       188 |
-| boataminium                     |       141 |
-| other commercial housing        |        99 |
-| nursing home / private hospital |        94 |
-| mobile home / trailer park      |        40 |
-| independent living (seniors)    |        38 |
-| lihtc res                       |        25 |
+| land_use                       | n_parcels |
+|:-------------------------------|----------:|
+| single family dwelling         |    213044 |
+| condominium unit               |     19754 |
+| two family dwelling            |     11352 |
+| apartment, 4-19 units          |      5659 |
+| landominium                    |      3047 |
+| three family dwelling          |      1863 |
+| condo or pud garage            |      1063 |
+| other residential structure    |       875 |
+| metropolitan housing authority |       744 |
+| apartment, 40+ units           |       625 |
+| apartment, 20-39 units         |       457 |
+| manufactured home              |       204 |
+| office / apartment over        |       188 |
+| boataminium                    |       141 |
+| other commercial housing       |        99 |
+| mobile home / trailer park     |        40 |
+| lihtc res                      |        25 |
 
-### Estimating the number of households per parcel
+## Non-Residential Parcels
+
+Known non-residential addresses will be matched and returned with a
+special parcel identifer denoting that the matched parcel is
+non-residential; e.g., Cincinnati Children’s Hospital Medical Center,
+Jobs and Family Services, Ronald McDonald House):
+
+``` r
+c("222 E Central Parkway Cincinnati Ohio 45220",
+  "3333 Burnet Ave Cincinnati Ohio 45219",
+  "3333 Burnet Avenue Cincinnati Ohio 45219",
+  "350 Erkenbrecher Ave Cincinnati Ohio 45219") |>
+  get_parcel_data()
+#> # A tibble: 4 × 23
+#>   input_address              parcel_id score parcel_address property_addr_number
+#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
+#> 1 222 E Central Parkway Cin… nonres-j… 0.620 <NA>           <NA>                
+#> 2 3333 Burnet Ave Cincinnat… nonres-c… 0.733 <NA>           <NA>                
+#> 3 3333 Burnet Avenue Cincin… nonres-c… 0.720 <NA>           <NA>                
+#> 4 350 Erkenbrecher Ave Cinc… nonres-r… 0.733 <NA>           <NA>                
+#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
+#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
+#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
+#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
+#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
+#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
+#> #   online_market_total_value <dbl>
+```
+
+## Estimating the number of households per parcel
 
 Certain calculations needs to be weighted by households instead of
 parcel; e.g. “What fraction of families live near roadway in Avondale?”.
@@ -349,7 +374,7 @@ households per parcel for each `land_use` code:
 | other residential structure     |            0 |
 | boataminium                     |            0 |
 
-### Identifiers for Parcels and Properties
+## Identifiers for Parcels and Properties
 
 A `parcel_id` refers to the Hamilton County Auditor’s “Parcel Number”,
 which is referred to as the “Property Number” within the CAGIS Open Data
@@ -372,3 +397,21 @@ values and land uses:
 | 14500010319 |             255000 | condominium unit            |
 | 14500010322 |             388230 | condominium unit            |
 | 14500010318 |             239500 | condominium unit            |
+
+In this case, a special parcel identifier `TIED_MATCH` is returned to
+denote that the address matched more than one parcel:
+
+``` r
+get_parcel_data("323 Fifth St W Cincinnati OH 45202")
+#> # A tibble: 1 × 23
+#>   input_address              parcel_id score parcel_address property_addr_number
+#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
+#> 1 323 Fifth St W Cincinnati… TIED_MAT… 0.733 <NA>           <NA>                
+#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
+#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
+#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
+#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
+#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
+#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
+#> #   online_market_total_value <dbl>
+```

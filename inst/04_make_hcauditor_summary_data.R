@@ -23,12 +23,18 @@ scrape_hamilton_parcel <- function(parcel_id){
            haul[seq(from = 1, to = length(haul), by = 2)])
 }
 
-d$auditor_online <- readRDS("./auditor_online_scrape_2023-08-10.rds")
+
 # to run the very long process of scraping without using a prestored result, run:
 ## d$auditor_online <-
 ##   mappp::mappp(d$parcel_id, scrape_hamilton_parcel, parallel = FALSE, cache = TRUE, cache_name = "auditor_online_cache")
 ## save dated copy of parcel scrape
 ## saveRDS(d$auditor_parcel, "./auditor_online_scrape_2023-08-10.rds")
+the_scrape <- readRDS("./auditor_online_scrape_2023-08-10.rds")
+the_scrape_parcel_ids <- readr::read_csv("https://raw.githubusercontent.com/geomarker-io/parcel/98cf676b4f8961cc2cd6e78bd922a3c1910e13fd/inst/hamilton_online_parcels/hamilton_online_parcels.csv",
+                                         show_col_types = FALSE)$parcel_id
+
+names(the_scrape) <- the_scrape_parcel_ids
+d$auditor_online <- the_scrape[d$parcel_id]
 
 d_out <-
   d |>

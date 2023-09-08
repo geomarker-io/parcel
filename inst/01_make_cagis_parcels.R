@@ -11,7 +11,7 @@ if (!fs::file_exists(fs::path_package("parcel", "ham_merge_parcels.gdb"))) {
 
 parcel_gdb <- fs::path_package("parcel", "ham_merge_parcels.gdb")
 
-## st_layers(dsn = "data-raw/HAM_MERGE_PARCELS.gdb")
+## st_layers(dsn = parcel_gdb)
 rd <-
   st_read(dsn = parcel_gdb, layer = "HAM_PARCELS_MERGED_W_CONDOS") |>
   st_zm(drop = TRUE, what = "ZM") |>
@@ -33,9 +33,9 @@ rd <-
   tibble::as_tibble()
 
 # remove duplicated entries for a parcel id
-nrow(rd) #354521
+nrow(rd) #354,521
 rd <- distinct(rd, AUDPTYID, .keep_all = TRUE)
-nrow(rd) #352529
+nrow(rd) #352,529
 
 d <-
   tibble::tibble(parcel_id = rd$AUDPTYID) |>
@@ -96,8 +96,10 @@ d <-
 
 # remove those without a parcel_id
 d <- filter(d, !is.na(parcel_id))
+nrow(d) #352528
 # remove missing property address number or street
 d <- filter(d, (!is.na(property_addr_number)) & (!is.na(property_addr_street)))
+nrow(d) #320832
 
 # filter to residential land use codes
 lu_keepers <-
@@ -109,24 +111,22 @@ lu_keepers <-
     "apartment, 4-19 units" = "401",
     "apartment, 20-39 units" = "402",
     "apartment, 40+ units" = "403",
-    "nursing home / private hospital" = "412",
-    "independent living (seniors)" = "413",
     "mobile home / trailer park" = "415",
     "other commercial housing" = "419",
     "office / apartment over" = "431",
     "boataminium" = "551",
     "landominium" = "555",
     "manufactured home" = "560",
-    "metropolitan housing authority" = "645",
-    "lihtc res" = "569",
     "other residential structure" = "599",
     "condo or pud garage" = "552",
-    "charities, hospitals, retir" = "680"
+    "metropolitan housing authority" = "645",
+    "lihtc res" = "569"
   )
 
 d <- d |>
   filter(land_use %in% lu_keepers) |>
   mutate(land_use = forcats::fct_recode(as.factor(land_use), !!!lu_keepers))
+nrow(d) # 259180
 
 d <- d |>
   tidyr::unite(

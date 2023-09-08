@@ -40,7 +40,6 @@ reticulate::py_install("dedupe", pip = TRUE)
 reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
-
 The development version of parcel can be installed with:
 
 ```{r}
@@ -59,7 +58,7 @@ get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
                   "3544 Linwood Av Cincinnati OH 45226"))
 ```
 
-### Python, `miniconda`, and `virtualenv`
+## Python, `miniconda`, and `virtualenv`
 
 `reticulate::py_install()` assumes a non-system version of Python is already installed and will offer to install Miniconda and create an environment specifically for R and the reticulate package.
 
@@ -83,7 +82,7 @@ reticulate::py_config()
 reticulate::py_list_packages()
 ```
 
-## CAGIS Parcels Data Details
+## CAGIS Parcels Data
 
 The `cagis_parcels` tabular data resource (TDR) is created using the R scripts in `/inst` and stored within the package. It can be loaded using {[`codec`](https://geomarker.io/codec)}:
 
@@ -92,7 +91,7 @@ d_parcel <- codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
 
 head(d_parcel)
 
-# without CODECtools:
+# without codec:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
 ```
 
@@ -116,21 +115,20 @@ Some of the parcel characteristics do not make sense in certain contexts and sho
 %%{init: { "fontFamily": "arial" } }%%
 
 flowchart LR
-classDef id fill:#acd68e,stroke:#000,stroke-width:1px;
-classDef input fill:#c490ae,stroke:#000,stroke-width:1px;
-classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px;
-classDef data fill:#67ccde,stroke:#000,stroke-width:1px;
+classDef id fill:#fff,stroke:#000,stroke-width:1px;
+classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px,stroke-dasharray: 5 2;
+classDef data fill:#fff,stroke:#000,stroke-width:1px;
 
-addr(address):::input ---> hc("likely in \nHamilton County \n (by ZIP code)"):::data
+addr(hospitalization):::id ---> hc("likely in \nHamilton County \n (by ZIP code)"):::data
 addr ---> nhc("not in Hamilton  County"):::tool
 
-hc --> inst([institutional parcel]):::id
-inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-> sdoh("temporary housing,\n foster care"):::data
+hc --> inst[institutional parcel]:::id
+inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-> sdoh("temporary housing,\n foster care,\n low income housing tax credit"):::data
 
-hc --> res([residential parcel]):::id
+hc --> res(residential parcel):::id
 
-res -. CCHMC \nlinkage -.-> hhh("home's hospitalization history \n (i.e., pedigree)"):::data
-res -. CAGIS & \nODC linkage -.-> hce(housing code enforcement,\n public service calls, crime):::data
+res -- CCHMC \nlinkage --> hhh("home's hospitalization history \n (i.e., pedigree)"):::data
+res -- CAGIS & \nODC linkage --> hce(housing code enforcement,\n public service calls, crime):::data
 
 res -- single family dwelling --> vat("family-level SES measures \n (e.g., value, age, condition, tenure)"):::data
 res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family dwelling, \n apartment with 20-39 units)"):::data
@@ -138,7 +136,7 @@ res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family 
 hc --> npm(not matched \nto a parcel):::tool
 ```
 
-### Hamilton County Auditor Online
+## Hamilton County Auditor Online Data
 
 The `hamilton_online_parcels` TDR is created by linking a saved scraping of the [auditor's website](https://wedge1.hcauditor.org/) to the parcel identifiers in the `cagis_parcels` TDR.
 
@@ -149,7 +147,7 @@ d_online <- codec::read_tdr_csv(fs::path_package("parcel", "hamilton_online_parc
 
 head(d_online)
 
-# without CODECtools:
+# without codec:
 # read.csv(fs::path_package("parcel", "hamilton_online_parcels"))
 ```
 
@@ -168,7 +166,7 @@ codec::glimpse_schema(d_parcel) |>
 ```
 
 
-### Inclusion/Exclusion Criteria for Parcel Data
+## Inclusion/Exclusion Criteria for Parcel Data
 
 Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) had a duplicated parcel identifier.
 
@@ -184,7 +182,19 @@ d_parcel |>
   knitr::kable()
 ```
 
-### Estimating the number of households per parcel
+## Non-Residential Parcels
+
+Known non-residential addresses will be matched and returned with a special parcel identifer denoting that the matched parcel is non-residential; e.g., Cincinnati Children's Hospital Medical Center, Jobs and Family Services, Ronald McDonald House):
+
+```{r}
+c("222 E Central Parkway Cincinnati Ohio 45220",
+  "3333 Burnet Ave Cincinnati Ohio 45219",
+  "3333 Burnet Avenue Cincinnati Ohio 45219",
+  "350 Erkenbrecher Ave Cincinnati Ohio 45219") |>
+  get_parcel_data()
+```
+
+## Estimating the number of households per parcel
 
 Certain calculations needs to be weighted by households instead of parcel; e.g. "What fraction of families live near roadway in Avondale?".  We assume the following as a conservative estimate of the number of households per parcel for each `land_use` code:
 
@@ -213,7 +223,7 @@ Certain calculations needs to be weighted by households instead of parcel; e.g. 
 |other residential structure     |0|
 |boataminium                     |0|
 
-### Identifiers for Parcels and Properties
+## Identifiers for Parcels and Properties
 
 A `parcel_id` refers to the Hamilton County Auditor's "Parcel Number", which is referred to as the "Property Number" within the CAGIS Open Data and uniquely identifies properties. In rare cases, multple addresses can share the same parcel boundaries, but have unique `parcel_id`s and in these cases, their resulting centroid coordinates would also be identical.
 
@@ -227,3 +237,9 @@ Because "second line" address components (e.g., "Unit 2B") are not captured, a s
 |14500010319 |             255000|condominium unit            |
 |14500010322 |             388230|condominium unit            |
 |14500010318 |             239500|condominium unit            |
+
+In this case, a special parcel identifier `TIED_MATCH` is returned to denote that the address matched more than one parcel:
+
+```{r}
+get_parcel_data("323 Fifth St W Cincinnati OH 45202")
+```

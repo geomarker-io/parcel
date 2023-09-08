@@ -11,3 +11,4 @@ docs
 /auditor_online_scrape_2023-08-10.rds
 /auditor_online_cache.zip
 /.Rprofile
+.Rproj.user
