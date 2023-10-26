@@ -18,6 +18,23 @@ test_that("link_parcel works", {
                c("2170054005900", "2270001008600", "2270001008600"))
 })
 
+test_that("link_apt works", {
+
+  link_apt("3830 President Drive Cincinnati Ohio 45225") |>
+    expect_identical("fay")
+
+  link_apt("2582 East Tower Drive Cincinnati Ohio 45238") |>
+    expect_identical("tower")
+
+  link_apt("224 Woolper Ave Cincinnati Ohio 45225") |>
+    expect_identical(NA)
+
+  link_apt("224 Woolper Ave Cincinnati Ohio 89344") |>
+    expect_warning("non-Cincinnati ZIP code")
+
+
+  })
+
 test_that("link_parcel works with inst addresses", {
   skip_if_no_dedupe()
   my_addresses <- c(

@@ -16,5 +16,6 @@ reference:
   - tag_address
 - title: Parcel identification
   contents:
-  - link_parcel
   - get_parcel_data
+  - link_parcel
+  - link_apt
