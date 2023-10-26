@@ -413,22 +413,20 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 </table>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>knitr.kable.NA <span class="op">=</span> <span class="st">''</span><span class="op">)</span></span>
-<span><span class="fu">codec</span><span class="fu">::</span><span class="fu"><a href="http://geomarker.io/codec/reference/glimpse_schema.html" class="external-link">glimpse_schema</a></span><span class="op">(</span><span class="va">d_parcel</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu">codec</span><span class="fu">::</span><span class="fu"><a href="http://geomarker.io/codec/reference/glimpse_schema.html" class="external-link">glimpse_schema</a></span><span class="op">(</span><span class="va">d_online</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col width="4%">
+<col width="15%">
+<col width="10%">
+<col width="68%">
 <col width="5%">
-<col width="12%">
-<col width="1%">
-<col width="75%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">name</th>
 <th align="left">title</th>
 <th align="left">description</th>
 <th align="left">type</th>
-<th align="left">constraints</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -436,105 +434,42 @@ hc --&gt; npm(not matched \nto a parcel):::tool</code></pre>
 <td align="left">Parcel Identifier</td>
 <td align="left">uniquely identifies properties; the auditor Parcel Number</td>
 <td align="left">string</td>
-<td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">parcel_address</td>
-<td align="left">Parcel Address</td>
-<td align="left">derived by pasting Property Address Number, Street, and Suffix</td>
-<td align="left">string</td>
+<td align="left">year_built</td>
 <td align="left"></td>
+<td align="left"></td>
+<td align="left">integer</td>
 </tr>
 <tr class="odd">
-<td align="left">property_addr_number</td>
-<td align="left">Address Number</td>
+<td align="left">n_total_rooms</td>
 <td align="left"></td>
-<td align="left">string</td>
 <td align="left"></td>
+<td align="left">integer</td>
 </tr>
 <tr class="even">
-<td align="left">property_addr_street</td>
-<td align="left">Address Street</td>
+<td align="left">n_bedrooms</td>
 <td align="left"></td>
-<td align="left">string</td>
 <td align="left"></td>
+<td align="left">integer</td>
 </tr>
 <tr class="odd">
-<td align="left">property_addr_suffix</td>
-<td align="left">Address Suffix</td>
+<td align="left">n_full_bathrooms</td>
 <td align="left"></td>
-<td align="left">string</td>
 <td align="left"></td>
+<td align="left">integer</td>
 </tr>
 <tr class="even">
-<td align="left">condo_id</td>
-<td align="left">Condo identifier</td>
-<td align="left">used to match two parcels to the same building of condos</td>
-<td align="left">string</td>
+<td align="left">n_half_bathrooms</td>
 <td align="left"></td>
+<td align="left"></td>
+<td align="left">integer</td>
 </tr>
 <tr class="odd">
-<td align="left">condo_unit</td>
-<td align="left">Condo unit</td>
-<td align="left">specifies a specific unit within a building of condos</td>
-<td align="left">string</td>
+<td align="left">online_market_total_value</td>
 <td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">parcel_centroid_lat</td>
-<td align="left">Parcel Centroid Latitude</td>
-<td align="left">coordinates derived from centroid of parcel shape</td>
+<td align="left">May differ from the market_total_value from CAGIS auditor online data. This value is scraped from the auditor’s website.</td>
 <td align="left">number</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">parcel_centroid_lon</td>
-<td align="left">Parcel Centroid Longitude</td>
-<td align="left">coordinates derived from centroid of parcel shape</td>
-<td align="left">number</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">market_total_value</td>
-<td align="left">Market Total Value</td>
-<td align="left"></td>
-<td align="left">number</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">land_use</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">string</td>
-<td align="left">apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority</td>
-</tr>
-<tr class="even">
-<td align="left">acreage</td>
-<td align="left">Acreage</td>
-<td align="left"></td>
-<td align="left">number</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">homestead</td>
-<td align="left">Homestead</td>
-<td align="left"></td>
-<td align="left">boolean</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">rental_registration</td>
-<td align="left">Rental Registration</td>
-<td align="left"></td>
-<td align="left">boolean</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">RED_25_FLAG</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">boolean</td>
-<td align="left"></td>
 </tr>
 </tbody>
 </table>
