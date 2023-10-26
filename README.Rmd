@@ -161,7 +161,7 @@ codec::glimpse_attr(d_online) |>
 ```{r}
 #| results: asis
 options(knitr.kable.NA = '')
-codec::glimpse_schema(d_parcel) |>
+codec::glimpse_schema(d_online) |>
   knitr::kable()
 ```
 
