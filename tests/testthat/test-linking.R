@@ -19,6 +19,7 @@ test_that("link_parcel works", {
 })
 
 test_that("link_apt works", {
+  skip_if_no_dedupe()
 
   link_apt("3830 President Drive Cincinnati Ohio 45225") |>
     expect_identical("fay")
