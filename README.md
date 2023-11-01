@@ -12,7 +12,33 @@ The goal of parcel is to provide tools for matching real-world addresses
 to reference sets of addresses; e.g., “352 Helen Street”, “352 Helen
 St.” or “352 helen st”. This package is motivated by the included
 example data resources of auditor parcel tax data from Hamilton County,
-Ohio.
+Ohio. Use `get_parcel_data()` to get the corresponding parcel data for a
+vector of addresses:
+
+``` r
+get_parcel_data(
+  c("1069 Overlook Avenue Cincinnati OH 45238",
+    "419 Elm St. Cincinnati OH 45238",
+    "3333 Burnet Ave Cincinnati OH 45219",
+    "3830 President Drive Cincinnati Ohio 45225",
+    "3544 Linwood Av Cincinnati OH 45226")
+)
+#> # A tibble: 5 × 23
+#>   input_address             parcel_id  score parcel_address property_addr_number
+#>   <chr>                     <chr>      <dbl> <chr>          <chr>               
+#> 1 1069 Overlook Avenue Cin… 1800A800…  0.717 1069 OVERLOOK… 1069                
+#> 2 419 Elm St. Cincinnati O… 54000410…  0.733 419 ELM ST     419                 
+#> 3 3333 Burnet Ave Cincinna… nonres-c…  0.733 <NA>           <NA>                
+#> 4 3830 President Drive Cin… president NA     <NA>           <NA>                
+#> 5 3544 Linwood Av Cincinna… 01900010…  0.733 3544 LINWOOD … 3544                
+#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
+#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
+#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
+#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
+#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
+#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
+#> #   online_market_total_value <dbl>
+```
 
 With this specific goal in mind, parcel includes:
 
@@ -28,7 +54,9 @@ With this specific goal in mind, parcel includes:
   Online](https://wedge1.hcauditor.org/)
 - functions for joining addresses to parcel identifiers based on an
   included model pretrained on electronic health record addresses in
-  Hamilton County, OH: **`link_parcel()`**
+  Hamilton County, OH and a list of custom pseudo-identifiers for
+  multi-building apartment complexes: **`link_parcel()`**,
+  **`link_apt()`**
 
 ## Installation
 
@@ -49,32 +77,7 @@ The development version of parcel can be installed with:
 pak::pak("geomarker-io/parcel")
 ```
 
-## Example Usage
-
-Use `get_parcel_data()` to get the corresponding parcel data for a
-vector of addresses:
-
-``` r
-library(parcel)
-get_parcel_data(c("1069 Overlook Avenue Cincinnati OH 45238",
-                  "419 Elm St. Cincinnati OH 45238",
-                  "3544 Linwood Av Cincinnati OH 45226"))
-#> # A tibble: 3 × 23
-#>   input_address              parcel_id score parcel_address property_addr_number
-#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
-#> 1 1069 Overlook Avenue Cinc… 1800A800… 0.717 1069 OVERLOOK… 1069                
-#> 2 419 Elm St. Cincinnati OH… 54000410… 0.733 419 ELM ST     419                 
-#> 3 3544 Linwood Av Cincinnat… 01900010… 0.733 3544 LINWOOD … 3544                
-#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
-#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
-#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
-#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
-#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
-#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
-#> #   online_market_total_value <dbl>
-```
-
-## Python, `miniconda`, and `virtualenv`
+### Python, `miniconda`, and `virtualenv`
 
 `reticulate::py_install()` assumes a non-system version of Python is
 already installed and will offer to install Miniconda and create an
@@ -101,6 +104,136 @@ python installation chosen to be used by reticulate and why by using:
 ``` r
 reticulate::py_config()
 reticulate::py_list_packages()
+```
+
+## Identifiers for Parcels and Properties
+
+A `parcel_id` refers to the Hamilton County Auditor’s “Parcel Number”,
+which is referred to as the “Property Number” within the CAGIS Open Data
+and uniquely identifies properties. In rare cases, multple addresses can
+share the same parcel boundaries, but have unique `parcel_id`s and in
+these cases, their resulting centroid coordinates would also be
+identical.
+
+Within the process of matching to a parcel, an individual address could
+be merged with differing types and resolutions of data:
+
+``` mermaid
+%%{init: { "fontFamily": "arial" } }%%
+
+flowchart LR
+classDef id fill:#fff,stroke:#000,stroke-width:1px;
+classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px,stroke-dasharray: 5 2;
+classDef data fill:#fff,stroke:#000,stroke-width:1px;
+
+addr(hospitalization):::id ---> hc("likely in \nHamilton County \n (by ZIP code)"):::data
+addr ---> nhc("not in Hamilton  County"):::tool
+
+hc --> inst[institutional parcel]:::id
+inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-> sdoh("temporary housing,\n foster care,\n low income housing tax credit"):::data
+
+hc --> res(residential parcel):::id
+
+res -- CCHMC \nlinkage --> hhh("home's hospitalization history \n (i.e., pedigree)"):::data
+res -- CAGIS & \nODC linkage --> hce(housing code enforcement,\n public service calls, crime):::data
+
+res -- single family dwelling --> vat("family-level SES measures \n (e.g., value, age, condition, tenure)"):::data
+res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family dwelling, \n apartment with 20-39 units)"):::data
+
+hc --> npm(not matched \nto a parcel):::tool
+```
+
+### Non-Residential Parcels
+
+Known non-residential addresses will be matched and returned with a
+special parcel identifer denoting that the matched parcel is
+non-residential; e.g., Cincinnati Children’s Hospital Medical Center,
+Jobs and Family Services, Ronald McDonald House):
+
+``` r
+get_parcel_data(
+  c("222 E Central Parkway Cincinnati Ohio 45220",
+    "3333 Burnet Ave Cincinnati Ohio 45219",
+    "3333 Burnet Avenue Cincinnati Ohio 45219",
+    "350 Erkenbrecher Ave Cincinnati Ohio 45219")
+) |>
+  dplyr::select(input_address, parcel_id)
+#> # A tibble: 4 × 2
+#>   input_address                               parcel_id     
+#>   <chr>                                       <chr>         
+#> 1 222 E Central Parkway Cincinnati Ohio 45220 nonres-jfs-e  
+#> 2 3333 Burnet Ave Cincinnati Ohio 45219       nonres-cchmc  
+#> 3 3333 Burnet Avenue Cincinnati Ohio 45219    nonres-cchmc  
+#> 4 350 Erkenbrecher Ave Cincinnati Ohio 45219  nonres-rmh-350
+```
+
+### Condominiums
+
+Because “second line” address components (e.g., “Unit 2B”) are not
+captured, a single address can refer to multiple parcels in the case of
+condos or otherwise shared building ownership. For example, the address
+“323 Fifth St” has six distinct `parcel_id`s, each with different home
+values and land uses:
+
+| parcel_id   | market_total_value | land_use                    |
+|:------------|-------------------:|:----------------------------|
+| 14500010321 |             397500 | condominium unit            |
+| 14500010317 |             123000 | condominium office building |
+| 14500010320 |             180000 | condominium unit            |
+| 14500010319 |             255000 | condominium unit            |
+| 14500010322 |             388230 | condominium unit            |
+| 14500010318 |             239500 | condominium unit            |
+
+In this case, a special parcel identifier `TIED_MATCH` is returned to
+denote that the address matched more than one parcel:
+
+``` r
+get_parcel_data("323 Fifth St W Cincinnati OH 45202")$parcel_id
+#> [1] "TIED_MATCHES"
+```
+
+### Large Apartment Complexes
+
+Large apartment complexes often use multiple mailing addresses that are
+not the same as the parcel address(es). In these special cases,
+`link_apt()` is used to match addresses exactly based on their street
+name if the street number falls within a certain range:
+
+``` r
+str(parcel:::apt_defs)
+#> List of 8
+#>  $ president  :List of 3
+#>   ..$ street_name: chr [1:2] "president drive" "president dr"
+#>   ..$ range_low  : num 3000
+#>   ..$ range_high : num 3999
+#>  $ tower      :List of 3
+#>   ..$ street_name: chr [1:4] "east tower drive" "e tower drive" "east tower dr" "e tower dr"
+#>   ..$ range_low  : num 2000
+#>   ..$ range_high : num 29999
+#>  $ bahama     :List of 3
+#>   ..$ street_name: chr [1:3] "bahama terrace" "bahama te" "bahama ter"
+#>   ..$ range_low  : num 5000
+#>   ..$ range_high : num 5999
+#>  $ hawaiian   :List of 3
+#>   ..$ street_name: chr [1:3] "hawaiian terrace" "hawaiian te" "hawaiian ter"
+#>   ..$ range_low  : num 4000
+#>   ..$ range_high : num 5999
+#>  $ dewdrop    :List of 3
+#>   ..$ street_name: chr "dewdrop circle"
+#>   ..$ range_low  : num 400
+#>   ..$ range_high : num 599
+#>  $ winneste   :List of 3
+#>   ..$ street_name: chr [1:3] "winneste avenue" "winneste ave" "winneste av"
+#>   ..$ range_low  : num 4000
+#>   ..$ range_high : num 5999
+#>  $ walden_glen:List of 3
+#>   ..$ street_name: chr "walden glen circle"
+#>   ..$ range_low  : num 2000
+#>   ..$ range_high : num 2999
+#>  $ clovernook :List of 3
+#>   ..$ street_name: chr [1:3] "clovernook avenue" "clovernook ave" "clovernook av"
+#>   ..$ range_low  : num 7000
+#>   ..$ range_high : num 7999
 ```
 
 ## CAGIS Parcels Data
@@ -171,38 +304,49 @@ codec::glimpse_schema(d_parcel) |>
 | rental_registration  | Rental Registration       |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
 | RED_25_FLAG          |                           |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
 
+Auditor parcel-level data were excluded if they (1) did not contain a
+parcel identifier, (2) did not contain a property address number/name,
+or (3) had a duplicated parcel identifier.
+
+Parcels with the following land use categories are included in the data
+resource and others are excluded. These were selected to reflect
+*residential* usages of parcels.
+
+``` r
+library(dplyr, warn.conflicts = FALSE)
+
+d_parcel |>
+  group_by(land_use) |>
+  summarize(n_parcels = n()) |>
+  arrange(desc(n_parcels)) |>
+  knitr::kable()
+```
+
+| land_use                       | n_parcels |
+|:-------------------------------|----------:|
+| single family dwelling         |    213044 |
+| condominium unit               |     19754 |
+| two family dwelling            |     11352 |
+| apartment, 4-19 units          |      5659 |
+| landominium                    |      3047 |
+| three family dwelling          |      1863 |
+| condo or pud garage            |      1063 |
+| other residential structure    |       875 |
+| metropolitan housing authority |       744 |
+| apartment, 40+ units           |       625 |
+| apartment, 20-39 units         |       457 |
+| manufactured home              |       204 |
+| office / apartment over        |       188 |
+| boataminium                    |       141 |
+| other commercial housing       |        99 |
+| mobile home / trailer park     |        40 |
+| lihtc res                      |        25 |
+
 Some of the parcel characteristics do not make sense in certain contexts
 and should not be interpreted incorrectly; for example, the value of a
 parcel for a multi-family or multi-unit housing structure shouldn’t be
 compared to the value of a parcel for a single-family household for the
-purposes of assesing individual-level SES. Within the process of
-matching to a parcel, an individual address could be merged with
-differing types and resolutions of data:
-
-``` mermaid
-%%{init: { "fontFamily": "arial" } }%%
-
-flowchart LR
-classDef id fill:#fff,stroke:#000,stroke-width:1px;
-classDef tool fill:#e8e8e8,stroke:#000,stroke-width:1px,stroke-dasharray: 5 2;
-classDef data fill:#fff,stroke:#000,stroke-width:1px;
-
-addr(hospitalization):::id ---> hc("likely in \nHamilton County \n (by ZIP code)"):::data
-addr ---> nhc("not in Hamilton  County"):::tool
-
-hc --> inst[institutional parcel]:::id
-inst -. "institution 'type' linkage\n (e.g., JFS, CCHMC, RMH)" .-> sdoh("temporary housing,\n foster care,\n low income housing tax credit"):::data
-
-hc --> res(residential parcel):::id
-
-res -- CCHMC \nlinkage --> hhh("home's hospitalization history \n (i.e., pedigree)"):::data
-res -- CAGIS & \nODC linkage --> hce(housing code enforcement,\n public service calls, crime):::data
-
-res -- single family dwelling --> vat("family-level SES measures \n (e.g., value, age, condition, tenure)"):::data
-res -- multi-family dwelling --> lu("auditor land use type \n (e.g., two family dwelling, \n apartment with 20-39 units)"):::data
-
-hc --> npm(not matched \nto a parcel):::tool
-```
+purposes of assesing individual-level SES.
 
 ## Hamilton County Auditor Online Data
 
@@ -265,75 +409,6 @@ codec::glimpse_schema(d_online) |>
 | n_half_bathrooms          |                   |                                                                                                                          | integer |
 | online_market_total_value |                   | May differ from the market_total_value from CAGIS auditor online data. This value is scraped from the auditor’s website. | number  |
 
-## Inclusion/Exclusion Criteria for Parcel Data
-
-Auditor parcel-level data were excluded if they (1) did not contain a
-parcel identifier, (2) did not contain a property address number/name,
-or (3) had a duplicated parcel identifier.
-
-Parcels with the following land use categories are included in the data
-resource and others are excluded. These were selected to reflect
-*residential* usages of parcels.
-
-``` r
-library(dplyr, warn.conflicts = FALSE)
-
-d_parcel |>
-  group_by(land_use) |>
-  summarize(n_parcels = n()) |>
-  arrange(desc(n_parcels)) |>
-  knitr::kable()
-```
-
-| land_use                       | n_parcels |
-|:-------------------------------|----------:|
-| single family dwelling         |    213044 |
-| condominium unit               |     19754 |
-| two family dwelling            |     11352 |
-| apartment, 4-19 units          |      5659 |
-| landominium                    |      3047 |
-| three family dwelling          |      1863 |
-| condo or pud garage            |      1063 |
-| other residential structure    |       875 |
-| metropolitan housing authority |       744 |
-| apartment, 40+ units           |       625 |
-| apartment, 20-39 units         |       457 |
-| manufactured home              |       204 |
-| office / apartment over        |       188 |
-| boataminium                    |       141 |
-| other commercial housing       |        99 |
-| mobile home / trailer park     |        40 |
-| lihtc res                      |        25 |
-
-## Non-Residential Parcels
-
-Known non-residential addresses will be matched and returned with a
-special parcel identifer denoting that the matched parcel is
-non-residential; e.g., Cincinnati Children’s Hospital Medical Center,
-Jobs and Family Services, Ronald McDonald House):
-
-``` r
-c("222 E Central Parkway Cincinnati Ohio 45220",
-  "3333 Burnet Ave Cincinnati Ohio 45219",
-  "3333 Burnet Avenue Cincinnati Ohio 45219",
-  "350 Erkenbrecher Ave Cincinnati Ohio 45219") |>
-  get_parcel_data()
-#> # A tibble: 4 × 23
-#>   input_address              parcel_id score parcel_address property_addr_number
-#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
-#> 1 222 E Central Parkway Cin… nonres-j… 0.620 <NA>           <NA>                
-#> 2 3333 Burnet Ave Cincinnat… nonres-c… 0.733 <NA>           <NA>                
-#> 3 3333 Burnet Avenue Cincin… nonres-c… 0.720 <NA>           <NA>                
-#> 4 350 Erkenbrecher Ave Cinc… nonres-r… 0.733 <NA>           <NA>                
-#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
-#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
-#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
-#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
-#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
-#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
-#> #   online_market_total_value <dbl>
-```
-
 ## Estimating the number of households per parcel
 
 Certain calculations needs to be weighted by households instead of
@@ -365,45 +440,3 @@ households per parcel for each `land_use` code:
 | condominium office building     |            0 |
 | other residential structure     |            0 |
 | boataminium                     |            0 |
-
-## Identifiers for Parcels and Properties
-
-A `parcel_id` refers to the Hamilton County Auditor’s “Parcel Number”,
-which is referred to as the “Property Number” within the CAGIS Open Data
-and uniquely identifies properties. In rare cases, multple addresses can
-share the same parcel boundaries, but have unique `parcel_id`s and in
-these cases, their resulting centroid coordinates would also be
-identical.
-
-Because “second line” address components (e.g., “Unit 2B”) are not
-captured, a single address can refer to multiple parcels in the case of
-condos or otherwise shared building ownership. For example, the address
-“323 Fifth St” has six distinct `parcel_id`s, each with different home
-values and land uses:
-
-| parcel_id   | market_total_value | land_use                    |
-|:------------|-------------------:|:----------------------------|
-| 14500010321 |             397500 | condominium unit            |
-| 14500010317 |             123000 | condominium office building |
-| 14500010320 |             180000 | condominium unit            |
-| 14500010319 |             255000 | condominium unit            |
-| 14500010322 |             388230 | condominium unit            |
-| 14500010318 |             239500 | condominium unit            |
-
-In this case, a special parcel identifier `TIED_MATCH` is returned to
-denote that the address matched more than one parcel:
-
-``` r
-get_parcel_data("323 Fifth St W Cincinnati OH 45202")
-#> # A tibble: 1 × 23
-#>   input_address              parcel_id score parcel_address property_addr_number
-#>   <chr>                      <chr>     <dbl> <chr>          <chr>               
-#> 1 323 Fifth St W Cincinnati… TIED_MAT… 0.733 <NA>           <NA>                
-#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
-#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
-#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
-#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
-#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
-#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
-#> #   online_market_total_value <dbl>
-```
