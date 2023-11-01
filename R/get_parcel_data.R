@@ -40,7 +40,8 @@ get_parcel_data <- function(x) {
     dplyr::rowwise() |>
     dplyr::mutate(apt_id = link_apt(input_address)) |>
     dplyr::mutate(parcel_id = dplyr::coalesce(apt_id, parcel_id)) |>
-    dplyr::select(-apt_id)
+    dplyr::select(-apt_id) |>
+    dplyr::ungroup()
 
   d_parcel <-
     fs::path_package("parcel", "cagis_parcels") |>
