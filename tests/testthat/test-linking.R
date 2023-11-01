@@ -22,11 +22,20 @@ test_that("link_apt works", {
   skip_if_no_dedupe()
 
   link_apt("3830 President Drive Cincinnati Ohio 45225") |>
-    expect_identical("fay")
+    expect_identical("president")
+
+  # under range
+  link_apt("2998 President Drive Cincinnati Ohio 45225") |>
+    expect_identical(NA)
+
+  # over range
+  link_apt("4001 President Drive Cincinnati Ohio 45225") |>
+    expect_identical(NA)
 
   link_apt("2582 East Tower Drive Cincinnati Ohio 45238") |>
     expect_identical("tower")
 
+  # no matched street
   link_apt("224 Woolper Ave Cincinnati Ohio 45225") |>
     expect_identical(NA)
 

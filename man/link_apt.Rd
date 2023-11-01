@@ -2,15 +2,18 @@
 % Please edit documentation in R/link_apt.R
 \name{link_apt}
 \alias{link_apt}
-\title{Link one addresses to custom parcel identifiers based on street names and ranges}
+\title{Link one address to custom parcel identifiers based on street names and ranges}
 \usage{
 link_apt(x)
 }
 \arguments{
-\item{x}{a vector of address character strings}
+\item{x}{a single address character string}
+}
+\value{
+apt pseudo-identifier character string; \code{NA} if not matched
 }
 \description{
 This function will probably take a long time to map over large numbers of addresses.
 Reduce the use of this function by only applying it to addresses that are unmatched
-with \code{link_parcel()}, but have a Cincinnati ZIP code. (
+with \code{link_parcel()}, but have a Cincinnati ZIP code.
 }
