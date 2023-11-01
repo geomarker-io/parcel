@@ -2,7 +2,7 @@
 % Please edit documentation in R/link_apt.R
 \name{link_apt}
 \alias{link_apt}
-\title{Link one address to custom parcel identifiers based on street names and ranges}
+\title{Link one address to parcel pseudo-identifiers for apartment complexes}
 \usage{
 link_apt(x)
 }
@@ -13,7 +13,10 @@ link_apt(x)
 apt pseudo-identifier character string; \code{NA} if not matched
 }
 \description{
-This function will probably take a long time to map over large numbers of addresses.
-Reduce the use of this function by only applying it to addresses that are unmatched
-with \code{link_parcel()}, but have a Cincinnati ZIP code.
+To match a parcel to an apartment complex pseudo-identifier, it must contain:
+\itemize{
+\item a Hamilton County ZIP code
+\item a street name matching the street names in \code{parcel:::apt_defs}
+\item a street number within the ranges for each pseudo-identifier in \code{parcel:::apt_defs}
+}
 }

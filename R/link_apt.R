@@ -1,14 +1,15 @@
-#' Link one address to custom parcel identifiers based on street names and ranges
+#' Link one address to parcel pseudo-identifiers for apartment complexes
 #'
-#' This function will probably take a long time to map over large numbers of addresses.
-#' Reduce the use of this function by only applying it to addresses that are unmatched
-#' with `link_parcel()`, but have a Cincinnati ZIP code.
+#' To match a parcel to an apartment complex pseudo-identifier, it must contain:  
+#' - a Hamilton County ZIP code
+#' - a street name matching the street names in `parcel:::apt_defs`
+#' - a street number within the ranges for each pseudo-identifier in `parcel:::apt_defs`
+#'
 #' @param x a single address character string
 #' @return apt pseudo-identifier character string; `NA` if not matched
 link_apt <- function(x) {
   x_tags <- tag_address(x)
   if (!x_tags$zip_code %in% cincy::zcta_tigris_2020$zcta_2020) {
-    warning("At least one non-Cincinnati ZIP code found; returning NA")
     return(NA)
   }
   apt_id <-

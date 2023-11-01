@@ -6,14 +6,16 @@
 #' Note that one address can be linked to more than one parcel with the same match score (e.g.,
 #' "323 Fifth" on https://wedge3.hcauditor.org/search_results). In this case,
 #' a special identifier, `TIED_MATCHES` is returned instead of a missing `parcel_id`.
+#' Addresses are subsequently tried to be matched with a known apartment
+#' complex using `link_apt()`. (Matched apartment complex psuedo-identifers take precedence over
+#' matched parcel identifers.)
 #' The `hamilton_online_parcels` tabular data resource is also linked based on `parcel_id`.
-#' For finer control of selecting matched parcels based on scores, use `link_parcel()`
+#' For finer control of selecting matched parcels based on scores, use `link_parcel()` and `link_apt()`
 #' @param x a vector of address character strings
 #' @return a tibble with the `input_address`es defined in `x` in the first column,
 #' and columns corresponding to matched parcel characteristics from CAGIS and Auditor Online Summary website
 #' @export
 get_parcel_data <- function(x) {
-
   parcel_links <- link_parcel(x)
 
   tied_high_scores_addresses <-
@@ -31,8 +33,16 @@ get_parcel_data <- function(x) {
     dplyr::group_by(input_address) |>
     dplyr::arrange(dplyr::desc(score), .by_group = TRUE) |>
     dplyr::slice(1)
-  
-  d_parcel <- 
+
+  x_parcels <-
+    tibble::tibble(input_address = x) |>
+    dplyr::left_join(parcel_matches, by = dplyr::join_by(input_address)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(apt_id = link_apt(input_address)) |>
+    dplyr::mutate(parcel_id = dplyr::coalesce(apt_id, parcel_id)) |>
+    dplyr::select(-apt_id)
+
+  d_parcel <-
     fs::path_package("parcel", "cagis_parcels") |>
     codec::read_tdr_csv()
 
@@ -40,8 +50,7 @@ get_parcel_data <- function(x) {
     fs::path_package("parcel", "hamilton_online_parcels") |>
     codec::read_tdr_csv()
 
-  tibble::tibble(input_address = x) |>
-    dplyr::left_join(parcel_matches, by = dplyr::join_by(input_address)) |>
+  x_parcels |>
     dplyr::left_join(d_parcel, by = dplyr::join_by(parcel_id), relationship = "many-to-one") |>
     dplyr::left_join(d_online_parcel, by = dplyr::join_by(parcel_id), relationship = "many-to-one")
-  }
+}

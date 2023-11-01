@@ -14,8 +14,10 @@ test_that("link_parcel works", {
   )
   my_addr_links <- link_parcel(my_addresses, threshold = 0.2)
   expect_equal(nrow(my_addr_links), 3)
-  expect_equal(my_addr_links$parcel_id,
-               c("2170054005900", "2270001008600", "2270001008600"))
+  expect_equal(
+    my_addr_links$parcel_id,
+    c("2170054005900", "2270001008600", "2270001008600")
+  )
 })
 
 test_that("link_apt works", {
@@ -40,10 +42,8 @@ test_that("link_apt works", {
     expect_identical(NA)
 
   link_apt("224 Woolper Ave Cincinnati Ohio 89344") |>
-    expect_warning("non-Cincinnati ZIP code")
-
-
-  })
+    expect_identical(NA)
+})
 
 test_that("link_parcel works with inst addresses", {
   skip_if_no_dedupe()
@@ -63,24 +63,29 @@ test_that("link_parcel works with inst addresses", {
     dplyr::left_join(my_addr_links, by = c("address" = "input_address"))
   out
   expect_equal(length(my_addresses), nrow(out))
-  expect_equal(out$parcel_id,
-               paste0("nonres-", c("jfs-e", "jfs", "eden-3031", "eden-3010", "cchmc", "cchmc", "rmh-341", "rmh-350")))
+  expect_equal(
+    out$parcel_id,
+    paste0("nonres-", c("jfs-e", "jfs", "eden-3031", "eden-3010", "cchmc", "cchmc", "rmh-341", "rmh-350"))
+  )
 })
 
 test_that("get_parcel_data works", {
   skip_if_no_dedupe()
   out <-
-    c("352 Helen St Cincinnati OH 45202",
-    "5377 Bahama Ter Cincinnati Ohio 45223",
-    "1851 Campbell Dr Hamilton Ohio 45011") |>
+    c(
+      "352 Helen St Cincinnati OH 45202",
+      "224 Woolper Ave Cincinnati OH 45229",
+      "5377 Bahama Ter Cincinnati Ohio 45223", # TODO will now be matched to "bahama" instead of an exact id
+      "1851 Campbell Dr Hamilton Ohio 45011"
+    ) |>
     get_parcel_data()
-  expect_equal(nrow(out), 3)
-  expect_equal(as.vector(out$homestead), c(NA, FALSE, NA))
-  expect_equal(as.vector(out$parcel_id), c(NA, "2270001008600", NA))
-  expect_equal(as.vector(out$year_built), c(NA, 1968, NA))
-  expect_equal(as.vector(out$n_total_rooms), c(NA, 8, NA))
-  expect_equal(as.vector(out$online_market_total_value), c(NA, 164610, NA))
-  })
+  expect_equal(nrow(out), 4)
+  expect_equal(as.vector(out$homestead), c(NA, FALSE, NA, NA))
+  expect_equal(as.vector(out$parcel_id), c(NA, "2170054005900", "bahama", NA))
+  expect_equal(as.vector(out$year_built), c(NA, 1912, NA, NA))
+  expect_equal(as.vector(out$n_total_rooms), c(NA, 6, NA, NA))
+  expect_equal(as.vector(out$online_market_total_value), c(NA, 265990, NA, NA))
+})
 
 test_that("get_parcel_data only returns 1 row, possibly TIED_MATCH, per input address", {
   skip_if_no_dedupe()
