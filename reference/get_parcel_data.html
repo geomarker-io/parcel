@@ -5,8 +5,11 @@ input address and this function chooses the single best match based on the maxim
 Note that one address can be linked to more than one parcel with the same match score (e.g.,
 "323 Fifth" on https://wedge3.hcauditor.org/search_results). In this case,
 a special identifier, TIED_MATCHES is returned instead of a missing parcel_id.
+Addresses are subsequently tried to be matched with a known apartment
+complex using link_apt(). (Matched apartment complex psuedo-identifers take precedence over
+matched parcel identifers.)
 The hamilton_online_parcels tabular data resource is also linked based on parcel_id.
-For finer control of selecting matched parcels based on scores, use link_parcel()'><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
+For finer control of selecting matched parcels based on scores, use link_parcel() and link_apt()'><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
@@ -24,7 +27,7 @@ For finer control of selecting matched parcels based on scores, use link_parcel(
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">parcel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.0</span>
       </span>
     </div>
 
@@ -53,8 +56,11 @@ input address and this function chooses the single best match based on the maxim
 Note that one address can be linked to more than one parcel with the same match score (e.g.,
 "323 Fifth" on https://wedge3.hcauditor.org/search_results). In this case,
 a special identifier, <code>TIED_MATCHES</code> is returned instead of a missing <code>parcel_id</code>.
+Addresses are subsequently tried to be matched with a known apartment
+complex using <code><a href="link_apt.html">link_apt()</a></code>. (Matched apartment complex psuedo-identifers take precedence over
+matched parcel identifers.)
 The <code>hamilton_online_parcels</code> tabular data resource is also linked based on <code>parcel_id</code>.
-For finer control of selecting matched parcels based on scores, use <code><a href="link_parcel.html">link_parcel()</a></code></p>
+For finer control of selecting matched parcels based on scores, use <code><a href="link_parcel.html">link_parcel()</a></code> and <code><a href="link_apt.html">link_apt()</a></code></p>
     </div>
 
     <div id="ref-usage">
