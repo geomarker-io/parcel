@@ -20,6 +20,9 @@ input address and this function chooses the single best match based on the maxim
 Note that one address can be linked to more than one parcel with the same match score (e.g.,
 "323 Fifth" on https://wedge3.hcauditor.org/search_results). In this case,
 a special identifier, \code{TIED_MATCHES} is returned instead of a missing \code{parcel_id}.
+Addresses are subsequently tried to be matched with a known apartment
+complex using \code{link_apt()}. (Matched apartment complex psuedo-identifers take precedence over
+matched parcel identifers.)
 The \code{hamilton_online_parcels} tabular data resource is also linked based on \code{parcel_id}.
-For finer control of selecting matched parcels based on scores, use \code{link_parcel()}
+For finer control of selecting matched parcels based on scores, use \code{link_parcel()} and \code{link_apt()}
 }
