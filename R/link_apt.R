@@ -1,6 +1,6 @@
 #' Link one address to parcel pseudo-identifiers for apartment complexes
 #'
-#' To match a parcel to an apartment complex pseudo-identifier, it must contain:  
+#' To match a parcel to an apartment complex pseudo-identifier, it must contain:
 #' - a Hamilton County ZIP code
 #' - a street name matching the street names in `parcel:::apt_defs`
 #' - a street number within the ranges for each pseudo-identifier in `parcel:::apt_defs`
@@ -17,9 +17,15 @@ link_apt <- function(x) {
     purrr::map_lgl(\(x) x_tags[["street_name"]] %in% x) |>
     which() |>
     names()
-  if(length(apt_id) == 0) return(NA)
-  if (x_tags$street_number < apt_defs[[apt_id]]$range_low) return(NA)
-  if (x_tags$street_number > apt_defs[[apt_id]]$range_high) return(NA)
+  if (length(apt_id) == 0) {
+    return(NA)
+  }
+  if (x_tags$street_number < apt_defs[[apt_id]]$range_low) {
+    return(NA)
+  }
+  if (x_tags$street_number > apt_defs[[apt_id]]$range_high) {
+    return(NA)
+  }
   return(apt_id)
 }
 
@@ -27,48 +33,57 @@ apt_defs <-
   list(
     "president" =
       list(
-        street_name = c("president drive", "president dr"),
+        street_name = paste("president", c("drive", "dr")),
         range_low = 3000,
-        range_high = 3999
+        range_high = 4999
       ),
     "tower" =
       list(
-        street_name = c("east tower drive", "e tower drive", "east tower dr", "e tower dr"),
+        street_name = c(paste("east tower", c("drive", "dr")), paste("e tower", c("drive", "dr"))),
         range_low = 2000,
         range_high = 29999
       ),
     "bahama" =
       list(
-        street_name = c("bahama terrace", "bahama te", "bahama ter"),
+        street_name = paste("bahama", c("terrace", "te", "ter", "terr")),
         range_low = 5000,
         range_high = 5999
       ),
     "hawaiian" =
       list(
-        street_name = c("hawaiian terrace", "hawaiian te", "hawaiian ter"),
+        street_name = paste("hawaiian", c("terrace", "te", "ter", "terr")),
         range_low = 4000,
         range_high = 5999
       ),
     "dewdrop" =
       list(
-        street_name = c("dewdrop circle"),
+        street_name = paste("dewdrop circle", c("circle", "cir")),
         range_low = 400,
         range_high = 599
       ),
     "winneste" =
       list(
-        street_name = c("winneste avenue", "winneste ave", "winneste av"),
-        range_low = 4000,
-        range_high = 5999
-      ),
-    "walden_glen" =
-      list(street_name = c("walden glen circle"),
-           range_low = 2000,
-           range_high = 2999
-           ),
-    "clovernook" =
-      list(street_name = c("clovernook avenue", "clovernook ave", "clovernook av"),
-           range_low = 7000,
-           range_high = 7999
-           )
+        street_name = paste("winneste", c("avenue", "ave", "av"),
+          range_low = 4000,
+          range_high = 5999
+        ),
+        "walden_glen" =
+          list(
+            street_name = paste("walden glen", c("circle", "cir")),
+            range_low = 2000,
+            range_high = 2999
+          ),
+        "clovernook" =
+          list(
+            street_name = paste("clovernook", c("avenue", "ave", "av")),
+            range_low = 7000,
+            range_high = 7999
+          ),
+        "nottingham" =
+          list(
+            street_name = paste("nottingham", c("road", "rd", "drive", "dr")),
+            range_low = 2000,
+            range_high = 2999
+          )
+      )
   )

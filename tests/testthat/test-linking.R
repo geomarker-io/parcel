@@ -31,7 +31,7 @@ test_that("link_apt works", {
     expect_identical(NA)
 
   # over range
-  link_apt("4001 President Drive Cincinnati Ohio 45225") |>
+  link_apt("5001 President Drive Cincinnati Ohio 45225") |>
     expect_identical(NA)
 
   link_apt("2582 East Tower Drive Cincinnati Ohio 45238") |>
