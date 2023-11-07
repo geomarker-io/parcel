@@ -63,27 +63,26 @@ apt_defs <-
       ),
     "winneste" =
       list(
-        street_name = paste("winneste", c("avenue", "ave", "av"),
-          range_low = 4000,
-          range_high = 5999
-        ),
-        "walden_glen" =
-          list(
-            street_name = paste("walden glen", c("circle", "cir")),
-            range_low = 2000,
-            range_high = 2999
-          ),
-        "clovernook" =
-          list(
-            street_name = paste("clovernook", c("avenue", "ave", "av")),
-            range_low = 7000,
-            range_high = 7999
-          ),
-        "nottingham" =
-          list(
-            street_name = paste("nottingham", c("road", "rd", "drive", "dr")),
-            range_low = 2000,
-            range_high = 2999
-          )
+        street_name = paste("winneste", c("avenue", "ave", "av")),
+        range_low = 4000,
+        range_high = 5999
+      ),
+    "walden_glen" =
+      list(
+        street_name = paste("walden glen", c("circle", "cir")),
+        range_low = 2000,
+        range_high = 2999
+      ),
+    "clovernook" =
+      list(
+        street_name = paste("clovernook", c("avenue", "ave", "av")),
+        range_low = 7000,
+        range_high = 7999
+      ),
+    "nottingham" =
+      list(
+        street_name = paste("nottingham", c("road", "rd", "drive", "dr")),
+        range_low = 2000,
+        range_high = 2999
       )
   )
