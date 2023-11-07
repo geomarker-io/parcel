@@ -61,11 +61,10 @@ test_that("link_parcel works with inst addresses", {
   out <-
     tibble::tibble(address = my_addresses) |>
     dplyr::left_join(my_addr_links, by = c("address" = "input_address"))
-  out
   expect_equal(length(my_addresses), nrow(out))
   expect_equal(
     out$parcel_id,
-    paste0("nonres-", c("jfs-e", "jfs", "eden-3031", "eden-3010", "cchmc", "cchmc", "rmh-341", "rmh-350"))
+    paste0("nonres-", c("jfs", "jfs", "eden-3031", "eden-3010", "cchmc", "cchmc", "rmh-341", "rmh-350"))
   )
 })
 
