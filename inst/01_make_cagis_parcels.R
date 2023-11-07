@@ -1,6 +1,6 @@
 library(dplyr)
 library(sf)
-library(codec)
+library(fr)
 
 # make sure {parcel} is loaded using devtools::load_all() to access read/write paths inside package during development
 if (!fs::file_exists(fs::path_package("parcel", "ham_merge_parcels.gdb"))) {
@@ -9,97 +9,30 @@ if (!fs::file_exists(fs::path_package("parcel", "ham_merge_parcels.gdb"))) {
   unzip(tmp, exdir = fs::path_package("parcel"))
 }
 
-parcel_gdb <- fs::path_package("parcel", "ham_merge_parcels.gdb")
-
 ## st_layers(dsn = parcel_gdb)
 rd <-
-  st_read(dsn = parcel_gdb, layer = "HAM_PARCELS_MERGED_W_CONDOS") |>
-  st_zm(drop = TRUE, what = "ZM") |>
-  st_cast("MULTIPOLYGON")
-
-coords <-
-  rd |>
-  st_centroid() |>
-  st_transform(4326) |>
-  st_coordinates()
-
-rd <-
-  rd |>
-  mutate(
-    parcel_centroid_lon = coords[, "X"],
-    parcel_centroid_lat = coords[, "Y"]
-  ) |>
-  st_drop_geometry(d) |>
+  st_read(dsn = fs::path_package("parcel", "ham_merge_parcels.gdb"), layer = "HAM_PARCELS_MERGED_W_CONDOS") |>
+  st_drop_geometry() |>
   tibble::as_tibble()
 
 # remove duplicated entries for a parcel id
-nrow(rd) #354,521
+nrow(rd) # 354,521
 rd <- distinct(rd, AUDPTYID, .keep_all = TRUE)
-nrow(rd) #352,529
+nrow(rd) # 352,529
 
-d <-
-  tibble::tibble(parcel_id = rd$AUDPTYID) |>
-  add_col_attrs(parcel_id,
-    title = "Parcel Identifier",
-    description = "uniquely identifies properties; the auditor Parcel Number"
-  ) |>
-  mutate(property_addr_number = rd$ADDRNO) |>
-  add_col_attrs(property_addr_number,
-    title = "Address Number"
-  ) |>
-  mutate(property_addr_street = rd$ADDRST) |>
-  add_col_attrs(property_addr_street,
-    title = "Address Street"
-  ) |>
-  mutate(property_addr_suffix = rd$ADDRSF) |>
-  add_col_attrs(property_addr_suffix,
-    title = "Address Suffix"
-  ) |>
-  mutate(condo_id = rd$CONDOMTCH) |>
-  add_col_attrs(condo_id,
-                title = "Condo identifier",
-                description = "used to match two parcels to the same building of condos") |>
-  mutate(condo_unit = rd$UNIT) |>
-  add_col_attrs(condo_unit,
-                title = "Condo unit",
-                description = "specifies a specific unit within a building of condos") |>
-  mutate(parcel_centroid_lat = rd$parcel_centroid_lat) |>
-  add_col_attrs(parcel_centroid_lat,
-    title = "Parcel Centroid Latitude",
-    description = "coordinates derived from centroid of parcel shape"
-  ) |>
-  mutate(parcel_centroid_lon = rd$parcel_centroid_lon) |>
-  add_col_attrs(parcel_centroid_lon,
-    title = "Parcel Centroid Longitude",
-    description = "coordinates derived from centroid of parcel shape"
-  ) |>
-  mutate(market_total_value = rd$MKT_TOTAL_VAL) |>
-  add_col_attrs(market_total_value,
-    title = "Market Total Value"
-  ) |>
-  mutate(land_use = rd$CLASS) |>
-  add_col_attrs(land_use,
-    title = "Auditor Land Use"
-  ) |>
-  mutate(acreage = rd$ACREDEED) |>
-  add_col_attrs(acreage,
-    title = "Acreage"
-  ) |>
-  mutate(homestead = rd$HMSD_FLAG == "Y") |>
-  add_col_attrs(homestead,
-    title = "Homestead"
-    ) |>
-  mutate(rental_registration = rd$RENT_REG_FLAG == "Y") |>
-  add_col_attrs(rental_registration,
-                title = "Rental Registration") |>
-  mutate(RED_25_FLAG = rd$RED_25_FLAG == "Y")
+d <- rd |>
+  tidyr::unite(
+    col = "parcel_address",
+    tidyselect::any_of(c("ADDRNO", "ADDRST", "ADDRSF")),
+    sep = " ", na.rm = TRUE, remove = FALSE
+  )
 
 # remove those without a parcel_id
 d <- filter(d, !is.na(parcel_id))
-nrow(d) #352528
+nrow(d) # 352529
 # remove missing property address number or street
-d <- filter(d, (!is.na(property_addr_number)) & (!is.na(property_addr_street)))
-nrow(d) #320832
+d <- filter(d, (!is.na(ADDRNO)) & (!is.na(ADDRST)))
+nrow(d) # 320832
 
 # filter to residential land use codes
 lu_keepers <-
@@ -124,25 +57,27 @@ lu_keepers <-
   )
 
 d <- d |>
-  filter(land_use %in% lu_keepers) |>
-  mutate(land_use = forcats::fct_recode(as.factor(land_use), !!!lu_keepers))
+  filter(CLASS %in% lu_keepers) |>
+  mutate(land_use = forcats::fct_recode(as.factor(CLASS), !!!lu_keepers))
 nrow(d) # 259180
 
-d <- d |>
-  tidyr::unite(
-    col = "parcel_address",
-    tidyselect::any_of(c("property_addr_number", "property_addr_street", "property_addr_suffix")),
-    sep = " ", na.rm = TRUE, remove = FALSE
-  ) |>
-  add_col_attrs(parcel_address,
-    title = "Parcel Address",
-    description = "derived by pasting Property Address Number, Street, and Suffix"
-  )
-
-d <-
+out <-
   d |>
-  add_type_attrs() |>
-  add_attrs(
+  transmute(
+    parcel_id = AUDPTYID,
+    parcel_address = parcel_address,
+    parcel_addr_number = ADDRNO,
+    parcel_addr_street = ADDRST,
+    parcel_addr_suffix = ADDRSF,
+    land_use = land_use,
+    condo_id = CONDOMTCH,
+    condo_unit = UNIT,
+    market_total_value = MKT_TOTAL_VAL,
+    acreage = ACREDEED,
+    homestead = HMSD_FLAG == "Y",
+    rental_registration = RENT_REG_FLAG == "Y"
+  ) |>
+  as_fr_tdr(
     name = "cagis_parcels",
     version = paste0(packageVersion("parcel")),
     title = "CAGIS Parcels",
@@ -150,4 +85,15 @@ d <-
     description = "A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data: https://cagismaps.hamilton-co.org/cagisportal/mapdata/download"
   )
 
-write_tdr_csv(d, dir = fs::path_package("parcel"))
+out <- out |>
+  update_field("parcel_id",
+    description = "uniquely identifies properties; the auditor Parcel Number"
+  ) |>
+  update_field("condo_id",
+    description = "used to match two parcels to the same building of condos"
+  ) |>
+  update_field("parcel_address",
+    description = "derived by pasting parcel_address_{number, street, suffix}` together"
+  )
+
+write_fr_tdr(out, dir = fs::path_package("parcel"))

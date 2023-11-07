@@ -1,7 +1,7 @@
 profile: tabular-data-resource
 name: hamilton_online_parcels
 path: hamilton_online_parcels.csv
-version: 0.8.2
+version: 0.10.0
 title: Hamilton Online Parcels
 homepage: https://github.com/geomarker-io/parcel
 description: 'A curated property-level data resource derived from scraping the Hamilton
@@ -11,26 +11,24 @@ schema:
   fields:
     parcel_id:
       name: parcel_id
-      title: Parcel Identifier
-      description: uniquely identifies properties; the auditor Parcel Number
       type: string
     year_built:
       name: year_built
-      type: integer
+      type: number
     n_total_rooms:
       name: n_total_rooms
-      type: integer
+      type: number
     n_bedrooms:
       name: n_bedrooms
-      type: integer
+      type: number
     n_full_bathrooms:
       name: n_full_bathrooms
-      type: integer
+      type: number
     n_half_bathrooms:
       name: n_half_bathrooms
-      type: integer
+      type: number
     online_market_total_value:
       name: online_market_total_value
+      type: number
       description: May differ from the market_total_value from CAGIS auditor online
         data. This value is scraped from the auditor's website.
-      type: number

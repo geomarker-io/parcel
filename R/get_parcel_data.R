@@ -45,11 +45,13 @@ get_parcel_data <- function(x) {
 
   d_parcel <-
     fs::path_package("parcel", "cagis_parcels") |>
-    codec::read_tdr_csv()
+    fr::read_fr_tdr() |>
+    tibble::as_tibble()
 
   d_online_parcel <-
     fs::path_package("parcel", "hamilton_online_parcels") |>
-    codec::read_tdr_csv()
+    fr::read_fr_tdr() |>
+    tibble::as_tibble()
 
   x_parcels |>
     dplyr::left_join(d_parcel, by = dplyr::join_by(parcel_id), relationship = "many-to-one") |>

@@ -2,7 +2,8 @@
 
 parcel_addresses <-
   fs::path_package("parcel", "cagis_parcels") |>
-  codec::read_tdr_csv() |>
+  fr::read_fr_tdr() |>
+  tibble::as_tibble() |>
   dplyr::select(parcel_id, parcel_address) |>
   dplyr::mutate(parcel_address_stub = create_address_stub(parcel_address, filter_zip = FALSE))
 
