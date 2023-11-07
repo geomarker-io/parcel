@@ -23,20 +23,19 @@ get_parcel_data(
     "3830 President Drive Cincinnati Ohio 45225",
     "3544 Linwood Av Cincinnati OH 45226")
 )
-#> # A tibble: 5 × 23
-#>   input_address             parcel_id  score parcel_address property_addr_number
-#>   <chr>                     <chr>      <dbl> <chr>          <chr>               
-#> 1 1069 Overlook Avenue Cin… 1800A800…  0.717 1069 OVERLOOK… 1069                
-#> 2 419 Elm St. Cincinnati O… 54000410…  0.733 419 ELM ST     419                 
-#> 3 3333 Burnet Ave Cincinna… nonres-c…  0.733 <NA>           <NA>                
-#> 4 3830 President Drive Cin… president NA     <NA>           <NA>                
-#> 5 3544 Linwood Av Cincinna… 01900010…  0.733 3544 LINWOOD … 3544                
-#> # ℹ 18 more variables: property_addr_street <chr>, property_addr_suffix <chr>,
-#> #   condo_id <chr>, condo_unit <chr>, parcel_centroid_lat <dbl>,
-#> #   parcel_centroid_lon <dbl>, market_total_value <dbl>, land_use <fct>,
+#> # A tibble: 5 × 20
+#>   input_address               parcel_id  score parcel_address parcel_addr_number
+#>   <chr>                       <chr>      <dbl> <chr>          <chr>             
+#> 1 1069 Overlook Avenue Cinci… 1800A800…  0.851 1069 OVERLOOK… 1069              
+#> 2 419 Elm St. Cincinnati OH … 54000410…  0.849 419 ELM ST     419               
+#> 3 3333 Burnet Ave Cincinnati… nonres-c…  0.849 <NA>           <NA>              
+#> 4 3830 President Drive Cinci… president NA     <NA>           <NA>              
+#> 5 3544 Linwood Av Cincinnati… 01900010…  0.849 3544 LINWOOD … 3544              
+#> # ℹ 15 more variables: parcel_addr_street <chr>, parcel_addr_suffix <chr>,
+#> #   land_use <fct>, condo_id <chr>, condo_unit <chr>, market_total_value <dbl>,
 #> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
-#> #   RED_25_FLAG <lgl>, year_built <int>, n_total_rooms <int>, n_bedrooms <int>,
-#> #   n_full_bathrooms <int>, n_half_bathrooms <int>,
+#> #   year_built <dbl>, n_total_rooms <dbl>, n_bedrooms <dbl>,
+#> #   n_full_bathrooms <dbl>, n_half_bathrooms <dbl>,
 #> #   online_market_total_value <dbl>
 ```
 
@@ -153,18 +152,20 @@ Jobs and Family Services, Ronald McDonald House):
 ``` r
 get_parcel_data(
   c("222 E Central Parkway Cincinnati Ohio 45220",
+    "222 central pkwy Cincinnati Ohio 45220",
     "3333 Burnet Ave Cincinnati Ohio 45219",
     "3333 Burnet Avenue Cincinnati Ohio 45219",
     "350 Erkenbrecher Ave Cincinnati Ohio 45219")
 ) |>
   dplyr::select(input_address, parcel_id)
-#> # A tibble: 4 × 2
+#> # A tibble: 5 × 2
 #>   input_address                               parcel_id     
 #>   <chr>                                       <chr>         
-#> 1 222 E Central Parkway Cincinnati Ohio 45220 nonres-jfs-e  
-#> 2 3333 Burnet Ave Cincinnati Ohio 45219       nonres-cchmc  
-#> 3 3333 Burnet Avenue Cincinnati Ohio 45219    nonres-cchmc  
-#> 4 350 Erkenbrecher Ave Cincinnati Ohio 45219  nonres-rmh-350
+#> 1 222 E Central Parkway Cincinnati Ohio 45220 nonres-jfs    
+#> 2 222 central pkwy Cincinnati Ohio 45220      nonres-jfs    
+#> 3 3333 Burnet Ave Cincinnati Ohio 45219       nonres-cchmc  
+#> 4 3333 Burnet Avenue Cincinnati Ohio 45219    nonres-cchmc  
+#> 5 350 Erkenbrecher Ave Cincinnati Ohio 45219  nonres-rmh-350
 ```
 
 ### Condominiums
@@ -201,25 +202,25 @@ name if the street number falls within a certain range:
 
 ``` r
 str(parcel:::apt_defs)
-#> List of 8
+#> List of 9
 #>  $ president  :List of 3
 #>   ..$ street_name: chr [1:2] "president drive" "president dr"
 #>   ..$ range_low  : num 3000
-#>   ..$ range_high : num 3999
+#>   ..$ range_high : num 4999
 #>  $ tower      :List of 3
-#>   ..$ street_name: chr [1:4] "east tower drive" "e tower drive" "east tower dr" "e tower dr"
+#>   ..$ street_name: chr [1:4] "east tower drive" "east tower dr" "e tower drive" "e tower dr"
 #>   ..$ range_low  : num 2000
 #>   ..$ range_high : num 29999
 #>  $ bahama     :List of 3
-#>   ..$ street_name: chr [1:3] "bahama terrace" "bahama te" "bahama ter"
+#>   ..$ street_name: chr [1:4] "bahama terrace" "bahama te" "bahama ter" "bahama terr"
 #>   ..$ range_low  : num 5000
 #>   ..$ range_high : num 5999
 #>  $ hawaiian   :List of 3
-#>   ..$ street_name: chr [1:3] "hawaiian terrace" "hawaiian te" "hawaiian ter"
+#>   ..$ street_name: chr [1:4] "hawaiian terrace" "hawaiian te" "hawaiian ter" "hawaiian terr"
 #>   ..$ range_low  : num 4000
 #>   ..$ range_high : num 5999
 #>  $ dewdrop    :List of 3
-#>   ..$ street_name: chr "dewdrop circle"
+#>   ..$ street_name: chr [1:2] "dewdrop circle circle" "dewdrop circle cir"
 #>   ..$ range_low  : num 400
 #>   ..$ range_high : num 599
 #>  $ winneste   :List of 3
@@ -227,82 +228,99 @@ str(parcel:::apt_defs)
 #>   ..$ range_low  : num 4000
 #>   ..$ range_high : num 5999
 #>  $ walden_glen:List of 3
-#>   ..$ street_name: chr "walden glen circle"
+#>   ..$ street_name: chr [1:2] "walden glen circle" "walden glen cir"
 #>   ..$ range_low  : num 2000
 #>   ..$ range_high : num 2999
 #>  $ clovernook :List of 3
 #>   ..$ street_name: chr [1:3] "clovernook avenue" "clovernook ave" "clovernook av"
 #>   ..$ range_low  : num 7000
 #>   ..$ range_high : num 7999
+#>  $ nottingham :List of 3
+#>   ..$ street_name: chr [1:4] "nottingham road" "nottingham rd" "nottingham drive" "nottingham dr"
+#>   ..$ range_low  : num 2000
+#>   ..$ range_high : num 2999
+```
+
+``` r
+get_parcel_data("5377 Bahama Ter Cincinnati Ohio 45223")$parcel_id
+#> [1] "bahama"
 ```
 
 ## CAGIS Parcels Data
 
 The `cagis_parcels` tabular data resource (TDR) is created using the R
 scripts in `/inst` and stored within the package. It can be loaded using
-{[`codec`](https://geomarker.io/codec)}:
+{[`fr`](https://github.com/cole-brokamp/fr)}:
 
 ``` r
-d_parcel <- codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
+d_parcel <- fr::read_fr_tdr(fs::path_package("parcel", "cagis_parcels"))
 
-head(d_parcel)
-#> # A tibble: 6 × 15
-#>   parcel_id     parcel_address       property_addr_number property_addr_street
-#>   <chr>         <chr>                <chr>                <chr>               
-#> 1 6210024007000 210 CARRINGTON PL    210                  CARRINGTON          
-#> 2 6210024009200 220 CARRINGTON PL    220                  CARRINGTON          
-#> 3 6210024007100 210 CARRINGTON PL    210                  CARRINGTON          
-#> 4 6210024008200 220 CARRINGTON PL    220                  CARRINGTON          
-#> 5 5000122021500 8053 WITTS MILL LN   8053                 WITTS MILL          
-#> 6 5000122020900 8120 WITTS MEADOW LN 8120                 WITTS MEADOW        
-#> # ℹ 11 more variables: property_addr_suffix <chr>, condo_id <chr>,
-#> #   condo_unit <chr>, parcel_centroid_lat <dbl>, parcel_centroid_lon <dbl>,
-#> #   market_total_value <dbl>, land_use <fct>, acreage <dbl>, homestead <lgl>,
-#> #   rental_registration <lgl>, RED_25_FLAG <lgl>
+d_parcel
+#> 
+#> ── cagis_parcels
+#> # version: 0.10.0
+#> # title: CAGIS Parcels
+#> # homepage: <https://github.com/geomarker-io/hamilton_parcels>
+#> # description: A curated property-level data resource derived from the Hamilton
+#> County, OH Auditor data distributed through CAGIS Open Data:
+#> https://cagismaps.hamilton-co.org/cagisportal/mapdata/download
+#> # A tibble: 259,180 × 12
+#>    parcel_id     parcel_address       parcel_addr_number parcel_addr_street
+#>    <chr>         <chr>                <chr>              <chr>             
+#>  1 6210024007000 210 CARRINGTON PL    210                CARRINGTON        
+#>  2 6210024009200 220 CARRINGTON PL    220                CARRINGTON        
+#>  3 6210024007100 210 CARRINGTON PL    210                CARRINGTON        
+#>  4 6210024008200 220 CARRINGTON PL    220                CARRINGTON        
+#>  5 5000122021500 8053 WITTS MILL LN   8053               WITTS MILL        
+#>  6 5000122020900 8120 WITTS MEADOW LN 8120               WITTS MEADOW      
+#>  7 5000122020600 8107 WITTS MEADOW LN 8107               WITTS MEADOW      
+#>  8 0020001019900 1803 BELLE MEADE CT  1803               BELLE MEADE       
+#>  9 0800001024100 34 FOURTEENTH ST     34                 FOURTEENTH        
+#> 10 5900201019200 7847 RAMBLE VIEW     7847               RAMBLE VIEW       
+#> # ℹ 259,170 more rows
+#> # ℹ 8 more variables: parcel_addr_suffix <chr>, land_use <fct>, condo_id <chr>,
+#> #   condo_unit <chr>, market_total_value <dbl>, acreage <dbl>, homestead <lgl>,
+#> #   rental_registration <lgl>
 
-# without codec:
+d_parcel@schema
+#> ── parcel_id
+#> # type: string
+#> # description: uniquely identifies properties; the auditor Parcel Number
+#> ── parcel_address
+#> # type: string
+#> # description: derived by pasting parcel_address_{number, street, suffix}`
+#> together
+#> ── parcel_addr_number
+#> # type: string
+#> ── parcel_addr_street
+#> # type: string
+#> ── parcel_addr_suffix
+#> # type: string
+#> ── land_use
+#> # type: string
+#> # constraints: enum = apartment, 4-19 units, apartment, 20-39 units, apartment,
+#> 40+ units, mobile home / trailer park, other commercial housing, office /
+#> apartment over, single family dwelling, two family dwelling, three family
+#> dwelling, condominium unit, boataminium, condo or pud garage, landominium,
+#> manufactured home, lihtc res, other residential structure, and metropolitan
+#> housing authority
+#> ── condo_id
+#> # type: string
+#> # description: used to match two parcels to the same building of condos
+#> ── condo_unit
+#> # type: string
+#> ── market_total_value
+#> # type: number
+#> ── acreage
+#> # type: number
+#> ── homestead
+#> # type: boolean
+#> ── rental_registration
+#> # type: boolean
+
+# without fr:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
 ```
-
-``` r
-options(knitr.kable.NA = '')
-codec::glimpse_attr(d_parcel) |>
-  knitr::kable()
-```
-
-| name        | value                                                                                                                                                                                          |
-|:------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| profile     | tabular-data-resource                                                                                                                                                                          |
-| name        | cagis_parcels                                                                                                                                                                                  |
-| path        | cagis_parcels.csv                                                                                                                                                                              |
-| version     | 0.8.2                                                                                                                                                                                          |
-| title       | CAGIS Parcels                                                                                                                                                                                  |
-| homepage    | <https://github.com/geomarker-io/hamilton_parcels>                                                                                                                                             |
-| description | A curated property-level data resource derived from the Hamilton County, OH Auditor data distributed through CAGIS Open Data: <https://cagismaps.hamilton-co.org/cagisportal/mapdata/download> |
-
-``` r
-options(knitr.kable.NA = '')
-codec::glimpse_schema(d_parcel) |>
-  knitr::kable()
-```
-
-| name                 | title                     | description                                                    | type    | constraints                                                                                                                                                                                                                                                                                                                                                                        |
-|:---------------------|:--------------------------|:---------------------------------------------------------------|:--------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| parcel_id            | Parcel Identifier         | uniquely identifies properties; the auditor Parcel Number      | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| parcel_address       | Parcel Address            | derived by pasting Property Address Number, Street, and Suffix | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| property_addr_number | Address Number            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| property_addr_street | Address Street            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| property_addr_suffix | Address Suffix            |                                                                | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| condo_id             | Condo identifier          | used to match two parcels to the same building of condos       | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| condo_unit           | Condo unit                | specifies a specific unit within a building of condos          | string  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| parcel_centroid_lat  | Parcel Centroid Latitude  | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| parcel_centroid_lon  | Parcel Centroid Longitude | coordinates derived from centroid of parcel shape              | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| market_total_value   | Market Total Value        |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| land_use             |                           |                                                                | string  | apartment, 4-19 units, apartment, 20-39 units, apartment, 40+ units, mobile home / trailer park, other commercial housing, office / apartment over, single family dwelling, two family dwelling, three family dwelling, condominium unit, boataminium, condo or pud garage, landominium, manufactured home, lihtc res, other residential structure, metropolitan housing authority |
-| acreage              | Acreage                   |                                                                | number  |                                                                                                                                                                                                                                                                                                                                                                                    |
-| homestead            | Homestead                 |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
-| rental_registration  | Rental Registration       |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
-| RED_25_FLAG          |                           |                                                                | boolean |                                                                                                                                                                                                                                                                                                                                                                                    |
 
 Auditor parcel-level data were excluded if they (1) did not contain a
 parcel identifier, (2) did not contain a property address number/name,
@@ -356,58 +374,58 @@ identifiers in the `cagis_parcels` TDR.
 
 Similarly, the `hamilton_online_parcel` TDR is created using the R
 scripts in `/inst` and stored within the package. It can be loaded using
-{[`codec`](https://geomarker.io/codec)}:
+{[`fr`](https://github.com/cole-brokamp/fr)}:
 
 ``` r
-d_online <- codec::read_tdr_csv(fs::path_package("parcel", "hamilton_online_parcels"))
+d_online <- fr::read_fr_tdr(fs::path_package("parcel", "hamilton_online_parcels"))
 
-head(d_online)
-#> # A tibble: 6 × 7
-#>   parcel_id     year_built n_total_rooms n_bedrooms n_full_bathrooms
-#>   <chr>              <int>         <int>      <int>            <int>
-#> 1 6210024007000       1961             8          3                2
-#> 2 6210024009200       1960             7          3                3
-#> 3 6210024007100       1960             7          3                2
-#> 4 6210024008200       1960             7          3                2
-#> 5 5000122021500       1955             6          2                1
-#> 6 5000122020900       1955             6          3                2
-#> # ℹ 2 more variables: n_half_bathrooms <int>, online_market_total_value <dbl>
+d_online
+#> 
+#> ── hamilton_online_parcels
+#> # version: 0.10.0
+#> # title: Hamilton Online Parcels
+#> # homepage: <https://github.com/geomarker-io/parcel>
+#> # description: A curated property-level data resource derived from scraping the
+#> Hamilton County, OH Auditor Online: https://wedge1.hcauditor.org/. Data was
+#> scraped for only residential parcels in CAGIS Parcels; see homepage for
+#> details.
+#> # A tibble: 259,180 × 7
+#>    parcel_id     year_built n_total_rooms n_bedrooms n_full_bathrooms
+#>    <chr>              <dbl>         <dbl>      <dbl>            <dbl>
+#>  1 6210024007000       1961             8          3                2
+#>  2 6210024009200       1960             7          3                3
+#>  3 6210024007100       1960             7          3                2
+#>  4 6210024008200       1960             7          3                2
+#>  5 5000122021500       1955             6          2                1
+#>  6 5000122020900       1955             6          3                2
+#>  7 5000122020600       1955             6          3                2
+#>  8 0020001019900       2013             7          3                2
+#>  9 0800001024100       1985             6          3                2
+#> 10 5900201019200       1975             7          4                1
+#> # ℹ 259,170 more rows
+#> # ℹ 2 more variables: n_half_bathrooms <dbl>, online_market_total_value <dbl>
 
-# without codec:
+d_online@schema
+#> ── parcel_id
+#> # type: string
+#> ── year_built
+#> # type: number
+#> ── n_total_rooms
+#> # type: number
+#> ── n_bedrooms
+#> # type: number
+#> ── n_full_bathrooms
+#> # type: number
+#> ── n_half_bathrooms
+#> # type: number
+#> ── online_market_total_value
+#> # type: number
+#> # description: May differ from the market_total_value from CAGIS auditor online
+#> data. This value is scraped from the auditor's website.
+
+# without fr:
 # read.csv(fs::path_package("parcel", "hamilton_online_parcels"))
 ```
-
-``` r
-options(knitr.kable.NA = '')
-codec::glimpse_attr(d_online) |>
-  knitr::kable()
-```
-
-| name        | value                                                                                                                                                                                                                           |
-|:------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| profile     | tabular-data-resource                                                                                                                                                                                                           |
-| name        | hamilton_online_parcels                                                                                                                                                                                                         |
-| path        | hamilton_online_parcels.csv                                                                                                                                                                                                     |
-| version     | 0.8.2                                                                                                                                                                                                                           |
-| title       | Hamilton Online Parcels                                                                                                                                                                                                         |
-| homepage    | <https://github.com/geomarker-io/parcel>                                                                                                                                                                                        |
-| description | A curated property-level data resource derived from scraping the Hamilton County, OH Auditor Online: <https://wedge1.hcauditor.org/>. Data was scraped for only residential parcels in CAGIS Parcels; see homepage for details. |
-
-``` r
-options(knitr.kable.NA = '')
-codec::glimpse_schema(d_online) |>
-  knitr::kable()
-```
-
-| name                      | title             | description                                                                                                              | type    |
-|:--------------------------|:------------------|:-------------------------------------------------------------------------------------------------------------------------|:--------|
-| parcel_id                 | Parcel Identifier | uniquely identifies properties; the auditor Parcel Number                                                                | string  |
-| year_built                |                   |                                                                                                                          | integer |
-| n_total_rooms             |                   |                                                                                                                          | integer |
-| n_bedrooms                |                   |                                                                                                                          | integer |
-| n_full_bathrooms          |                   |                                                                                                                          | integer |
-| n_half_bathrooms          |                   |                                                                                                                          | integer |
-| online_market_total_value |                   | May differ from the market_total_value from CAGIS auditor online data. This value is scraped from the auditor’s website. | number  |
 
 ## Estimating the number of households per parcel
 
