@@ -1,10 +1,11 @@
 library(dplyr, warn.conflicts = FALSE)
-library(codec)
+library(fr)
 # make sure {parcel} is loaded using devtools::load_all() to access read/write paths inside package during development
 
 d <-
   fs::path_package("parcel", "cagis_parcels") |>
-  codec::read_tdr_csv()
+  fr::read_fr_tdr() |>
+  tibble::as_tibble()
 
 #' scrape hamilton county auditor online summary data
 #' This function downloads data from the auditor website, please be polite!
@@ -45,16 +46,16 @@ d_out <-
   mutate(n_full_bathrooms = as.integer(purrr::map_chr(auditor_online, "# Full Bathrooms"))) |>
   mutate(n_half_bathrooms = as.integer(purrr::map_chr(auditor_online, "# Half Bathrooms"))) |>
   mutate(online_market_total_value = readr::parse_number(purrr::map_chr(auditor_online, "Market Total Value"))) |>
-  add_col_attrs(online_market_total_value,
-               description = "May differ from the market_total_value from CAGIS auditor online data. This value is scraped from the auditor's website.") |>
-  select(-auditor_online) |>
-  add_type_attrs() |>
-  add_attrs(
+  select(-auditor_online)
+
+d_out <- d_out |>
+  as_fr_tdr(
     name = "hamilton_online_parcels",
     version = paste0(packageVersion("parcel")),
     title = "Hamilton Online Parcels",
     homepage = "https://github.com/geomarker-io/parcel",
-    description = "A curated property-level data resource derived from scraping the Hamilton County, OH Auditor Online: https://wedge1.hcauditor.org/. Data was scraped for only residential parcels in CAGIS Parcels; see homepage for details."
-  )
+    description = "A curated property-level data resource derived from scraping the Hamilton County, OH Auditor Online: https://wedge1.hcauditor.org/. Data was scraped for only residential parcels in CAGIS Parcels; see homepage for details.") |>
+  update_field("online_market_total_value",
+               description = "May differ from the market_total_value from CAGIS auditor online data. This value is scraped from the auditor's website.")
 
-write_tdr_csv(d_out, dir = fs::path_package("parcel"))
+write_fr_tdr(d_out, dir = fs::path_package("parcel"))

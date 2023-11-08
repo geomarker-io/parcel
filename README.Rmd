@@ -122,6 +122,7 @@ Known non-residential addresses will be matched and returned with a special parc
 ```{r}
 get_parcel_data(
   c("222 E Central Parkway Cincinnati Ohio 45220",
+    "222 central pkwy Cincinnati Ohio 45220",
     "3333 Burnet Ave Cincinnati Ohio 45219",
     "3333 Burnet Avenue Cincinnati Ohio 45219",
     "350 Erkenbrecher Ave Cincinnati Ohio 45219")
@@ -156,31 +157,23 @@ Large apartment complexes often use multiple mailing addresses that are not the 
 str(parcel:::apt_defs)
 ```
 
+```{r}
+get_parcel_data("5377 Bahama Ter Cincinnati Ohio 45223")$parcel_id
+```
+
 ## CAGIS Parcels Data
 
-The `cagis_parcels` tabular data resource (TDR) is created using the R scripts in `/inst` and stored within the package. It can be loaded using {[`codec`](https://geomarker.io/codec)}:
+The `cagis_parcels` tabular data resource (TDR) is created using the R scripts in `/inst` and stored within the package. It can be loaded using {[`fr`](https://github.com/cole-brokamp/fr)}:
 
 ```{r}
-d_parcel <- codec::read_tdr_csv(fs::path_package("parcel", "cagis_parcels"))
+d_parcel <- fr::read_fr_tdr(fs::path_package("parcel", "cagis_parcels"))
 
-head(d_parcel)
+d_parcel
 
-# without codec:
+d_parcel@schema
+
+# without fr:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
-```
-
-```{r}
-#| results: asis
-options(knitr.kable.NA = '')
-codec::glimpse_attr(d_parcel) |>
-  knitr::kable()
-```
-
-```{r}
-#| results: asis
-options(knitr.kable.NA = '')
-codec::glimpse_schema(d_parcel) |>
-  knitr::kable()
 ```
 
 Auditor parcel-level data were excluded if they (1) did not contain a parcel identifier, (2) did not contain a property address number/name, or (3) had a duplicated parcel identifier.
@@ -203,29 +196,17 @@ Some of the parcel characteristics do not make sense in certain contexts and sho
 
 The `hamilton_online_parcels` TDR is created by linking a saved scraping of the [auditor's website](https://wedge1.hcauditor.org/) to the parcel identifiers in the `cagis_parcels` TDR.
 
-Similarly, the `hamilton_online_parcel` TDR is created using the R scripts in `/inst` and stored within the package. It can be loaded using {[`codec`](https://geomarker.io/codec)}:
+Similarly, the `hamilton_online_parcel` TDR is created using the R scripts in `/inst` and stored within the package. It can be loaded using {[`fr`](https://github.com/cole-brokamp/fr)}:
 
 ```{r}
-d_online <- codec::read_tdr_csv(fs::path_package("parcel", "hamilton_online_parcels"))
+d_online <- fr::read_fr_tdr(fs::path_package("parcel", "hamilton_online_parcels"))
 
-head(d_online)
+d_online
 
-# without codec:
+d_online@schema
+
+# without fr:
 # read.csv(fs::path_package("parcel", "hamilton_online_parcels"))
-```
-
-```{r}
-#| results: asis
-options(knitr.kable.NA = '')
-codec::glimpse_attr(d_online) |>
-  knitr::kable()
-```
-
-```{r}
-#| results: asis
-options(knitr.kable.NA = '')
-codec::glimpse_schema(d_online) |>
-  knitr::kable()
 ```
 
 ## Estimating the number of households per parcel
