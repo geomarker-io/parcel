@@ -7,6 +7,7 @@
 #'
 #' @param x a single address character string
 #' @return apt pseudo-identifier character string; `NA` if not matched
+#' @export
 link_apt <- function(x) {
   x_tags <- tag_address(x)
   if (!x_tags$zip_code %in% cincy::zcta_tigris_2020$zcta_2020) {
@@ -14,7 +15,7 @@ link_apt <- function(x) {
   }
   apt_id <-
     purrr::map(apt_defs, purrr::pluck, "street_name") |>
-    purrr::map_lgl(\(x) x_tags[["street_name"]] %in% x) |>
+    purrr::map_lgl(\(x) purrr::pluck(x_tags, "street_name", .default = NA) %in% x) |>
     which() |>
     names()
   if (length(apt_id) == 0) {
