@@ -44,7 +44,7 @@ With this specific goal in mind, parcel includes:
 
 ## Installation
 
-{parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, as well as the `dedupe` and `dedupe-variable-address` python modules for matching addresses, all of which can be installed from inside R with:
+{parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, as well as the `dedupe` and `dedupe-variable-address` python modules for matching addresses, all of which can be installed to an existing python environment from inside R using [reticulate](https://rstudio.github.io/reticulate/index.html):
 
 ```{r}
 #| eval: false
@@ -53,35 +53,13 @@ reticulate::py_install("dedupe", pip = TRUE)
 reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
+If there is no [preconfigured](https://rstudio.github.io/reticulate/articles/versions.html) or compatible version of Python already available on the system, Miniconda will be installed and the required Python packages will be installed in the standard shared environment for R sessions (typically a virtual environment, or a Conda environment named "r-reticulate").
+
 The development version of parcel can be installed with:
 
 ```{r}
 #| eval: false
 pak::pak("geomarker-io/parcel")
-```
-
-### Python, `miniconda`, and `virtualenv`
-
-`reticulate::py_install()` assumes a non-system version of Python is already installed and will offer to install Miniconda and create an environment specifically for R and the reticulate package.
-
-As an alternative to miniconda, it is possible to create a virtualenv using reticulate:
-
-```{r}
-#| eval: false
-library(reticulate)
-install_python("3.9.12")
-virtualenv_create("r-parcel", version = "3.9.12")
-use_virtualenv("r-parcel")
-py_install("usaddress", pip = TRUE)
-py_module_available("usaddress")
-```
-
-To help R find this virtualenv for every session, either `use_virtualenv("r-parcel")` should be run in every R session *or*, better yet, by setting the `RETICULATE_PYTHON` environment variable in a user- or project-specific `.Renviron` file. You can check on which python installation chosen to be used by reticulate and why by using:
-
-```{r}
-#| eval: false
-reticulate::py_config()
-reticulate::py_list_packages()
 ```
 
 ## Identifiers for Parcels and Properties
