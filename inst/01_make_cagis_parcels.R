@@ -3,24 +3,35 @@ library(sf)
 library(fr)
 
 # make sure {parcel} is loaded using devtools::load_all() to access read/write paths inside package during development
-if (!fs::file_exists(fs::path_package("parcel", "ham_merge_parcels.gdb"))) {
+if (!fs::file_exists(fs::path_package("parcel", "Parcels2024.gdb"))) {
   tmp <- tempfile(fileext = ".zip")
-  download.file("https://www.cagis.org/Opendata/Auditor/HAM_MERGE_PARCELS.gdb.zip", tmp, timeout = 1000, method = "wget")
+  download.file("https://www.cagis.org/Opendata/Auditor/Parcels2024.gdb.zip", tmp, timeout = 1000, method = "wget")
   unzip(tmp, exdir = fs::path_package("parcel"))
 }
 
 ## st_layers(dsn = parcel_gdb)
-rd <-
-  st_read(dsn = fs::path_package("parcel", "ham_merge_parcels.gdb"), layer = "HAM_PARCELS_MERGED_W_CONDOS") |>
-  st_drop_geometry() |>
+rd <- st_read(dsn = fs::path_package("parcel", "Parcels2024.gdb"), layer = "HAM_PARCELS_MERGED_W_CONDOS") |>
+  st_zm()
+
+rd_centroids <-
+  rd |>
+  select(Shape) |>
+  st_cast("MULTIPOLYGON") |>
+  st_centroid() |>
+  st_transform(st_crs(4326))
+
+rd$centroid_lon <- st_coordinates(rd_centroids)[ , "X"]
+rd$centroid_lat <- st_coordinates(rd_centroids)[ , "Y"]
+
+d <- st_drop_geometry(rd) |>
   tibble::as_tibble()
 
 # remove duplicated entries for a parcel id
-nrow(rd) # 354,521
-rd <- distinct(rd, AUDPTYID, .keep_all = TRUE)
-nrow(rd) # 352,529
+nrow(d) # 354,763
+d <- distinct(d, AUDPTYID, .keep_all = TRUE)
+nrow(d) # 353,288
 
-d <- rd |>
+d <- d |>
   tidyr::unite(
     col = "parcel_address",
     tidyselect::any_of(c("ADDRNO", "ADDRST", "ADDRSF")),
@@ -28,11 +39,11 @@ d <- rd |>
   )
 
 # remove those without a parcel_id
-d <- filter(d, !is.na(parcel_id))
-nrow(d) # 352529
+d <- filter(d, !is.na(AUDPTYID))
+nrow(d) # 353287
 # remove missing property address number or street
 d <- filter(d, (!is.na(ADDRNO)) & (!is.na(ADDRST)))
-nrow(d) # 320832
+nrow(d) # 321250
 
 # filter to residential land use codes
 lu_keepers <-
@@ -59,13 +70,14 @@ lu_keepers <-
 d <- d |>
   filter(CLASS %in% lu_keepers) |>
   mutate(land_use = forcats::fct_recode(as.factor(CLASS), !!!lu_keepers))
-nrow(d) # 259180
+nrow(d) # 259653
 
 out <-
   d |>
   transmute(
     parcel_id = AUDPTYID,
-    parcel_address = parcel_address,
+    centroid_lat, centroid_lon,
+    parcel_address,
     parcel_addr_number = ADDRNO,
     parcel_addr_street = ADDRST,
     parcel_addr_suffix = ADDRSF,
@@ -94,6 +106,10 @@ out <- out |>
   ) |>
   update_field("parcel_address",
     description = "derived by pasting parcel_address_{number, street, suffix}` together"
-  )
+    ) |>
+  update_field("centroid_lat",
+               description = "calculated as centroid of casted multipolygon geometry and projected from Ohio South to WGS84") |>
+  update_field("centroid_lon",
+               description = "calculated as centroid of casted multipolygon geometry and projected from Ohio South to WGS84")
 
 write_fr_tdr(out, dir = fs::path_package("parcel"))
