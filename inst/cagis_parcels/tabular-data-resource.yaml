@@ -1,7 +1,7 @@
 profile: tabular-data-resource
 name: cagis_parcels
 path: cagis_parcels.csv
-version: 0.10.0
+version: 0.11.0
 title: CAGIS Parcels
 homepage: https://github.com/geomarker-io/hamilton_parcels
 description: 'A curated property-level data resource derived from the Hamilton County,
@@ -12,6 +12,16 @@ schema:
       name: parcel_id
       type: string
       description: uniquely identifies properties; the auditor Parcel Number
+    centroid_lat:
+      name: centroid_lat
+      type: number
+      description: calculated as centroid of casted multipolygon geometry and projected
+        from Ohio South to WGS84
+    centroid_lon:
+      name: centroid_lon
+      type: number
+      description: calculated as centroid of casted multipolygon geometry and projected
+        from Ohio South to WGS84
     parcel_address:
       name: parcel_address
       type: string

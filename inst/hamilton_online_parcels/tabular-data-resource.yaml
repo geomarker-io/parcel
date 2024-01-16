@@ -1,7 +1,7 @@
 profile: tabular-data-resource
 name: hamilton_online_parcels
 path: hamilton_online_parcels.csv
-version: 0.10.0
+version: 0.11.0
 title: Hamilton Online Parcels
 homepage: https://github.com/geomarker-io/parcel
 description: 'A curated property-level data resource derived from scraping the Hamilton

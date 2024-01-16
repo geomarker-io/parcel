@@ -7,6 +7,8 @@ d <-
   fr::read_fr_tdr() |>
   tibble::as_tibble()
 
+httr::set_config(httr::user_agent("Mozilla/5.0 (Windows NT 5.1; rv:52.0) Gecko/20100101 Firefox/52.0"))
+
 #' scrape hamilton county auditor online summary data
 #' This function downloads data from the auditor website, please be polite!
 #' @param parcel_id numeric or character parcel identifier
@@ -24,18 +26,13 @@ scrape_hamilton_parcel <- function(parcel_id){
            haul[seq(from = 1, to = length(haul), by = 2)])
 }
 
-
-# to run the very long process of scraping without using a prestored result, run:
+## # to run the very long process of scraping without using a prestored result, run:
 ## d$auditor_online <-
 ##   mappp::mappp(d$parcel_id, scrape_hamilton_parcel, parallel = FALSE, cache = TRUE, cache_name = "auditor_online_cache")
-## save dated copy of parcel scrape
-## saveRDS(d$auditor_parcel, "./auditor_online_scrape_2023-08-10.rds")
-the_scrape <- readRDS("./auditor_online_scrape_2023-08-10.rds")
-the_scrape_parcel_ids <- readr::read_csv("https://raw.githubusercontent.com/geomarker-io/parcel/98cf676b4f8961cc2cd6e78bd922a3c1910e13fd/inst/hamilton_online_parcels/hamilton_online_parcels.csv",
-                                         show_col_types = FALSE)$parcel_id
+## # save dated copy of parcel scrape
+## saveRDS(d, "./auditor_online_scrape_2024-01-16.rds")
 
-names(the_scrape) <- the_scrape_parcel_ids
-d$auditor_online <- the_scrape[d$parcel_id]
+d <- readRDS("./auditor_online_scrape_2024-01-16.rds")
 
 d_out <-
   d |>
