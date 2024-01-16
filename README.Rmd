@@ -44,6 +44,13 @@ With this specific goal in mind, parcel includes:
 
 ## Installation
 
+The development version of parcel can be installed with:
+
+```{r}
+#| eval: false
+pak::pak("geomarker-io/parcel")
+```
+
 {parcel} requires the `usaddress` python module for tagging addresses and creating address stubs, as well as the `dedupe` and `dedupe-variable-address` python modules for matching addresses, all of which can be installed to an existing python environment from inside R using [reticulate](https://rstudio.github.io/reticulate/index.html):
 
 ```{r}
@@ -53,14 +60,7 @@ reticulate::py_install("dedupe", pip = TRUE)
 reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
-If there is no [preconfigured](https://rstudio.github.io/reticulate/articles/versions.html) or compatible version of Python already available on the system, Miniconda will be installed and the required Python packages will be installed in the standard shared environment for R sessions (typically a virtual environment, or a Conda environment named "r-reticulate").
-
-The development version of parcel can be installed with:
-
-```{r}
-#| eval: false
-pak::pak("geomarker-io/parcel")
-```
+If there is no [preconfigured](https://rstudio.github.io/reticulate/articles/versions.html) or compatible version of Python already available on the system, Miniconda will be installed and the required Python packages will be installed in the standard shared environment for R sessions (typically a virtual environment, or a Conda environment named "r-reticulate") after `library(parcel)` is called.
 
 ## Identifiers for Parcels and Properties
 

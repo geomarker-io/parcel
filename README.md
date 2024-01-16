@@ -23,19 +23,19 @@ get_parcel_data(
     "3830 President Drive Cincinnati Ohio 45225",
     "3544 Linwood Av Cincinnati OH 45226")
 )
-#> # A tibble: 5 × 20
-#>   input_address               parcel_id  score parcel_address parcel_addr_number
-#>   <chr>                       <chr>      <dbl> <chr>          <chr>             
-#> 1 1069 Overlook Avenue Cinci… 1800A800…  0.851 1069 OVERLOOK… 1069              
-#> 2 419 Elm St. Cincinnati OH … 54000410…  0.849 419 ELM ST     419               
-#> 3 3333 Burnet Ave Cincinnati… nonres-c…  0.849 <NA>           <NA>              
-#> 4 3830 President Drive Cinci… president NA     <NA>           <NA>              
-#> 5 3544 Linwood Av Cincinnati… 01900010…  0.849 3544 LINWOOD … 3544              
-#> # ℹ 15 more variables: parcel_addr_street <chr>, parcel_addr_suffix <chr>,
-#> #   land_use <fct>, condo_id <chr>, condo_unit <chr>, market_total_value <dbl>,
-#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>,
-#> #   year_built <dbl>, n_total_rooms <dbl>, n_bedrooms <dbl>,
-#> #   n_full_bathrooms <dbl>, n_half_bathrooms <dbl>,
+#> # A tibble: 5 × 22
+#>   input_address        parcel_id  score centroid_lat centroid_lon parcel_address
+#>   <chr>                <chr>      <dbl>        <dbl>        <dbl> <chr>         
+#> 1 1069 Overlook Avenu… 1800A800…  0.795         39.1        -84.6 1069 OVERLOOK…
+#> 2 419 Elm St. Cincinn… 54000410…  0.860         39.1        -84.6 419 ELM ST    
+#> 3 3333 Burnet Ave Cin… nonres-c…  0.860         NA           NA   <NA>          
+#> 4 3830 President Driv… president NA             NA           NA   <NA>          
+#> 5 3544 Linwood Av Cin… 01900010…  0.860         39.1        -84.4 3544 LINWOOD …
+#> # ℹ 16 more variables: parcel_addr_number <chr>, parcel_addr_street <chr>,
+#> #   parcel_addr_suffix <chr>, land_use <fct>, condo_id <chr>, condo_unit <chr>,
+#> #   market_total_value <dbl>, acreage <dbl>, homestead <lgl>,
+#> #   rental_registration <lgl>, year_built <dbl>, n_total_rooms <dbl>,
+#> #   n_bedrooms <dbl>, n_full_bathrooms <dbl>, n_half_bathrooms <dbl>,
 #> #   online_market_total_value <dbl>
 ```
 
@@ -59,10 +59,17 @@ With this specific goal in mind, parcel includes:
 
 ## Installation
 
+The development version of parcel can be installed with:
+
+``` r
+pak::pak("geomarker-io/parcel")
+```
+
 {parcel} requires the `usaddress` python module for tagging addresses
 and creating address stubs, as well as the `dedupe` and
 `dedupe-variable-address` python modules for matching addresses, all of
-which can be installed from inside R with:
+which can be installed to an existing python environment from inside R
+using [reticulate](https://rstudio.github.io/reticulate/index.html):
 
 ``` r
 reticulate::py_install("usaddress", pip = TRUE)
@@ -70,40 +77,13 @@ reticulate::py_install("dedupe", pip = TRUE)
 reticulate::py_install("dedupe-variable-address", pip = TRUE)
 ```
 
-The development version of parcel can be installed with:
-
-``` r
-pak::pak("geomarker-io/parcel")
-```
-
-### Python, `miniconda`, and `virtualenv`
-
-`reticulate::py_install()` assumes a non-system version of Python is
-already installed and will offer to install Miniconda and create an
-environment specifically for R and the reticulate package.
-
-As an alternative to miniconda, it is possible to create a virtualenv
-using reticulate:
-
-``` r
-library(reticulate)
-install_python("3.9.12")
-virtualenv_create("r-parcel", version = "3.9.12")
-use_virtualenv("r-parcel")
-py_install("usaddress", pip = TRUE)
-py_module_available("usaddress")
-```
-
-To help R find this virtualenv for every session, either
-`use_virtualenv("r-parcel")` should be run in every R session *or*,
-better yet, by setting the `RETICULATE_PYTHON` environment variable in a
-user- or project-specific `.Renviron` file. You can check on which
-python installation chosen to be used by reticulate and why by using:
-
-``` r
-reticulate::py_config()
-reticulate::py_list_packages()
-```
+If there is no
+[preconfigured](https://rstudio.github.io/reticulate/articles/versions.html)
+or compatible version of Python already available on the system,
+Miniconda will be installed and the required Python packages will be
+installed in the standard shared environment for R sessions (typically a
+virtual environment, or a Conda environment named “r-reticulate”) after
+`library(parcel)` is called.
 
 ## Identifiers for Parcels and Properties
 
@@ -256,67 +236,74 @@ scripts in `/inst` and stored within the package. It can be loaded using
 d_parcel <- fr::read_fr_tdr(fs::path_package("parcel", "cagis_parcels"))
 
 d_parcel
-#> 
-#> ── cagis_parcels
-#> # version: 0.10.0
-#> # title: CAGIS Parcels
-#> # homepage: <https://github.com/geomarker-io/hamilton_parcels>
-#> # description: A curated property-level data resource derived from the Hamilton
+#> cagis_parcels
+#> - version: 0.11.0
+#> - title: CAGIS Parcels
+#> - homepage: <https://github.com/geomarker-io/hamilton_parcels>
+#> - description: A curated property-level data resource derived from the Hamilton
 #> County, OH Auditor data distributed through CAGIS Open Data:
 #> https://cagismaps.hamilton-co.org/cagisportal/mapdata/download
-#> # A tibble: 259,180 × 12
-#>    parcel_id     parcel_address       parcel_addr_number parcel_addr_street
-#>    <chr>         <chr>                <chr>              <chr>             
-#>  1 6210024007000 210 CARRINGTON PL    210                CARRINGTON        
-#>  2 6210024009200 220 CARRINGTON PL    220                CARRINGTON        
-#>  3 6210024007100 210 CARRINGTON PL    210                CARRINGTON        
-#>  4 6210024008200 220 CARRINGTON PL    220                CARRINGTON        
-#>  5 5000122021500 8053 WITTS MILL LN   8053               WITTS MILL        
-#>  6 5000122020900 8120 WITTS MEADOW LN 8120               WITTS MEADOW      
-#>  7 5000122020600 8107 WITTS MEADOW LN 8107               WITTS MEADOW      
-#>  8 0020001019900 1803 BELLE MEADE CT  1803               BELLE MEADE       
-#>  9 0800001024100 34 FOURTEENTH ST     34                 FOURTEENTH        
-#> 10 5900201019200 7847 RAMBLE VIEW     7847               RAMBLE VIEW       
-#> # ℹ 259,170 more rows
-#> # ℹ 8 more variables: parcel_addr_suffix <chr>, land_use <fct>, condo_id <chr>,
-#> #   condo_unit <chr>, market_total_value <dbl>, acreage <dbl>, homestead <lgl>,
-#> #   rental_registration <lgl>
+#> # A tibble: 259,653 × 14
+#>    parcel_id     centroid_lat centroid_lon parcel_address    parcel_addr_number
+#>    <chr>                <dbl>        <dbl> <chr>             <chr>             
+#>  1 6210023015500         39.3        -84.3 184 CANNONADE DR  184               
+#>  2 6210023017000         39.3        -84.3 154 THOROBRED RD  154               
+#>  3 6210023017700         39.3        -84.3 112 CITATION CT   112               
+#>  4 6210023018100         39.3        -84.3 119 CITATION CT   119               
+#>  5 6210023018500         39.3        -84.3 112 THOROBRED RD  112               
+#>  6 6210023020300         39.3        -84.3 242 CORDERO TL    242               
+#>  7 6210023020500         39.3        -84.3 254 CORDERO TL    254               
+#>  8 6210023022800         39.3        -84.3 212 RIVA RIDGE CT 212               
+#>  9 6210023023100         39.3        -84.3 230 RIVA RIDGE CT 230               
+#> 10 6210023023300         39.3        -84.3 242 RIVA RIDGE CT 242               
+#> # ℹ 259,643 more rows
+#> # ℹ 9 more variables: parcel_addr_street <chr>, parcel_addr_suffix <chr>,
+#> #   land_use <fct>, condo_id <chr>, condo_unit <chr>, market_total_value <dbl>,
+#> #   acreage <dbl>, homestead <lgl>, rental_registration <lgl>
 
 d_parcel@schema
-#> ── parcel_id
-#> # type: string
-#> # description: uniquely identifies properties; the auditor Parcel Number
-#> ── parcel_address
-#> # type: string
-#> # description: derived by pasting parcel_address_{number, street, suffix}`
+#> parcel_id
+#> - type: string
+#> - description: uniquely identifies properties; the auditor Parcel Number
+#> centroid_lat
+#> - type: number
+#> - description: calculated as centroid of casted multipolygon geometry and
+#> projected from Ohio South to WGS84
+#> centroid_lon
+#> - type: number
+#> - description: calculated as centroid of casted multipolygon geometry and
+#> projected from Ohio South to WGS84
+#> parcel_address
+#> - type: string
+#> - description: derived by pasting parcel_address_{number, street, suffix}`
 #> together
-#> ── parcel_addr_number
-#> # type: string
-#> ── parcel_addr_street
-#> # type: string
-#> ── parcel_addr_suffix
-#> # type: string
-#> ── land_use
-#> # type: string
-#> # constraints: enum = apartment, 4-19 units, apartment, 20-39 units, apartment,
+#> parcel_addr_number
+#> - type: string
+#> parcel_addr_street
+#> - type: string
+#> parcel_addr_suffix
+#> - type: string
+#> land_use
+#> - type: string
+#> - constraints: enum = apartment, 4-19 units, apartment, 20-39 units, apartment,
 #> 40+ units, mobile home / trailer park, other commercial housing, office /
 #> apartment over, single family dwelling, two family dwelling, three family
 #> dwelling, condominium unit, boataminium, condo or pud garage, landominium,
 #> manufactured home, lihtc res, other residential structure, and metropolitan
 #> housing authority
-#> ── condo_id
-#> # type: string
-#> # description: used to match two parcels to the same building of condos
-#> ── condo_unit
-#> # type: string
-#> ── market_total_value
-#> # type: number
-#> ── acreage
-#> # type: number
-#> ── homestead
-#> # type: boolean
-#> ── rental_registration
-#> # type: boolean
+#> condo_id
+#> - type: string
+#> - description: used to match two parcels to the same building of condos
+#> condo_unit
+#> - type: string
+#> market_total_value
+#> - type: number
+#> acreage
+#> - type: number
+#> homestead
+#> - type: boolean
+#> rental_registration
+#> - type: boolean
 
 # without fr:
 # read.csv(fs::path_package("parcel", "cagis_parcels"))
@@ -342,21 +329,21 @@ d_parcel |>
 
 | land_use                       | n_parcels |
 |:-------------------------------|----------:|
-| single family dwelling         |    213044 |
-| condominium unit               |     19754 |
-| two family dwelling            |     11352 |
-| apartment, 4-19 units          |      5659 |
-| landominium                    |      3047 |
-| three family dwelling          |      1863 |
+| single family dwelling         |    212995 |
+| condominium unit               |     20325 |
+| two family dwelling            |     11331 |
+| apartment, 4-19 units          |      5654 |
+| landominium                    |      3049 |
+| three family dwelling          |      1854 |
 | condo or pud garage            |      1063 |
-| other residential structure    |       875 |
+| other residential structure    |       869 |
 | metropolitan housing authority |       744 |
-| apartment, 40+ units           |       625 |
-| apartment, 20-39 units         |       457 |
+| apartment, 40+ units           |       619 |
+| apartment, 20-39 units         |       458 |
 | manufactured home              |       204 |
-| office / apartment over        |       188 |
+| office / apartment over        |       187 |
 | boataminium                    |       141 |
-| other commercial housing       |        99 |
+| other commercial housing       |        95 |
 | mobile home / trailer park     |        40 |
 | lihtc res                      |        25 |
 
@@ -380,47 +367,46 @@ scripts in `/inst` and stored within the package. It can be loaded using
 d_online <- fr::read_fr_tdr(fs::path_package("parcel", "hamilton_online_parcels"))
 
 d_online
-#> 
-#> ── hamilton_online_parcels
-#> # version: 0.10.0
-#> # title: Hamilton Online Parcels
-#> # homepage: <https://github.com/geomarker-io/parcel>
-#> # description: A curated property-level data resource derived from scraping the
+#> hamilton_online_parcels
+#> - version: 0.11.0
+#> - title: Hamilton Online Parcels
+#> - homepage: <https://github.com/geomarker-io/parcel>
+#> - description: A curated property-level data resource derived from scraping the
 #> Hamilton County, OH Auditor Online: https://wedge1.hcauditor.org/. Data was
 #> scraped for only residential parcels in CAGIS Parcels; see homepage for
 #> details.
-#> # A tibble: 259,180 × 7
+#> # A tibble: 259,653 × 7
 #>    parcel_id     year_built n_total_rooms n_bedrooms n_full_bathrooms
 #>    <chr>              <dbl>         <dbl>      <dbl>            <dbl>
-#>  1 6210024007000       1961             8          3                2
-#>  2 6210024009200       1960             7          3                3
-#>  3 6210024007100       1960             7          3                2
-#>  4 6210024008200       1960             7          3                2
-#>  5 5000122021500       1955             6          2                1
-#>  6 5000122020900       1955             6          3                2
-#>  7 5000122020600       1955             6          3                2
-#>  8 0020001019900       2013             7          3                2
-#>  9 0800001024100       1985             6          3                2
-#> 10 5900201019200       1975             7          4                1
-#> # ℹ 259,170 more rows
+#>  1 6210023015500       1990             8          4                3
+#>  2 6210023017000       1990             7          3                2
+#>  3 6210023017700       1991             8          4                2
+#>  4 6210023018100       1991             9          4                2
+#>  5 6210023018500       1990             5          3                2
+#>  6 6210023020300       1991             9          4                3
+#>  7 6210023020500       1992             8          4                2
+#>  8 6210023022800       1992             8          4                2
+#>  9 6210023023100       1992             6          2                3
+#> 10 6210023023300       1992             7          3                2
+#> # ℹ 259,643 more rows
 #> # ℹ 2 more variables: n_half_bathrooms <dbl>, online_market_total_value <dbl>
 
 d_online@schema
-#> ── parcel_id
-#> # type: string
-#> ── year_built
-#> # type: number
-#> ── n_total_rooms
-#> # type: number
-#> ── n_bedrooms
-#> # type: number
-#> ── n_full_bathrooms
-#> # type: number
-#> ── n_half_bathrooms
-#> # type: number
-#> ── online_market_total_value
-#> # type: number
-#> # description: May differ from the market_total_value from CAGIS auditor online
+#> parcel_id
+#> - type: string
+#> year_built
+#> - type: number
+#> n_total_rooms
+#> - type: number
+#> n_bedrooms
+#> - type: number
+#> n_full_bathrooms
+#> - type: number
+#> n_half_bathrooms
+#> - type: number
+#> online_market_total_value
+#> - type: number
+#> - description: May differ from the market_total_value from CAGIS auditor online
 #> data. This value is scraped from the auditor's website.
 
 # without fr:
