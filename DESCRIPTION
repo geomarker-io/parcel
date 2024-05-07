@@ -9,9 +9,11 @@ Config/reticulate:
   list(
     packages = list(
       list(package = "usaddress", version = "0.5.10", pip = TRUE),
+      list(package = "csvdedupe", version = "0.1.20", pip = TRUE),
       list(package = "dedupe", version = "2.0.23", pip = TRUE),
       list(package = "numpy", version = "1.25.2", pip = TRUE),
-      list(package = "dedupe-variable-address", version = "0.0.8", pip = TRUE)
+      list(package = "dedupe-variable-address", version = "0.0.8", pip = TRUE),
+      list(package = "scikit-learn", version = "1.3.0", pip = TRUE)
     )
   )
 License: GPL (>= 3)
