@@ -58,7 +58,7 @@ apt_defs <-
       ),
     "dewdrop" =
       list(
-        street_name = paste("dewdrop circle", c("circle", "cir")),
+        street_name = paste("dewdrop", c("circle", "cir")),
         range_low = 400,
         range_high = 599
       ),
