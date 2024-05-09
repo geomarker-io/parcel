@@ -42,7 +42,7 @@ apt_defs <-
       list(
         street_name = c(paste("east tower", c("drive", "dr")), paste("e tower", c("drive", "dr"))),
         range_low = 2000,
-        range_high = 29999
+        range_high = 2999
       ),
     "bahama" =
       list(
