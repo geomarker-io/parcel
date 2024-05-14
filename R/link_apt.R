@@ -62,10 +62,16 @@ apt_defs <-
         range_low = 400,
         range_high = 599
       ),
-    "winneste" =
+    "winneste1" =
       list(
         street_name = paste("winneste", c("avenue", "ave", "av")),
-        range_low = 4000,
+        range_low = 4800,
+        range_high = 5099
+      ),
+    "winneste2" =
+      list(
+        street_name = paste("winneste", c("avenue", "ave", "av")),
+        range_low = 5329,
         range_high = 5999
       ),
     "walden_glen" =
@@ -77,7 +83,7 @@ apt_defs <-
     "clovernook" =
       list(
         street_name = paste("clovernook", c("avenue", "ave", "av")),
-        range_low = 7000,
+        range_low = 7600,
         range_high = 7999
       ),
     "nottingham" =
