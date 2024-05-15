@@ -32,11 +32,23 @@ link_apt <- function(x) {
 
 apt_defs <-
   list(
-    "president" =
+    "villages_at_roll_hill" =
       list(
         street_name = paste("president", c("drive", "dr")),
         range_low = 3000,
         range_high = 4999
+      ),
+    "villages_at_roll_hill" =
+      list(
+        street_name = paste("nottingham", c("road", "rd", "drive", "dr")),
+        range_low = 2000,
+        range_high = 2999
+      ),
+    "villages_at_roll_hill" =
+      list(
+        street_name = paste("williamsburg", c("drive", "dr")),
+        range_low = 2200,
+        range_high = 2599
       ),
     "tower" =
       list(
@@ -62,17 +74,119 @@ apt_defs <-
         range_low = 400,
         range_high = 599
       ),
-    "winneste1" =
+    "winton_terrace" =
       list(
         street_name = paste("winneste", c("avenue", "ave", "av")),
         range_low = 4800,
         range_high = 5099
       ),
-    "winneste2" =
+    "winton_terrace" =
+      list(
+        street_name = paste("este", c("avenue", "ave", "av")),
+        range_low = 4700,
+        range_high = 4899
+      ),
+    "winton_terrace" =
+      list(
+        street_name = paste("kings run", c("drive", "dr")),
+        range_low = 400,
+        range_high = 519
+      ),
+    "winton_terrace" =
+      list(
+        street_name = paste("kings run", c("court", "ct")),
+        range_low = 1,
+        range_high = 69
+      ),
+    "winton_terrace" =
+      list(
+        street_name = paste("craft", c("street", "st")),
+        range_low = 1,
+        range_high = 299
+      ),
+    "winton_terrace" =
+      list(
+        street_name = paste("topridge", c("place", "pl")),
+        range_low = 1,
+        range_high = 899
+      ),
+    "silver_oak" =
       list(
         street_name = paste("winneste", c("avenue", "ave", "av")),
-        range_low = 5329,
-        range_high = 5999
+        range_low = 5600,
+        range_high = 5799
+      ),
+    "silver_oak" =
+      list(
+        street_name = paste("winneste", c("court", "ct")),
+        range_low = 600,
+        range_high = 699
+      ),
+    "silver_oak" =
+      list(
+        street_name = paste("gardenview", c("lane", "ln")),
+        range_low = 5400,
+        range_high = 5499
+      ),
+    "silver_oak" =
+      list(
+        street_name = paste("gardenhill", c("lane", "ln")),
+        range_low = 5500,
+        range_high = 5799
+      ),
+    "silver_oak" =
+      list(
+        street_name = paste("wintonview", c("place", "pl")),
+        range_low = 5400,
+        range_high = 5499
+      ),
+    "winton_hills_mha" =
+      list(
+        street_name = paste("winneste", c("avenue", "ave", "av")),
+        range_low = 5300,
+        range_high = 5499
+      ),
+    "winton_hills_mha" =
+      list(
+        street_name = paste("strand", c("lane", "ln")),
+        range_low = 580,
+        range_high = 689
+      ),
+    "winton_hills_mha" =
+      list(
+        street_name = paste("holland", c("drive", "dr")),
+        range_low = 5100,
+        range_high = 5499
+      ),
+    "winton_hills_mha" =
+      list(
+        street_name = paste("vivian", c("place", "pl")),
+        range_low = 5200,
+        range_high = 5299
+      ),
+    "winton_hills_mha" =
+      list(
+        street_name = paste("vassar", c("court", "ct")),
+        range_low = 500,
+        range_high = 699
+      ),
+    "winton_hills_mha" =
+      list(
+        street_name = paste("bettman", c("drive", "dr")),
+        range_low = 5300,
+        range_high = 5499
+      ),
+    "winton_hills_mha" =
+      list(
+        street_name = paste("dutch colony", c("drive", "dr")),
+        range_low = 500,
+        range_high = 899
+      ),
+    "winton_hills_mha" =
+      list(
+        street_name = paste("hebron", c("court", "ct")),
+        range_low = 5400,
+        range_high = 5499
       ),
     "walden_glen" =
       list(
@@ -85,11 +199,5 @@ apt_defs <-
         street_name = paste("clovernook", c("avenue", "ave", "av")),
         range_low = 7600,
         range_high = 7999
-      ),
-    "nottingham" =
-      list(
-        street_name = paste("nottingham", c("road", "rd", "drive", "dr")),
-        range_low = 2000,
-        range_high = 2999
       )
   )
