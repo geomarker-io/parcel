@@ -124,7 +124,7 @@ apt_defs <-
       ),
     "silver_oak" =
       list(
-        street_name = paste("gardenview", c("lane", "ln")),
+        street_name = paste("garden view", c("lane", "ln")),
         range_low = 5400,
         range_high = 5499
       ),
