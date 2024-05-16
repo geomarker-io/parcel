@@ -28,6 +28,9 @@ apt_pseudoids <-
   d_apartment_ids |>
   group_by(complex_id) |>
   summarize(land_use = collapse::fmode(land_use), 
-            market_total_value = sum(market_total_value))
+            market_total_value = sum(market_total_value)) |>
+  mutate(land_use = case_when(
+    str_sub(land_use, 1, 9) == "apartment" ~ "apartment, 40+ units", 
+    TRUE ~ land_use))
 
-write_csv(apt_psuedoids, "inst/apt_complex_pseudoids.csv")
+write_csv(apt_pseudoids, "inst/apt_complex_pseudoids.csv")
