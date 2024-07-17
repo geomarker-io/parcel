@@ -1,98 +1,16 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # parcel
 
-<!-- badges: start -->
+> Older versions of this repository contain an R package that relies on the usaddress and dedupe python libraries for address matching. Consider using the {addr} R package instead for more precise and accurate matching to CAGIS parcel identifiers (and fewer dependencies).
 
-[![R-CMD-check](https://github.com/geomarker-io/parcel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/parcel/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
+This repository contains two tabular data resources:
 
-The goal of parcel is to provide tools for matching real-world addresses
-to reference sets of addresses; e.g., “352 Helen Street”, “352 Helen
-St.” or “352 helen st”. This package is motivated by the included
-example data resources of auditor parcel tax data from Hamilton County,
-Ohio. Use `get_parcel_data()` to get the corresponding parcel data for a
-vector of addresses:
-
-``` r
-get_parcel_data(
-  c("1069 Overlook Avenue Cincinnati OH 45238",
-    "419 Elm St. Cincinnati OH 45238",
-    "3333 Burnet Ave Cincinnati OH 45219",
-    "3830 President Drive Cincinnati Ohio 45225",
-    "3544 Linwood Av Cincinnati OH 45226")
-)
-#> # A tibble: 5 × 22
-#>   input_address        parcel_id  score centroid_lat centroid_lon parcel_address
-#>   <chr>                <chr>      <dbl>        <dbl>        <dbl> <chr>         
-#> 1 1069 Overlook Avenu… 1800A800…  0.795         39.1        -84.6 1069 OVERLOOK…
-#> 2 419 Elm St. Cincinn… 54000410…  0.860         39.1        -84.6 419 ELM ST    
-#> 3 3333 Burnet Ave Cin… nonres-c…  0.860         NA           NA   <NA>          
-#> 4 3830 President Driv… president NA             NA           NA   <NA>          
-#> 5 3544 Linwood Av Cin… 01900010…  0.860         39.1        -84.4 3544 LINWOOD …
-#> # ℹ 16 more variables: parcel_addr_number <chr>, parcel_addr_street <chr>,
-#> #   parcel_addr_suffix <chr>, land_use <fct>, condo_id <chr>, condo_unit <chr>,
-#> #   market_total_value <dbl>, acreage <dbl>, homestead <lgl>,
-#> #   rental_registration <lgl>, year_built <dbl>, n_total_rooms <dbl>,
-#> #   n_bedrooms <dbl>, n_full_bathrooms <dbl>, n_half_bathrooms <dbl>,
-#> #   online_market_total_value <dbl>
-```
-
-With this specific goal in mind, parcel includes:
-
-- functions for cleaning and tagging components of addresses:
-  **`clean_address()`**, **`tag_address()`**, and
-  **`create_address_stub()`**
-- the `cagis_parcels` tabular-data-resource, which contains parcel
-  identifiers, parcel addresses, and parcel characteristics downloaded
-  from the [Cincinnati Area Geographic Information System
-  (CAGIS)](https://cagismaps.hamilton-co.org/cagisportal/mapdata/download)
-- the `hamilton_online_parcels` tabular-data-resource, which contains
-  parcel characteristics scraped from [Hamilton County Auditor
-  Online](https://wedge1.hcauditor.org/)
-- functions for joining addresses to parcel identifiers based on an
-  included model pretrained on electronic health record addresses in
-  Hamilton County, OH and a list of custom pseudo-identifiers for
-  multi-building apartment complexes: **`link_parcel()`**,
-  **`link_apt()`**
-
-## Installation
-
-The development version of parcel can be installed with:
-
-``` r
-pak::pak("geomarker-io/parcel")
-```
-
-{parcel} requires the `usaddress` python module for tagging addresses
-and creating address stubs, as well as the `dedupe` and
-`dedupe-variable-address` python modules for matching addresses, all of
-which can be installed to an existing python environment from inside R
-using [reticulate](https://rstudio.github.io/reticulate/index.html):
-
-``` r
-reticulate::py_install("usaddress", pip = TRUE)
-reticulate::py_install("dedupe", pip = TRUE)
-reticulate::py_install("dedupe-variable-address", pip = TRUE)
-```
-
-If there is no
-[preconfigured](https://rstudio.github.io/reticulate/articles/versions.html)
-or compatible version of Python already available on the system,
-Miniconda will be installed and the required Python packages will be
-installed in the standard shared environment for R sessions (typically a
-virtual environment, or a Conda environment named “r-reticulate”) after
-`library(parcel)` is called.
+1. `cagis_parcels`: parcel identifiers, parcel addresses, and parcel characteristics downloaded from the [Cincinnati Area Geographic Information System (CAGIS)](https://cagismaps.hamilton-co.org/cagisportal/mapdata/download)
+2. `hamilton_online_parcels`: parcel characteristics scraped from [Hamilton County Auditor Online](https://wedge1.hcauditor.org/)
 
 ## Identifiers for Parcels and Properties
 
-A `parcel_id` refers to the Hamilton County Auditor’s “Parcel Number”,
-which is referred to as the “Property Number” within the CAGIS Open Data
-and uniquely identifies properties. In rare cases, multple addresses can
-share the same parcel boundaries, but have unique `parcel_id`s and in
-these cases, their resulting centroid coordinates would also be
-identical.
+A `parcel_id` refers to the Hamilton County Auditor’s “Parcel Number”, which is referred to as the “Property Number” within the CAGIS Open Data and uniquely identifies properties.
+In rare cases, multple addresses can share the same parcel boundaries, but have unique `parcel_id`s and in these cases, their resulting centroid coordinates would also be identical.
 
 Within the process of matching to a parcel, an individual address could
 be merged with differing types and resolutions of data:
