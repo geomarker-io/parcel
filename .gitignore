@@ -12,3 +12,4 @@ docs
 /auditor_online_cache.zip
 /.Rprofile
 .Rproj.user
+*.rds
