@@ -16,8 +16,8 @@ rd_centroids <-
   st_centroid() |>
   st_transform(st_crs(4326))
 
-rd$centroid_lon <- st_coordinates(rd_centroids)[ , "X"]
-rd$centroid_lat <- st_coordinates(rd_centroids)[ , "Y"]
+rd$centroid_lon <- st_coordinates(rd_centroids)[, "X"]
+rd$centroid_lat <- st_coordinates(rd_centroids)[, "Y"]
 
 d <- st_drop_geometry(rd) |>
   tibble::as_tibble()
