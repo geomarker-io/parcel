@@ -1,0 +1,28 @@
+$schema: https://datapackage.org/profiles/2.0/datapackage.json
+homepage: https://github.com/geomarker-io/parcel
+version:
+- - 1
+  - 1
+  - 0
+created: 1.7223472e+09
+resources:
+  resource:
+    $schema: https://datapackage.org/profiles/2.0/dataresource.json
+    name: auditor_online_parcels
+    path: auditor_online_parcels.rds
+    title: .na.character
+    description: |2-
+
+      ## Hamilton County Auditor Online Data
+
+      The `hamilton_online_parcels` tabular data resource contains parcel characteristics scraped from [Hamilton County Auditor Online](https://wedge1.hcauditor.org/) and linked to the parcel identifers in the `cagis_parcels` tabular data resource.
+
+      Create...
+
+      stored...
+
+      read....
+    format: rds
+    type: ~
+    bytes: 2447347
+    hash: 87ac19afc2565e4ee06d14a7c8c2e313
