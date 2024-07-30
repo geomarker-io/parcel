@@ -23,7 +23,7 @@ scrape_hamilton_parcel <- function(parcel_id) {
 ## d$auditor_online <-
 ##   mappp::mappp(d$parcel_id, scrape_hamilton_parcel, parallel = FALSE, cache = TRUE, cache_name = "auditor_online_cache")
 ## # save dated copy of parcel scrape
-## saveRDS(d, "./auditor_online_scrape_2024-01-16.rds")
+## saveRDS(d, "./auditor_online_parcels/auditor_online_scrape_2024-01-16.rds")
 
 d_scrape <- readRDS("./auditor_online_scrape_2024-01-16.rds")
 
