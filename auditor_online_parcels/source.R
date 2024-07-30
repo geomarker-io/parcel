@@ -25,7 +25,7 @@ scrape_hamilton_parcel <- function(parcel_id) {
 ## # save dated copy of parcel scrape
 ## saveRDS(d, "./auditor_online_parcels/auditor_online_scrape_2024-01-16.rds")
 
-d_scrape <- readRDS("./auditor_online_scrape_2024-01-16.rds")
+d_scrape <- readRDS("auditor_online_parcels/auditor_online_scrape_2024-01-16.rds")
 
 d_auditor_online_parcels <-
   d_scrape |>
@@ -43,7 +43,8 @@ d_auditor_online_parcels <-
 codec::dpkg_write(
   d_auditor_online_parcels,
   name = "auditor_online_parcels",
-  version = "1.1.0",
+  version = "0.2.0",
   homepage = "https://github.com/geomarker-io/parcel",
   dir = "auditor_online_parcels"
-)
+) |>
+  codec::dpkg_gh_release()
