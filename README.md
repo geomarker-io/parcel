@@ -1,9 +1,8 @@
 # parcel
 
-> Older versions of this repository contain an R package that relies on the usaddress and dedupe python libraries for address matching. Consider using the {addr} R package instead for more precise and accurate matching to CAGIS parcel identifiers (and fewer dependencies).
+> Older versions of this repository contain an R package that relies on the usaddress and dedupe python libraries for address matching. Consider using the {[addr](https://github.com/cole-brokamp/addr)} R package instead for more precise and accurate matching to CAGIS parcel identifiers (and fewer dependencies).
 
-This repository contains two tabular data resources:
-
+This repository contains two tabular data resources: `cagis_parcels` and `hamilton_online_parcels`.
 
 ## Parcel Identifiers and Corresponding Parcel Addresses
 
