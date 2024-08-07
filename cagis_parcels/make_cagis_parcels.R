@@ -79,9 +79,13 @@ d <- d |>
     rental_registration = RENT_REG_FLAG == "Y"
   )
 
-codec::dpkg_write(d,
-  name = "cagis_parcels", version = "1.1.0",
-  dir = "cagis_parcels",
-  homepage = "https://github.com/geomarker-io/parcel"
-) |>
-  codec::dpkg_gh_release()
+d_dpkg <-
+  d |>
+  dpkg::as_dpkg(
+    name = "cagis_parcels",
+    version = "1.1.0",
+    homepage = "https://github.com/geomarker-io/parcel",
+    description = paste(readLines(fs::path("cagis_parcels", "README", ext = "md")), collapse = "\n")
+  )
+
+dpkg::dpkg_gh_release(d_dpkg, draft = FALSE)
