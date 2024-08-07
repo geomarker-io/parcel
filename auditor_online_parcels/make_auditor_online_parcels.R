@@ -40,11 +40,13 @@ d_auditor_online_parcels <-
   ) |>
   dplyr::select(-auditor_online)
 
-codec::dpkg_write(
-  d_auditor_online_parcels,
-  name = "auditor_online_parcels",
-  version = "0.2.0",
-  homepage = "https://github.com/geomarker-io/parcel",
-  dir = "auditor_online_parcels"
-) |>
-  codec::dpkg_gh_release()
+d_dpkg <-
+  d_auditor_online_parcels |>
+  dpkg::as_dpkg(
+    name = "auditor_online_parcels",
+    version = "0.2.0",
+    homepage = "https://github.com/geomarker-io/parcel",
+    description = paste(readLines(fs::path("auditor_online_parcels", "README", ext = "md")), collapse = "\n")
+  )
+
+dpkg::dpkg_gh_release(d_dpkg, draft = FALSE)
