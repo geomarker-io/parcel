@@ -51,6 +51,3 @@ d_dpkg <-
   )
 
 dpkg::dpkg_gh_release(d_dpkg, draft = FALSE)
-
-dpkg::stow("gh://geomarker-io/parcel/auditor_online_parcels-v0.2.0") |>
-  dpkg::read_dpkg()

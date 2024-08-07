@@ -84,6 +84,7 @@ d_dpkg <-
   dpkg::as_dpkg(
     name = "cagis_parcels",
     version = "1.1.0",
+    title = "CAGIS Parcels Data",
     homepage = "https://github.com/geomarker-io/parcel",
     description = paste(readLines(fs::path("cagis_parcels", "README", ext = "md")), collapse = "\n")
   )
