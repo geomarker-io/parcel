@@ -1,15 +1,2 @@
-/degauss_cache/
-/tests/testthat/degauss_cache/
-/inst/*.gdb
-/Hospital Admissions.csv
-/.Renviron
-/inst/training.json
-training.json
-docs
-/README_cache/
-/auditor_online_cache/
-/auditor_online_scrape_2023-08-10.rds
-/auditor_online_cache.zip
 /.Rprofile
 .Rproj.user
-*.rds
