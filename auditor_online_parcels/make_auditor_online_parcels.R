@@ -44,9 +44,13 @@ d_dpkg <-
   d_auditor_online_parcels |>
   dpkg::as_dpkg(
     name = "auditor_online_parcels",
+    title = "Hamilton County Auditor Online Data",
     version = "0.2.0",
     homepage = "https://github.com/geomarker-io/parcel",
     description = paste(readLines(fs::path("auditor_online_parcels", "README", ext = "md")), collapse = "\n")
   )
 
 dpkg::dpkg_gh_release(d_dpkg, draft = FALSE)
+
+dpkg::stow("gh://geomarker-io/parcel/auditor_online_parcels-v0.2.0") |>
+  dpkg::read_dpkg()
