@@ -2,7 +2,7 @@
 
 > Older versions of this repository contain an R package that relies on the usaddress and dedupe python libraries for address matching. Consider using the {[addr](https://github.com/cole-brokamp/addr)} R package instead for more precise and accurate matching to CAGIS parcel identifiers (and fewer dependencies).
 
-This repository contains data packages: `cagis_parcels`, `auditor_online_parcels`.
+This repository contains data packages: `cagis_parcels`, `auditor_online_parcels`, `property_code_enforcements`.
 
 ## Parcel Identifiers and Corresponding Parcel Addresses
 
