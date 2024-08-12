@@ -6,7 +6,10 @@ Infraction addresses were matched to known residential addresses and parcel iden
 
 Infraction-level data were excluded if they (1) had a status of "Closed - No Violation", "Closed - No Violations Found", "Duplicate Case", or "Closed - Duplicate Complaint", or (2) did not contain a property address number/name.
 
-There were 568,951 infractions reported between September 17, 1999 and August 6, 2024. 334,863 (59%) were matched to a single residential address in Hamilton County and were matched to a parcel identifier. Note that in the case of condominiums, addresses are matched one-to-one, but are matched to multiple parcel identifiers. The 850 (0.1%) infractions that were matched to more than one address and 199,687 (35%) that were not matched are missing parcel identifier. 
+There were 535,686 infractions reported between 1999-09-17 and 2024-08-09. 
+- 335,077 (63%) were matched to a single residential address in Hamilton County and were matched to a parcel identifier.
+- Note that in the case of condominiums, addresses are matched one-to-one, but are matched to multiple parcel identifiers. 
+- The 850 (0.2%) infractions that were matched to more than one address and 199,759 (37%) that were not matched are missing parcel identifier.
 
 #### Resources
 
