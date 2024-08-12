@@ -37,11 +37,11 @@ d_address <- tibble::tibble(address = unique(raw_data$address))
 d_address$addr <- as_addr(d_address$address)
 
 # batch process for memory reasons (because using addr_match_line_one instead of looping over ZIPs)
-d_address <- 
-  d_address |> 
-  mutate(group = rep(1:(nrow(d_address)/880), times = 880))
+i_1 <- seq(1, nrow(d_address), by = 1000)
+i_2 <- i_1 + 999
 
-d_address_list <- group_split(group_by(d_address, group))
+d_address_list <- purrr::map2(i_1, i_2, ~d_address[.x:.y,])
+d_address_list[[length(i_1)]] <- na.omit(d_address_list[[length(i_1)]])
 
 # match with addr::cagis_addr reference addresses included in the package
 d_address_list <- 
@@ -72,14 +72,20 @@ d <-
 
 summary(d$addr_match_result) # include in readme (only keep single match)
 
+saveRDS(d, "property_code_enforcements_matched_addr.rds")
 # d <- readRDS("property_code_enforcements_matched_addr.rds")
 
 raw_data <- 
   raw_data |> 
-  left_join(d, by = "address") |> 
-  select(-group)
+  left_join(d, by = "address") 
 
-summary(raw_data$addr_match_result) # include in readme (only keep single match)
+match_summary <- summary(raw_data$addr_match_result) # include in readme (only keep single match)
+
+glue::glue("There were {prettyNum(nrow(raw_data), ',')} infractions reported between {min(raw_data$ENTERED_DATE)} and {max(raw_data$ENTERED_DATE)}. 
+{prettyNum(match_summary['single_match'], ',')} ({round(match_summary['single_match']/nrow(raw_data)*100)}%) were matched to a single residential address in Hamilton County and were matched to a parcel identifier.
+Note that in the case of condominiums, addresses are matched one-to-one, but are matched to multiple parcel identifiers. 
+The {prettyNum(match_summary['multi_match'], ',')} ({round(match_summary['multi_match']/nrow(raw_data)*100, 1)}%) infractions that were matched to more than one address and 
+{prettyNum(match_summary['no_match'], ',')} ({round(match_summary['no_match']/nrow(raw_data)*100)}%) that were not matched are missing parcel identifier.")
 
 # tummarize enforcements by (CAGIS) address/parcel id
 d_enforcements <- 
@@ -110,7 +116,8 @@ d_enforcements_unmatched <-
 
 d_enforcements <- 
   bind_rows(d_enforcements, d_enforcements_unmatched) |>
-  arrange(date)
+  arrange(date) |>
+  mutate(cagis_addr = as.character(cagis_addr))
 
 library(dpkg) # pak::pak("cole-brokamp/dpkg@v0.1.0")
 
@@ -125,3 +132,5 @@ d_dpkg <-
   )
 
 # dpkg::dpkg_gh_release(d_dpkg, draft = FALSE)
+
+
