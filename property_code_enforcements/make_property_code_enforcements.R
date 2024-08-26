@@ -1,6 +1,7 @@
 library(dplyr)
 library(sf)
 library(addr) # pak::pak("cole-brokamp/addr")
+library(dpkg) # pak::pak("cole-brokamp/dpkg")
 
 code_enforcement_url <- "https://data.cincinnati-oh.gov/api/views/cncm-znd6/rows.csv?accessType=DOWNLOAD"
 
@@ -72,9 +73,6 @@ d <-
 
 summary(d$addr_match_result) # include in readme (only keep single match)
 
-saveRDS(d, "property_code_enforcements_matched_addr.rds")
-# d <- readRDS("property_code_enforcements_matched_addr.rds")
-
 raw_data <- 
   raw_data |> 
   left_join(d, by = "address") 
@@ -119,18 +117,17 @@ d_enforcements <-
   arrange(date) |>
   mutate(cagis_addr = as.character(cagis_addr))
 
-library(dpkg) # pak::pak("cole-brokamp/dpkg@v0.1.0")
+saveRDS(d_enforcements, "property_code_enforcements/property_code_enforcements_matched_addr.rds")
+# d_enforcements <- readRDS("property_code_enforcements/property_code_enforcements_matched_addr.rds")
 
 d_dpkg <-
   d_enforcements |>
   dpkg::as_dpkg(
     name = "property_code_enforcements",
-    version = "1.0.0",
+    version = "1.0.1",
     title = "Property Code Enforcements",
     homepage = "https://github.com/geomarker-io/parcel",
     description = paste(readLines(fs::path("property_code_enforcements", "README", ext = "md")), collapse = "\n")
   )
 
 # dpkg::dpkg_gh_release(d_dpkg, draft = FALSE)
-
-
