@@ -45,7 +45,7 @@ d_dpkg <-
   dpkg::as_dpkg(
     name = "auditor_online_parcels",
     title = "Hamilton County Auditor Online Data",
-    version = "0.2.0",
+    version = "0.2.1",
     homepage = "https://github.com/geomarker-io/parcel",
     description = paste(readLines(fs::path("auditor_online_parcels", "README", ext = "md")), collapse = "\n")
   )
