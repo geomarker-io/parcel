@@ -8,7 +8,7 @@ This repository contains these data packages (and source code used to create the
 ![](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=cagis_parcels-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)
 ![](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=property_code_enforcements-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)
 
-Click the links below to be taken to the most recent release version of each data package and download the parquet data files and README.  Alternatively, import parquet data packages directly with the [dpkg](https://github.com/cole-brokamp/dpkg) R package.
+Click the links to be taken to the most recent release version of each data package and download the parquet data files and README.  Alternatively, import parquet data packages directly with the [dpkg](https://github.com/cole-brokamp/dpkg) R package.
 
 ## Parcel Identifiers and Corresponding Parcel Addresses
 
