@@ -1,5 +1,11 @@
 # parcel
 
+  <!-- badges: start -->
+[![latest github release for cagis_parcels dpkg](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=cagis_parcels-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)](https://github.com/geomarker-io/parcel/releases?q=cagis_parcels&expanded=false)
+[![latest github release for auditor_online_parcels dpkg](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=auditor_online_parcels-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)](https://github.com/geomarker-io/parcel/releases?q=auditor_online_parcels&expanded=false)
+[![latest github release for property_code_enforcements dpkg](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=property_code_enforcements-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)](https://github.com/geomarker-io/parcel/releases?q=property_code_enforcements&expanded=false)
+  <!-- badges: end -->
+
 > Older versions of this repository contain an R package that relies on the usaddress and dedupe python libraries for address matching. Consider using the {[addr](https://github.com/cole-brokamp/addr)} R package instead for more precise and accurate matching to CAGIS parcel identifiers (and fewer dependencies).
 
 This repository contains data packages: `cagis_parcels`, `auditor_online_parcels`, `property_code_enforcements`.
