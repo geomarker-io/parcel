@@ -86,4 +86,16 @@ households per parcel for each `land_use` code:
 | other residential structure     |            0 |
 | boataminium                     |            0 |
 
+## Parcel ID Structure for Property Code Enforcements Data
+
+The structure of parcel IDs in the property code enforcements data differs from the CAGIS parcels and online auditor data. Property code enforcement parcel IDs can be modified to match the other data packages in this repository as follows
+
+```r
+property_code_enforcements |>
+  mutate(
+      parcel_id = stringr::str_sub(cagis_parcel_id, 2), 
+      parcel_id = stringr::str_pad(parcel_id, width = 13, side = "right", pad = "0"),
+      .keep = "unused")
+```
+
 
