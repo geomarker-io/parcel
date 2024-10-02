@@ -1,5 +1,9 @@
 # Property Code Enforcements Data
 
+<!-- badges: start -->
+[![latest github release for property_code_enforcements dpkg](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=property_code_enforcements-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)](https://github.com/geomarker-io/parcel/releases?q=property_code_enforcements&expanded=false)
+<!-- badges: end -->
+
 The `property_code_enforcements` data package contains the date, infraction description, infraction status, and address of reported infractions downloaded from the [code enforcement data](https://data.cincinnati-oh.gov/api/views/cncm-znd6/rows.csv?accessType=DOWNLOAD) from [CincyInsights](https://data.cincinnati-oh.gov/thriving-neighborhoods/Code-Enforcement/cncm-znd6). 
 
 Infraction addresses were matched to known residential addresses and parcel identifiers in Hamilton County using [`addr`](https://github.com/cole-brokamp/addr). 

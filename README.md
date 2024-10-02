@@ -2,7 +2,13 @@
 
 > Older versions of this repository contain an R package that relies on the usaddress and dedupe python libraries for address matching. Consider using the {[addr](https://github.com/cole-brokamp/addr)} R package instead for more precise and accurate matching to CAGIS parcel identifiers (and fewer dependencies).
 
-This repository contains data packages: `cagis_parcels`, `auditor_online_parcels`, `property_code_enforcements`.
+This repository contains these data packages (and source code used to create them): 
+
+![](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=auditor_online_parcels-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)
+![](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=cagis_parcels-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)
+![](https://img.shields.io/github/v/release/geomarker-io/parcel?sort=date&filter=property_code_enforcements-*&display_name=tag&label=%5B%E2%98%B0%5D&labelColor=%238CB4C3&color=%23396175)
+
+Click the links to be taken to the most recent release version of each data package and download the parquet data files and README.  Alternatively, import parquet data packages directly with the [dpkg](https://github.com/cole-brokamp/dpkg) R package.
 
 ## Parcel Identifiers and Corresponding Parcel Addresses
 
