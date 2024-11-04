@@ -10,10 +10,20 @@ Infraction addresses were matched to known residential addresses and parcel iden
 
 Infraction-level data were excluded if they (1) had a status of "Closed - No Violation", "Closed - No Violations Found", "Duplicate Case", or "Closed - Duplicate Complaint", or (2) did not contain a property address number/name.
 
-There were 535,686 infractions reported between 1999-09-17 and 2024-08-09. 
-- 335,077 (63%) were matched to a single residential address in Hamilton County and were matched to a parcel identifier.
+There were 539,308 infractions reported between 1999-09-17 and 2024-10-30. 
+- 337,187 (63%) were matched to a residential address in Hamilton County with a parcel identifier.
 - Note that in the case of condominiums, addresses are matched one-to-one, but are matched to multiple parcel identifiers. 
-- The 850 (0.2%) infractions that were matched to more than one address and 199,759 (37%) that were not matched are missing parcel identifier.
+- 202,121 (37%) were not matched and are missing parcel identifier
+
+`property_code_enforcements` fields include
+- `id`: the infraction identifier
+- `date`: the date the infraction was reported
+- `description`: a text description of the infraction
+- `status`: the infraction status
+- `lat_jittered` and `lon_jittered`: randomly skewed coordinates (represent the same block area, but not the exact location, of the infraction)
+- `addr`: the property address of the infraction as an `addr` object
+- `cagis_addr`: the matched `addr` when matched to `addr::cagis_addr()`
+- `cagis_parcel_id`: parcel identifier from `addr::cagis_addr()`
 
 #### Resources
 
