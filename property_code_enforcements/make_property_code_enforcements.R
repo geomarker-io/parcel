@@ -38,47 +38,33 @@ raw_data <-
   ) |>
   filter(address != "")
 
-# unique addresses
-d_address <- 
-  tibble::tibble(address = unique(raw_data$address)) |>
-  mutate(addr = addr::addr(glue::glue("{address} Anytown XX 00000")))
+# match jittered lat/lon to zcta
+d_addr <- 
+  raw_data |>
+  filter(!is.na(lat_jittered), !is.na(lon_jittered)) |>
+  sf::st_as_sf(coords = c("lon_jittered", "lat_jittered"), crs = 4326) |>
+  sf::st_transform(sf::st_crs(cincy::zcta_tigris_2020)) |>
+  sf::st_join(cincy::zcta_tigris_2020, largest = TRUE) |>
+  sf::st_drop_geometry() |>
+  mutate(addr = addr::addr(glue::glue("{address} Anytown XX {zcta_2020}"))) 
 
 # match with addr::cagis_addr reference addresses included in the package
-d_address_match <- 
-  purrr::map2(
-    seq(from = 1, to = nrow(d_address), by = 100), 
-    c(seq(from = 100, to = nrow(d_address), by = 100), nrow(d_address)),
-    \(x, y) 
-    addr_match_street_name_and_number(
-      x = d_address$addr[x:y], 
-      ref_addr = cagis_addr()$cagis_addr,
-      stringdist_match = "osa_lt_1", 
-      match_street_type = TRUE, 
-      simplify = TRUE
-    ), 
-  .progress = TRUE
-  )
-
-d_address_match_tibble <- purrr::map(d_address_match, \(x) tibble::tibble(cagis_addr = x))
-d_address_match_tibble <- bind_rows(d_address_match_tibble)
-
-d_address <- bind_cols(d_address, d_address_match_tibble)
-
-saveRDS(d_address, "matched_addr.rds")
+d_addr$cagis_addr <- addr_match(
+  x = d_addr$addr, 
+  ref_addr = cagis_addr()$cagis_addr,
+  stringdist_match = "osa_lt_1", 
+  match_street_type = TRUE, 
+  simplify = TRUE
+)
 
 d <- 
-  raw_data |> 
-  left_join(d_address, by = "address") |>
+  d_addr |> 
   left_join(cagis_addr(), by = "cagis_addr") |>
-  mutate(cagis_parcel_id = purrr::map_chr(cagis_addr_data, \(x) ifelse(!is.null(x), x$cagis_parcel_id[1], NA))) |>
+  mutate(cagis_parcel_id = purrr::map(cagis_addr_data, "cagis_parcel_id") |>
+              purrr::modify_if(\(.) length(.) > 1, sample, size = 1) |>
+              purrr::modify_if(\(.) length(.) == 0, \(.) NA) ) |>
+  tidyr::unnest(cols = c(cagis_parcel_id)) |>
   select(-cagis_addr_data)
-
-saveRDS(d, "property_code_enforcements.rds")
-
-d_address |>
-  group_by(is.na(cagis_addr)) |>
-  tally() |>
-  mutate(pct = n/sum(n)*100)
 
 d |>
   group_by(is.na(cagis_parcel_id)) |>
