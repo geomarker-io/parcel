@@ -57,6 +57,44 @@ d_addr$cagis_addr <- addr_match(
   simplify = TRUE
 )
 
+# if not matched using zcta, match using addr_match_street_name_and_number()
+unmatched <- 
+  d_addr |>
+  filter(is.na(cagis_addr)) |>
+  select(addr) |>
+  distinct()
+    
+unmatched_cagis_addr <- 
+  purrr::map2(
+    seq(from = 1, to = nrow(unmatched), by = 1000),
+    c(seq(from = 1000, to = nrow(unmatched), by = 1000), nrow(unmatched)), 
+    \(x,y)
+  addr_match_street_name_and_number(
+    x = unmatched$addr[x:y], 
+    ref_addr = cagis_addr()$cagis_addr, 
+    stringdist_match = "osa_lt_1", 
+    match_street_type = TRUE, 
+    simplify = TRUE
+  ), 
+  .progress = TRUE
+)
+
+unmatched$cagis_addr <- purrr::list_c(unmatched_cagis_addr, ptype = addr())
+
+# row bind addrs matched using both methods
+d_addr_rematch <- 
+  d_addr |>
+  filter(is.na(cagis_addr)) |>
+  select(-cagis_addr) |>
+  left_join(unmatched, by = "addr") 
+
+d_addr <-
+  d_addr |>
+  filter(!is.na(cagis_addr)) |>
+  bind_rows(d_addr_rematch) |>
+  arrange(date)
+
+# join to cagis_addr_data by and randomly select parcel id
 d <- 
   d_addr |> 
   left_join(cagis_addr(), by = "cagis_addr") |>
@@ -65,6 +103,7 @@ d <-
               purrr::modify_if(\(.) length(.) == 0, \(.) NA) ) |>
   tidyr::unnest(cols = c(cagis_parcel_id)) |>
   select(-cagis_addr_data)
+
 
 d |>
   group_by(is.na(cagis_parcel_id)) |>
