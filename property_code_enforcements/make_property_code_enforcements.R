@@ -26,105 +26,95 @@ raw_data <-
       "Closed - Duplicate Complaint"
     )
   ) |>
-  mutate(SUB_TYPE_DESC = stringr::str_to_lower(SUB_TYPE_DESC),
-         address = stringr::str_to_lower(FULL_ADDRESS), 
-        address = clean_address_text(address)) |> 
+  mutate(description = stringr::str_to_lower(SUB_TYPE_DESC)) |> 
+  select(
+    id = NUMBER_KEY, 
+    date = ENTERED_DATE,
+    description,
+    status = DATA_STATUS_DISPLAY,
+    address = FULL_ADDRESS,
+    lat_jittered = LATITUDE,
+    lon_jittered = LONGITUDE,
+  ) |>
   filter(address != "")
 
-# pull unique addresses to reduce computation time
-d_address <- tibble::tibble(address = unique(raw_data$address))
-
-# convert address character strings into an addr vector
-d_address$addr <- as_addr(d_address$address)
-
-# batch process for memory reasons (because using addr_match_line_one instead of looping over ZIPs)
-i_1 <- seq(1, nrow(d_address), by = 1000)
-i_2 <- i_1 + 999
-
-d_address_list <- purrr::map2(i_1, i_2, ~d_address[.x:.y,])
-d_address_list[[length(i_1)]] <- na.omit(d_address_list[[length(i_1)]])
+# match jittered lat/lon to zcta
+d_addr <- 
+  raw_data |>
+  filter(!is.na(lat_jittered), !is.na(lon_jittered)) |>
+  sf::st_as_sf(coords = c("lon_jittered", "lat_jittered"), crs = 4326) |>
+  sf::st_transform(sf::st_crs(cincy::zcta_tigris_2020)) |>
+  sf::st_join(cincy::zcta_tigris_2020, largest = TRUE) |>
+  sf::st_drop_geometry() |>
+  mutate(addr = addr::addr(glue::glue("{address} Anytown XX {zcta_2020}"))) 
 
 # match with addr::cagis_addr reference addresses included in the package
-d_address_list <- 
-  purrr::map(
-    d_address_list, 
-    \(x) 
-    x |>
-    mutate(cagis_addr_matches = addr:::addr_match_line_one(addr, cagis_addr$cagis_addr)), 
+d_addr$cagis_addr <- addr_match(
+  x = d_addr$addr, 
+  ref_addr = cagis_addr()$cagis_addr,
+  stringdist_match = "osa_lt_1", 
+  match_street_type = TRUE, 
+  simplify = TRUE
+)
+
+# if not matched using zcta, match using addr_match_street_name_and_number()
+unmatched <- 
+  d_addr |>
+  filter(is.na(cagis_addr)) |>
+  select(addr) |>
+  distinct()
+    
+unmatched_cagis_addr <- 
+  purrr::map2(
+    seq(from = 1, to = nrow(unmatched), by = 1000),
+    c(seq(from = 1000, to = nrow(unmatched), by = 1000), nrow(unmatched)), 
+    \(x,y)
+  addr_match_street_name_and_number(
+    x = unmatched$addr[x:y], 
+    ref_addr = cagis_addr()$cagis_addr, 
+    stringdist_match = "osa_lt_1", 
+    match_street_type = TRUE, 
+    simplify = TRUE
+  ), 
   .progress = TRUE
-  )
+)
 
-# collapse back to one tibble
-d <- bind_rows(d_address_list)
+unmatched$cagis_addr <- purrr::list_c(unmatched_cagis_addr, ptype = addr())
 
+# row bind addrs matched using both methods
+d_addr_rematch <- 
+  d_addr |>
+  filter(is.na(cagis_addr)) |>
+  select(-cagis_addr) |>
+  left_join(unmatched, by = "addr") 
+
+d_addr <-
+  d_addr |>
+  filter(!is.na(cagis_addr)) |>
+  bind_rows(d_addr_rematch) |>
+  arrange(date)
+
+# join to cagis_addr_data by and randomly select parcel id
 d <- 
-  d |>
-  mutate(
-    addr_match_result =
-      case_when(
-        purrr::map_lgl(cagis_addr_matches, is.null) ~ NA,
-        purrr::map_dbl(cagis_addr_matches, vctrs::vec_size) == 0 ~ "no_match",
-        purrr::map_dbl(cagis_addr_matches, vctrs::vec_size) == 1 ~ "single_match",
-        purrr::map_dbl(cagis_addr_matches, vctrs::vec_size) > 1 ~ "multi_match",
-        .default = "foofy"
-      ) |>
-      factor(levels = c("no_match", "single_match", "multi_match"))
-  )
+  d_addr |> 
+  left_join(cagis_addr(), by = "cagis_addr") |>
+  mutate(cagis_parcel_id = purrr::map(cagis_addr_data, "cagis_parcel_id") |>
+              purrr::modify_if(\(.) length(.) > 1, sample, size = 1) |>
+              purrr::modify_if(\(.) length(.) == 0, \(.) NA) ) |>
+  tidyr::unnest(cols = c(cagis_parcel_id)) |>
+  select(-cagis_addr_data)
 
-summary(d$addr_match_result) # include in readme (only keep single match)
 
-raw_data <- 
-  raw_data |> 
-  left_join(d, by = "address") 
-
-match_summary <- summary(raw_data$addr_match_result) # include in readme (only keep single match)
-
-glue::glue("There were {prettyNum(nrow(raw_data), ',')} infractions reported between {min(raw_data$ENTERED_DATE)} and {max(raw_data$ENTERED_DATE)}. 
-{prettyNum(match_summary['single_match'], ',')} ({round(match_summary['single_match']/nrow(raw_data)*100)}%) were matched to a single residential address in Hamilton County and were matched to a parcel identifier.
-Note that in the case of condominiums, addresses are matched one-to-one, but are matched to multiple parcel identifiers. 
-The {prettyNum(match_summary['multi_match'], ',')} ({round(match_summary['multi_match']/nrow(raw_data)*100, 1)}%) infractions that were matched to more than one address and 
-{prettyNum(match_summary['no_match'], ',')} ({round(match_summary['no_match']/nrow(raw_data)*100)}%) that were not matched are missing parcel identifier.")
-
-# tummarize enforcements by (CAGIS) address/parcel id
-d_enforcements <- 
-  raw_data |>
-  filter(addr_match_result == "single_match") |>
-  tidyr::unnest(cols = cagis_addr_matches) |>
-  rename(cagis_addr = cagis_addr_matches) |>
-  left_join(cagis_addr, by = "cagis_addr") |> # rep rows for condos.. is this parcel id valid? 
-  tidyr::unnest(cols = cagis_addr_data) |>
-  select(
-    date = ENTERED_DATE,
-    infraction_description = SUB_TYPE_DESC,
-    status = DATA_STATUS_DISPLAY, 
-    address,
-    cagis_addr,
-    cagis_parcel_id
-  ) 
-
-d_enforcements_unmatched <- 
-  raw_data |>
-  filter(addr_match_result != "single_match") |>
-    select(
-      date = ENTERED_DATE,
-      infraction_description = SUB_TYPE_DESC,
-      status = DATA_STATUS_DISPLAY, 
-      address
-    )
-
-d_enforcements <- 
-  bind_rows(d_enforcements, d_enforcements_unmatched) |>
-  arrange(date) |>
-  mutate(cagis_addr = as.character(cagis_addr))
-
-saveRDS(d_enforcements, "property_code_enforcements/property_code_enforcements_matched_addr.rds")
-# d_enforcements <- readRDS("property_code_enforcements/property_code_enforcements_matched_addr.rds")
+d |>
+  group_by(is.na(cagis_parcel_id)) |>
+  tally() |>
+  mutate(pct = n/sum(n)*100)
 
 d_dpkg <-
-  d_enforcements |>
+  d |>
   dpkg::as_dpkg(
     name = "property_code_enforcements",
-    version = "1.0.1",
+    version = "1.1.0",
     title = "Property Code Enforcements",
     homepage = "https://github.com/geomarker-io/parcel",
     description = paste(readLines(fs::path("property_code_enforcements", "README", ext = "md")), collapse = "\n")
