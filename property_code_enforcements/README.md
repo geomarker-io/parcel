@@ -6,14 +6,14 @@
 
 The `property_code_enforcements` data package contains the date, infraction description, infraction status, and address of reported infractions downloaded from the [code enforcement data](https://data.cincinnati-oh.gov/api/views/cncm-znd6/rows.csv?accessType=DOWNLOAD) from [CincyInsights](https://data.cincinnati-oh.gov/thriving-neighborhoods/Code-Enforcement/cncm-znd6). 
 
-Infraction addresses were matched to known residential addresses and parcel identifiers in Hamilton County using [`addr`](https://github.com/cole-brokamp/addr). 
+Infraction addresses were matched to known residential addresses and parcel identifiers in Hamilton County using [`addr`](https://github.com/cole-brokamp/addr). ZIP codes were assigned using jittered coordinates provided in the source data, then addresses were matched nested by ZIP code. Addresses that were not matched to any known address in Hamilton County were then attempted to match within the entire county. 
 
 Infraction-level data were excluded if they (1) had a status of "Closed - No Violation", "Closed - No Violations Found", "Duplicate Case", or "Closed - Duplicate Complaint", or (2) did not contain a property address number/name.
 
-There were 539,998 infractions reported between 1999-09-17 and 2024-11-21. 
-- 337,663 (63%) were matched to a residential address in Hamilton County with a parcel identifier.
+There were 540,508 infractions reported between 1999-09-17 and 2024-12-08. 
+- 330,338 (61%) were matched to a residential address in Hamilton County with a parcel identifier.
 - Note that in the case of condominiums, addresses are matched one-to-one, but more than one parcel identifier. Here we randomly select one parcel identifier. 
-- 202,335 (37%) were not matched and are missing parcel identifier
+- 210,170 (39%) were not matched and are missing parcel identifier
 
 `property_code_enforcements` fields include
 - `id`: the infraction identifier
