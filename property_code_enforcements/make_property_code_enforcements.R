@@ -26,15 +26,21 @@ raw_data <-
       "Closed - Duplicate Complaint"
     )
   ) |>
-  mutate(description = stringr::str_to_lower(SUB_TYPE_DESC)) |> 
+  mutate(
+    description = stringr::str_to_lower(SUB_TYPE_DESC), 
+    lat_jittered = LATITUDE,
+    lon_jittered = LONGITUDE
+  ) |> 
   select(
     id = NUMBER_KEY, 
     date = ENTERED_DATE,
     description,
     status = DATA_STATUS_DISPLAY,
     address = FULL_ADDRESS,
-    lat_jittered = LATITUDE,
-    lon_jittered = LONGITUDE,
+    lat_jittered,
+    LATITUDE,
+    lon_jittered,
+    LONGITUDE,
   ) |>
   filter(address != "")
 
@@ -42,7 +48,7 @@ raw_data <-
 d_addr <- 
   raw_data |>
   filter(!is.na(lat_jittered), !is.na(lon_jittered)) |>
-  sf::st_as_sf(coords = c("lon_jittered", "lat_jittered"), crs = 4326) |>
+  sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326) |>
   sf::st_transform(sf::st_crs(cincy::zcta_tigris_2020)) |>
   sf::st_join(cincy::zcta_tigris_2020, largest = TRUE) |>
   sf::st_drop_geometry() |>
@@ -104,7 +110,6 @@ d <-
   tidyr::unnest(cols = c(cagis_parcel_id)) |>
   select(-cagis_addr_data)
 
-
 d |>
   group_by(is.na(cagis_parcel_id)) |>
   tally() |>
@@ -114,7 +119,7 @@ d_dpkg <-
   d |>
   dpkg::as_dpkg(
     name = "property_code_enforcements",
-    version = "1.1.0",
+    version = "1.1.1",
     title = "Property Code Enforcements",
     homepage = "https://github.com/geomarker-io/parcel",
     description = paste(readLines(fs::path("property_code_enforcements", "README", ext = "md")), collapse = "\n")
