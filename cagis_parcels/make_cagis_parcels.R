@@ -1,12 +1,19 @@
 library(sf)
 library(dplyr, warn.conflicts = FALSE)
 
+options(timeout = 60 * 5)
+
 tmp <- tempfile(fileext = ".zip")
-download.file("https://www.cagis.org/Opendata/Auditor/Parcels2024.gdb.zip", tmp)
+download.file("https://www.cagis.org/Opendata/Auditor/HAM_PARCELS.gdb.zip", tmp)
 unzip(tmp, exdir = tempdir())
 
+st_layers(dsn = fs::path(tempdir(), "HAM_PARCELS.gdb"))
+
 rd <-
-  st_read(dsn = fs::path(tempdir(), "Parcels2024.gdb"), layer = "HAM_PARCELS_MERGED_W_CONDOS") |>
+  st_read(
+    dsn = fs::path(tempdir(), "HAM_PARCELS.gdb"),
+    layer = "HAM_PARCELS_MERGED_W_CONDOS"
+  ) |>
   st_zm()
 
 rd_centroids <-
@@ -28,7 +35,9 @@ d <- d |>
   tidyr::unite(
     col = "parcel_address",
     tidyselect::any_of(c("ADDRNO", "ADDRST", "ADDRSF")),
-    sep = " ", na.rm = TRUE, remove = FALSE
+    sep = " ",
+    na.rm = TRUE,
+    remove = FALSE
   )
 
 # remove those without a parcel_id
@@ -65,7 +74,8 @@ d <- d |>
 d <- d |>
   transmute(
     parcel_id = AUDPTYID,
-    centroid_lat, centroid_lon,
+    centroid_lat,
+    centroid_lon,
     parcel_address,
     parcel_addr_number = ADDRNO,
     parcel_addr_street = ADDRST,
@@ -83,10 +93,14 @@ d_dpkg <-
   d |>
   dpkg::as_dpkg(
     name = "cagis_parcels",
-    version = "1.1.1",
+    version = "1.2.0",
     title = "CAGIS Parcels Data",
     homepage = "https://github.com/geomarker-io/parcel",
-    description = paste(readLines(fs::path("cagis_parcels", "README", ext = "md")), collapse = "\n")
+    description = paste(
+      readLines(fs::path("cagis_parcels", "README", ext = "md")),
+      collapse = "\n"
+    )
   )
 
+dpkg::write_dpkg(d_dpkg, getwd())
 dpkg::dpkg_gh_release(d_dpkg, draft = FALSE)
